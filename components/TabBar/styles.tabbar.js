@@ -16,6 +16,11 @@ export const styles = StyleSheet.create({
         shadowOffset: { width: 20, height: 0 },
         shadowOpacity: 0.25,
         elevation: 20
-
-    }
+    },
+    iconContainer: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "10%",
+    },
 })

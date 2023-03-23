@@ -14,9 +14,9 @@ const icons = {
 
 const barPosition = {
     "Home": "9.5%",
-    "Trainings": "31%",
-    "Messages": "52.5%",
-    "Profile": "74%",
+    "Trainings": "31.5%",
+    "Messages": "53.5%",
+    "Profile": "75.5%",
 };
 
 function TabBar({ state, descriptors, navigation }) {
@@ -49,7 +49,6 @@ function TabBar({ state, descriptors, navigation }) {
                             duration: 400,
                             update: { type: "spring", springDamping: 2 },
                         })
-                        // setRouteSelected(route.name);
 
                         // The `merge: true` option makes sure that the params inside the tab screen are preserved
                         navigation.navigate({ name: route.name, merge: true });
@@ -72,12 +71,8 @@ function TabBar({ state, descriptors, navigation }) {
                         testID={options.tabBarTestID}
                         onPress={onPress}
                         onLongPress={onLongPress}
-                        style={{
-                            display: "flex",
-                            justifyContent: "center",
-                        }}
+                        style={styles.iconContainer}
                         key={route.key}
-
                     >
                         {icons[route.name]({
                             color: isFocused ? "#BBF246" : "white",
@@ -86,15 +81,13 @@ function TabBar({ state, descriptors, navigation }) {
                 );
             })}
             <View style={{
-                width: 58,
+                width: "15%",
                 height: 4,
                 position: "absolute",
                 backgroundColor: "#BBF246",
                 bottom: 0,
                 left: barPosition[state.routeNames[state.index]],
-
             }}>
-
             </View>
         </View>
     );
