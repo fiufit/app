@@ -1,0 +1,24 @@
+name: Deploy to Expo
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Expo CLI
+        run: npm install -g expo-cli
+      - name: Install dependencies
+        run: npm install
+      - name: Install expo-updates
+        run: npm install expo-updates
+      - name: Build and deploy app
+        run: |
+          expo login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
+          expo publish
