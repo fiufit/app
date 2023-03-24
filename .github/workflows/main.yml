@@ -16,6 +16,8 @@ jobs:
         run: npm install -g expo-cli
       - name: Install dependencies
         run: npm install
+      - name: Install expo-updates
+        run: npm install expo-updates
       - name: Build and deploy app
         run: |
           expo login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
