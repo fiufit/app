@@ -1,11 +1,12 @@
 import { StyleSheet } from "react-native";
+import {DARK_BLUE} from "../../utils/colors";
 
 export const styles = StyleSheet.create({
     tabBar: {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-evenly",
-        backgroundColor: "#192126",
+        backgroundColor: DARK_BLUE,
         position: "absolute",
         bottom: 16,
         height: 63,

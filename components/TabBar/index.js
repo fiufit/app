@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Animated, LayoutAnimation, Platform, UIManager } from "react-native";
+import { View, TouchableOpacity, LayoutAnimation } from "react-native";
 import { styles } from "./styles.tabbar";
 import HomeIcon from "../../assets/images/tabBar/homeIcon.svg";
 import MessageIcon from "../../assets/images/tabBar/messagesIcon.svg";

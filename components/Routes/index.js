@@ -3,15 +3,14 @@ import { Text, View } from "react-native";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import TabBar from "../TabBar";
 import {styles} from "./styles.routes";
-import {useRecoilValue} from "recoil";
-import {exampleState} from "../../atoms";
+import Profile from "../Profile";
 
 const Tab = createBottomTabNavigator();
 
 const Routes = () => {
 
     return (
-        <NavigationContainer>
+        <NavigationContainer >
             <Tab.Navigator
                 initialRouteName="Home"
                 screenOptions={{
@@ -21,67 +20,21 @@ const Routes = () => {
                 tabBar={props => <TabBar {...props}/>}
 
             >
-                <Tab.Screen name="Home" component={TestHome} />
-                <Tab.Screen name="Trainings" component={TestTrainings} />
-                <Tab.Screen name="Messages" component={TestMessages} />
-                <Tab.Screen name="Profile" component={TestProfile} />
-
+                <Tab.Screen name="Home" component={InDevelopment} />
+                <Tab.Screen name="Trainings" component={InDevelopment} />
+                <Tab.Screen name="Messages" component={InDevelopment} />
+                <Tab.Screen name="Profile" component={Profile} />
             </Tab.Navigator>
         </NavigationContainer>
     );
 };
-const TestHome = ({navigation}) => {
-
-    const example = useRecoilValue(exampleState)
-
+const InDevelopment = ({navigation}) => {
 
     return (
-        <View style={styles.container} >
-            <Text>Home</Text>
-            <Text>{example}</Text>
+        <View style={styles.container}>
+            <Text>In development</Text>
         </View>
     );
 };
-
-const TestTrainings = ({navigation}) => {
-
-    const example = useRecoilValue(exampleState)
-
-
-    return (
-        <View style={styles.container} >
-            <Text>Trainings</Text>
-            <Text>{example}</Text>
-        </View>
-    );
-};
-
-
-const TestMessages = ({navigation}) => {
-
-    const example = useRecoilValue(exampleState)
-
-
-    return (
-        <View style={styles.container} >
-            <Text>Messages</Text>
-            <Text>{example}</Text>
-        </View>
-    );
-};
-
-const TestProfile = ({navigation}) => {
-
-    const example = useRecoilValue(exampleState)
-
-
-    return (
-        <View style={styles.container} >
-            <Text>Profile</Text>
-            <Text>{example}</Text>
-        </View>
-    );
-};
-
 
 export default Routes;
