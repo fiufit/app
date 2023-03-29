@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import {DARK_BLUE} from "../../../utils/colors";
+import {DARK_BLUE, DARK_GREY, GREEN, WHITE} from "../../../utils/colors";
 
 export const styles = StyleSheet.create({
     goalCard: {
@@ -13,12 +13,12 @@ export const styles = StyleSheet.create({
     },
     goalTitle: {
         fontSize: 16,
-        color: "#FFFFFF",
+        color: WHITE,
         fontFamily: "Poppins_500Medium",
     },
     goalDescription: {
         fontFamily: "Poppins_500Medium",
-        color: "#626262",
+        color: DARK_GREY,
         fontSize: 12
     },
     progressBar: {
@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
         width: "20%",
         height: "100%",
         borderRadius: 3,
-        backgroundColor: "#BBF246"
+        backgroundColor: GREEN
     },
     progressText: {
         position: "absolute",

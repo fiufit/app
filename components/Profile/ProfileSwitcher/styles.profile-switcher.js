@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import {DARK_BLUE, GREY} from "../../../utils/colors";
+import {DARK_BLUE, GREY, WHITE} from "../../../utils/colors";
 
 export const styles = StyleSheet.create({
     profileSwitcher: {
@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
         alignItems: "center"
     },
     profileSelectedText: {
-        color: "#FFFFFF",
+        color: WHITE,
         fontSize: 12,
         fontFamily: 'Poppins_500Medium',
     },

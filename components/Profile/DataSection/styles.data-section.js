@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import {DARK_BLUE} from "../../../utils/colors";
+import {DARK_BLUE, DARK_GREY, WHITE} from "../../../utils/colors";
 const profilePictureDimention = 80;
 
 export const styles = StyleSheet.create({
@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
     followers: {
         fontFamily: 'Poppins_500Medium',
         fontSize: 15,
-        color: "#626262"
+        color: DARK_GREY
     },
     upperSection: {
         display: "flex",
@@ -58,6 +58,6 @@ export const styles = StyleSheet.create({
     editProfileText: {
         fontFamily: 'Poppins_500Medium',
         fontSize: 10,
-        color: "#FFFFFF"
+        color: WHITE
     }
 })
