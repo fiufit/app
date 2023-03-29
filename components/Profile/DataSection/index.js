@@ -4,7 +4,7 @@ import exampleProfilePic from "../../../assets/images/examples/woman.png";
 import VerifiedIcon from "../../../assets/images/profile/verifiedIcon.svg";
 import {DARK_BLUE} from "../../../utils/colors";
 
-const DataSection = () => {
+const DataSection = ({onEditProfilePress}) => {
 
 
     return(
@@ -17,7 +17,7 @@ const DataSection = () => {
                 </View>
                 <View style={styles.lowerSection}>
                     <Text style={styles.followers}>127 followers</Text>
-                    <TouchableOpacity  style={styles.editProfileButton}>
+                    <TouchableOpacity  style={styles.editProfileButton} onPress={onEditProfilePress}>
                         <Text style={styles.editProfileText}>Edit Profile</Text>
                     </TouchableOpacity>
                 </View>
