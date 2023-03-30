@@ -1,9 +1,10 @@
-import { View, Text, TouchableOpacity, Animated, LayoutAnimation, Platform, UIManager } from "react-native";
+import { View, TouchableOpacity, LayoutAnimation } from "react-native";
 import { styles } from "./styles.tabbar";
 import HomeIcon from "../../assets/images/tabBar/homeIcon.svg";
 import MessageIcon from "../../assets/images/tabBar/messagesIcon.svg";
 import TrainingsIcon from "../../assets/images/tabBar/trainingsIcon.svg";
 import UserIcon from "../../assets/images/tabBar/userIcon.svg"
+import {GREEN} from "../../utils/colors";
 
 const icons = {
     "Home": style => <HomeIcon style={style} />,
@@ -20,11 +21,9 @@ const barPosition = {
 };
 
 function TabBar({ state, descriptors, navigation }) {
-
-    console.log(state)
-
+    
     return (
-        <View style={styles.tabBar}>
+        Object.keys(icons).includes(state.routeNames[state.index]) && <View style={styles.tabBar}>
             {state.routes.map((route, index) => {
                 const { options } = descriptors[route.key];
                 const label =
@@ -64,7 +63,7 @@ function TabBar({ state, descriptors, navigation }) {
 
 
                 return (
-                    <TouchableOpacity
+                    Object.keys(icons).includes(route.name) && <TouchableOpacity
                         accessibilityRole="button"
                         accessibilityState={isFocused ? { selected: true } : {}}
                         accessibilityLabel={options.tabBarAccessibilityLabel}
@@ -75,7 +74,7 @@ function TabBar({ state, descriptors, navigation }) {
                         key={route.key}
                     >
                         {icons[route.name]({
-                            color: isFocused ? "#BBF246" : "white",
+                            color: isFocused ? GREEN : "white",
                         })}
                     </TouchableOpacity>
                 );
@@ -84,7 +83,7 @@ function TabBar({ state, descriptors, navigation }) {
                 width: "15%",
                 height: 4,
                 position: "absolute",
-                backgroundColor: "#BBF246",
+                backgroundColor: GREEN,
                 bottom: 0,
                 left: barPosition[state.routeNames[state.index]],
             }}>
