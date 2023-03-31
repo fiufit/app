@@ -1,0 +1,44 @@
+name: Deploy to Preview Channel
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Expo CLI
+        run: npm install -g expo-cli
+      - name: Install dependencies
+        run: npm install
+      - name: Install expo-updates
+        run: npm install expo-updates
+      - name: Build and deploy app
+        run: |
+          expo login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
+          expo publish --release-channel preview-${{ github.event.number }}
+
+      - name: Post deployment URL as comment
+        uses: actions/github-script@v4
+        if: always()
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const response = await octokit.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 1,
+              page: 1
+            });
+            
+            const release = response.data[0];
+            const comment = `Expo Deploy Preview: ${release.html_url}`;
+            
+            await octokit.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
