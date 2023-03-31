@@ -20,9 +20,9 @@ jobs:
       - name: Build and deploy app
         run: |
           expo login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
-          expo publish --release-channel $(echo ${{ github.event.pull_request.number }}) --non-interactive --max-workers 1
-        env:
-          EXPO_CLI_NON_INTERACTIVE: 'true'
-      - name: Get deployment URL
-        run: |
-          echo "https://$(expo url:web -c $(echo ${{ github.event.pull_request.number }}))"
+          expo publish --release-channel preview-${{ github.event.number }}
+
+      - name: Set output
+        run: echo ::set-output name=url::https://expo.dev/@stein257/fiufitapp?release-channel=preview-${{ github.event.number }}
+        id: output
+
