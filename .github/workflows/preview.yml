@@ -18,31 +18,19 @@ jobs:
       - name: Build and deploy app
         run: |
           expo login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
-          expo publish --release-channel preview-${{ github.event.number }}
+          expo publish --release-channel preview-${{ github.event.pull_request.number }}
 
-      - name: Get Octokit
-        id: octokit
-        uses: octokit/request-action@v2.x
-        with:
-          token: ${{ secrets.TOKEN }}
-
-      - name: Post comment
+      - name: Comment on pull request
         uses: actions/github-script@v4
         with:
-          script: |
-            const { data: pullRequest } = await octokit.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.payload.pull_request.number,
-            });
-
-            const commentBody = `Preview deploy available at: ${deployUrl}`;
-
-            await octokit.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: pullRequest.number,
-              body: commentBody,
-            });
-        env:
-          DEPLOY_URL: ${{ steps.deploy.outputs.preview_url }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+            const previewUrl = '${{ steps.preview_url.outputs.url }}';
+            const releaseChannel = 'pr' + '${{ github.event.pull_request.number }}';
+            const { data: { number } } = await github.rest.pulls.get(context.repo, context.payload.pull_request.number);
+            await github.rest.issues.createComment({
+            repo: context.repo.repo,
+            owner: context.repo.owner,
+            issue_number: number,
+            body: `Preview URL: ${previewUrl}\nRelease Channel: ${releaseChannel}`
+          });
