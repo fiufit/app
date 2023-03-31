@@ -34,10 +34,14 @@ jobs:
           script: |
             const previewUrl = '${{ steps.preview_url.outputs.url }}';
             const releaseChannel = 'pr' + '${{ github.sha }}';
-            const { data: { number } } = await github.rest.pulls.get(context.repo, context.payload.pull_request.number);
-            await github.rest.issues.createComment({
-              repo: context.repo.repo,
+            const { data: { number } } = await github.rest.pulls.get({
               owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+            });
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
               issue_number: number,
               body: `Preview URL: ${previewUrl}\nRelease Channel: ${releaseChannel}`
             });
