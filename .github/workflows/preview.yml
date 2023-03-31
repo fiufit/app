@@ -24,7 +24,7 @@ jobs:
         id: octokit
         uses: octokit/request-action@v2.x
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.TOKEN }}
 
       - name: Post comment
         uses: actions/github-script@v4
