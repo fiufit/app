@@ -4,11 +4,12 @@ export const styles = StyleSheet.create({
   greetings: {
     marginTop: 197,
     fontSize: 16,
+    fontFamily: "Poppins_500Medium",
   },
   welcome: {
     fontSize: 20,
-    fontWeight: "bold",
     marginBottom: 40,
+    fontFamily: "Poppins_700Bold",
   },
   textInput: {
     width: "80%",
@@ -18,6 +19,7 @@ export const styles = StyleSheet.create({
   loginButton: {
     marginTop: 50,
     width: "80%",
+    fontFamily: "Poppins_500Medium",
   },
   forgotPasswordContainer: {
     width: "80%",
@@ -31,6 +33,7 @@ export const styles = StyleSheet.create({
   orText: {
     marginTop: 30,
     marginBottom: 30,
+    fontFamily: "Poppins_500Medium",
   },
   googleImage: {
     width: 40,
@@ -41,8 +44,10 @@ export const styles = StyleSheet.create({
   },
   doNotHaveAccountText: {
     fontSize: 15,
+    fontFamily: "Poppins_500Medium",
   },
   register: {
     color: "#9CB351",
+    fontFamily: "Poppins_500Medium",
   },
 });
