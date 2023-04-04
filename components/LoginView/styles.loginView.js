@@ -18,15 +18,18 @@ export const styles = StyleSheet.create({
   },
   loginButton: {
     marginTop: 50,
+    height: 40,
+    borderRadius: 10,
     width: "80%",
-    fontFamily: "Poppins_500Medium",
   },
   forgotPasswordContainer: {
     width: "80%",
     marginTop: 7,
   },
   forgotPasswordText: {
+    fontFamily: "Poppins_500Medium",
     marginLeft: "auto",
+    fontSize: 12,
     color: "#ADA4A5",
     textDecorationLine: "underline",
   },
