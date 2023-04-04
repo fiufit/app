@@ -9,12 +9,5 @@ export const styles = StyleSheet.create({
         textAlign: "center",
         gap: 10,
         backgroundColor: "#202020"
-    },
-    textContainer: {
-    },
-    input: {
-        textAlignVertical: "center",
-        width: "70%",
-        paddingBottom: 0,
     }
 });
