@@ -1,0 +1,22 @@
+import { initializeApp } from 'firebase/app';
+
+import {getAuth, signInWithEmailAndPassword, initializeAuth} from "firebase/auth";
+import { getReactNativePersistence } from "firebase/auth/react-native"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+const firebaseConfig = {
+    apiKey: "AIzaSyDbXF3gPXW-uggq-Fhsu_ANVgE-1mCYLcI", //TODO: Put this in an env file
+    authDomain: "fiufit.firebaseapp.com",
+    projectId: "fiufit",
+    storageBucket: "fiufit.appspot.com",
+    messagingSenderId: "235995330653",
+    appId: "1:235995330653:web:43dcd2cdfab28df85c35b4",
+    measurementId: "G-0W6BHPCT5D"
+};
+
+const app = initializeApp(firebaseConfig);
+
+initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage)
+});
+export const auth = getAuth();
+export const singIn = async (email, password) => await signInWithEmailAndPassword(auth, email, password);
