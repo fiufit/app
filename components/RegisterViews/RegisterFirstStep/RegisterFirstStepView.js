@@ -30,6 +30,7 @@ const RegisterFirstStepView = ({ navigation }) => {
 
   function handleRegister() {
     //TO DO
+    navigation.navigate({ name: "RegisterSecondStep", merge: true });
   }
 
   function handleLogIn() {
