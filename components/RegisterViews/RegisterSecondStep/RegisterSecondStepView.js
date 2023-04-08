@@ -12,7 +12,7 @@ import { styles } from "./styles.RegisterSecondStepView";
 const RegisterSecondStepView = () => {
   const [expandedList, setExpandedList] = useState(false);
   const [genderSelected, setGenderSelected] = useState("");
-  const [date, setDate] = useState(new Date());
+  const [dateOfBirth, setDateOfBirth] = useState(new Date());
   const [dateOfBirthInserted, setDateOfBirthInserted] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
   const [weight, setWeight] = useState("");
@@ -26,7 +26,7 @@ const RegisterSecondStepView = () => {
     setShowPicker(false);
     if (type == "set") {
       const currentDate = selectedDate;
-      setDate(currentDate);
+      setDateOfBirth(currentDate);
       setDateOfBirthInserted(true);
     }
   };
@@ -108,9 +108,11 @@ const RegisterSecondStepView = () => {
           }}
         >
           <Input
-            value={dateOfBirthInserted ? date.toDateString() : "Date of Birth"}
+            value={
+              dateOfBirthInserted ? dateOfBirth.toDateString() : "Date of Birth"
+            }
             placeholder="Date of Birth"
-            onChangeText={(date) => setDate(date)}
+            onChangeText={(date) => setDateOfBirth(date)}
             width={"77%"}
             height={55}
             fontSize={12}
@@ -123,7 +125,7 @@ const RegisterSecondStepView = () => {
           <DateTimePicker
             mode="date"
             display="spinner"
-            value={date}
+            value={dateOfBirth}
             onChange={onChange}
           />
         )}

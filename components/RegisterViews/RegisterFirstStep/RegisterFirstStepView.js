@@ -36,6 +36,14 @@ const RegisterFirstStepView = ({ navigation }) => {
     //TO DO
   }
 
+  function showPrivacyPolicy() {
+    //TO DO
+  }
+
+  function showTermsOfUse() {
+    //TO DO
+  }
+
   return (
     <Background
       fromColor={"rgb(185, 213, 123)"}
@@ -111,10 +119,25 @@ const RegisterFirstStepView = ({ navigation }) => {
           />
           <Text style={styles.policiesText}>
             By continuing you accept our{" "}
-            <Text style={styles.policies}>Privacy Policy</Text> and
+            <Text
+              style={styles.policies}
+              onPress={() => {
+                showPrivacyPolicy();
+              }}
+            >
+              Privacy Policy
+            </Text>{" "}
+            and
           </Text>
         </View>
-        <Text style={styles.policies}>Terms of Use</Text>
+        <Text
+          style={styles.policies}
+          onPress={() => {
+            showTermsOfUse();
+          }}
+        >
+          Terms of Use
+        </Text>
         <Button
           textColor={WHITE}
           fontSize={16}
