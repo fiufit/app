@@ -38,6 +38,8 @@ export const styles = StyleSheet.create({
   registerButton: {
     marginTop: 20,
     width: "80%",
+    height: 40,
+    borderRadius: 10,
   },
   orText: {
     marginTop: 30,

@@ -1,10 +1,4 @@
-import {
-  Button,
-  Checkbox,
-  List,
-  TextInput,
-  TouchableRipple,
-} from "react-native-paper";
+import { Checkbox, List, TextInput, TouchableRipple } from "react-native-paper";
 import {
   Image,
   ScrollView,
@@ -15,9 +9,15 @@ import {
 import { React, useState } from "react";
 
 import Background from "../../Background/background";
+import Button from "../..//Shared/Button/button";
+import Input from "../../Shared/Input/input";
+import { WHITE } from "../../../utils/colors";
 import { styles } from "./styles.RegisterFirstStepView";
 
 const RegisterFirstStepView = ({ navigation }) => {
+  const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [expandedList, setExpandedList] = useState(false);
   const [optionSelected, setOptionSelected] = useState("");
   const [password, setPassword] = useState("");
@@ -83,31 +83,45 @@ const RegisterFirstStepView = ({ navigation }) => {
             />
           </List.Accordion>
         </TouchableRipple>
-        <TextInput
-          style={styles.textInput}
+        <Input
+          value={name}
           placeholder="First Name"
-          activeUnderlineColor="#202020"
+          onChangeText={(name) => setName(name)}
+          width={"80%"}
+          height={55}
+          fontSize={14}
           left={<TextInput.Icon icon="account" />}
-        ></TextInput>
-        <TextInput
-          style={styles.textInput}
+          backgroundColor={"#FFFFFF"}
+        />
+        <Input
+          value={lastName}
           placeholder="Last Name"
-          activeUnderlineColor="#202020"
+          onChangeText={(lastName) => setLastName(lastName)}
+          width={"80%"}
+          height={55}
+          fontSize={14}
           left={<TextInput.Icon icon="account" />}
-        ></TextInput>
-        <TextInput
-          style={styles.textInput}
+          backgroundColor={"#FFFFFF"}
+        />
+        <Input
+          value={email}
           placeholder="Email"
-          activeUnderlineColor="#202020"
+          onChangeText={(email) => setEmail(email)}
+          width={"80%"}
+          height={55}
+          fontSize={14}
           left={<TextInput.Icon icon="email" />}
-        ></TextInput>
-        <TextInput
-          style={styles.textInput}
-          activeUnderlineColor="#202020"
-          secureTextEntry={!passwordIsVisible}
-          placeholder="Password"
+          backgroundColor={"#FFFFFF"}
+        />
+        <Input
           value={password}
+          placeholder="Password"
           onChangeText={(password) => setPassword(password)}
+          width={"80%"}
+          height={55}
+          fontSize={14}
+          backgroundColor={"#FFFFFF"}
+          secureTextEntry={!passwordIsVisible}
           right={
             <TextInput.Icon
               onPress={() => {
@@ -117,7 +131,7 @@ const RegisterFirstStepView = ({ navigation }) => {
             />
           }
           left={<TextInput.Icon icon="lock" />}
-        ></TextInput>
+        />
         <View style={styles.checkboxPolicies}>
           <Checkbox
             color="black"
@@ -133,8 +147,8 @@ const RegisterFirstStepView = ({ navigation }) => {
         </View>
         <Text style={styles.policies}>Terms of Use</Text>
         <Button
-          mode="contained"
-          buttonColor="#202020"
+          textColor={WHITE}
+          fontSize={16}
           style={styles.registerButton}
           onPress={() => handleRegister()}
         >
