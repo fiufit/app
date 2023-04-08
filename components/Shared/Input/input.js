@@ -19,6 +19,7 @@ const Input = ({
   onChangeText,
   secureTextEntry,
   editable,
+  inputMode,
 }) => {
   return (
     <View
@@ -44,6 +45,7 @@ const Input = ({
         }}
         cursorColor={cursorColor ?? DARK_GREY}
         editable={editable ?? true}
+        inputMode={inputMode ?? "text"}
       ></TextInput>
       <View style={styles.sideContainer}>{right}</View>
     </View>

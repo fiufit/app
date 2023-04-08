@@ -138,6 +138,7 @@ const RegisterSecondStepView = () => {
           fontSize={12}
           left={<TextInput.Icon icon="weight" />}
           backgroundColor={"#FFFFFF"}
+          inputMode={"numeric"}
         />
         <Input
           value={height}
@@ -148,6 +149,7 @@ const RegisterSecondStepView = () => {
           fontSize={12}
           left={<TextInput.Icon icon="human-male-height" />}
           backgroundColor={"#FFFFFF"}
+          inputMode={"numeric"}
         />
         <Input
           value={mainLocation}
