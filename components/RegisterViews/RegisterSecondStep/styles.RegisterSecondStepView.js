@@ -24,15 +24,6 @@ export const styles = StyleSheet.create({
   listAccordionTitle: {
     backgroundColor: "#FFFFFF",
   },
-  datePicker: {
-    backgroundColor: "#FFFFFF",
-    width: "80%",
-    height: 50,
-    marginTop: 20,
-    alignItems: "center",
-    paddingLeft: 15,
-    flexDirection: "row",
-  },
   nextButton: {
     marginTop: 50,
     height: 40,

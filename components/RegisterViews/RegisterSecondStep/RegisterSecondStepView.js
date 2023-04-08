@@ -1,11 +1,10 @@
 import { Image, Pressable, Text } from "react-native";
-import { List, TouchableRipple } from "react-native-paper";
+import { List, TextInput, TouchableRipple } from "react-native-paper";
 import { React, useState } from "react";
 
 import Background from "../../Background/background";
 import Button from "../../Shared/Button/button";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import HideEyeIcon from "../../../assets/images/general/hideEyeIcon.svg";
 import Input from "../../Shared/Input/input";
 import { WHITE } from "../../../utils/colors";
 import { styles } from "./styles.RegisterSecondStepView";
@@ -74,16 +73,21 @@ const RegisterSecondStepView = () => {
         </List.Accordion>
       </TouchableRipple>
       <Pressable
-        style={styles.datePicker}
         onPress={() => {
           setShowPicker(true);
         }}
       >
-        <HideEyeIcon height={18} width={25} />
-        <Text>
-          {" "}
-          {dateOfBirthInserted ? date.toDateString() : "Date of Birth"}
-        </Text>
+        <Input
+          value={dateOfBirthInserted ? date.toDateString() : "Date of Birth"}
+          placeholder="Date of Birth"
+          onChangeText={(date) => setDate(date)}
+          width={"77%"}
+          height={50}
+          fontSize={12}
+          left={<TextInput.Icon icon="calendar" />}
+          backgroundColor={"#FFFFFF"}
+          editable={false}
+        />
       </Pressable>
       {showPicker && (
         <DateTimePicker
@@ -100,7 +104,7 @@ const RegisterSecondStepView = () => {
         width={"80%"}
         height={50}
         fontSize={12}
-        left={<HideEyeIcon height={18} width={18} />}
+        left={<TextInput.Icon icon="weight" />}
         backgroundColor={"#FFFFFF"}
       />
       <Input
@@ -110,7 +114,7 @@ const RegisterSecondStepView = () => {
         width={"80%"}
         height={50}
         fontSize={12}
-        left={<HideEyeIcon height={18} width={18} />}
+        left={<TextInput.Icon icon="ruler" />}
         backgroundColor={"#FFFFFF"}
       />
       <Button
