@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
   listAccordion: {
     width: "80%",
     backgroundColor: "#EAEAEA",
-    marginTop: 30,
+    marginTop: 20,
     borderRadius: 15,
   },
   listAccordionTitle: {
@@ -32,6 +32,7 @@ export const styles = StyleSheet.create({
   },
   nextButton: {
     marginTop: 50,
+    marginBottom: 30,
     height: 40,
     borderRadius: 10,
     width: "80%",
