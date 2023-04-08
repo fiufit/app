@@ -10,25 +10,6 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 30,
   },
-  listAccordion: {
-    width: "80%",
-    backgroundColor: "#EAEAEA",
-    borderRadius: 15,
-  },
-  listAccordionTitle: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 15,
-    paddingLeft: 22,
-  },
-  listAccordionItem: {
-    backgroundColor: "#f2f2f2",
-  },
-  textInput: {
-    width: "80%",
-    height: 55,
-    marginTop: 20,
-    backgroundColor: "#FFFFFF",
-  },
   policies: {
     textDecorationLine: "underline",
   },
