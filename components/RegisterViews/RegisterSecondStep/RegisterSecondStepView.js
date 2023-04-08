@@ -47,7 +47,7 @@ const RegisterSecondStepView = () => {
       <Text style={styles.helpUsText}>
         It will help us to know more about you!
       </Text>
-      <TouchableRipple style={styles.listAccordion}>
+      <TouchableRipple borderless style={styles.listAccordion}>
         <List.Accordion
           title={genderSelected ? genderSelected : "Choose Gender"}
           left={(props) => <List.Icon {...props} icon="account-multiple" />}
@@ -58,17 +58,19 @@ const RegisterSecondStepView = () => {
         >
           <List.Item
             onPress={() => {
-              setGenderSelected("Man");
+              setGenderSelected("Male");
               setExpandedList(!expandedList);
             }}
-            title="Man"
+            title="Male"
+            style={styles.listAccordionItem}
           />
           <List.Item
             onPress={() => {
-              setGenderSelected("Woman");
+              setGenderSelected("Female");
               setExpandedList(!expandedList);
             }}
-            title="Woman"
+            title="Female"
+            style={styles.listAccordionItem}
           />
         </List.Accordion>
       </TouchableRipple>

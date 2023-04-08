@@ -13,9 +13,15 @@ export const styles = StyleSheet.create({
   listAccordion: {
     width: "80%",
     backgroundColor: "#EAEAEA",
+    borderRadius: 15,
   },
   listAccordionTitle: {
     backgroundColor: "#FFFFFF",
+    borderRadius: 15,
+    paddingLeft: 22,
+  },
+  listAccordionItem: {
+    backgroundColor: "#f2f2f2",
   },
   textInput: {
     width: "80%",

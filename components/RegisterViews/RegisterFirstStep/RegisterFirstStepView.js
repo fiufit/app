@@ -58,7 +58,7 @@ const RegisterFirstStepView = ({ navigation }) => {
         >
           Create an Account
         </Text>
-        <TouchableRipple style={styles.listAccordion}>
+        <TouchableRipple borderless style={styles.listAccordion}>
           <List.Accordion
             title={optionSelected ? optionSelected : "Type of User"}
             left={(props) => <List.Icon {...props} icon="account-multiple" />}
@@ -73,6 +73,7 @@ const RegisterFirstStepView = ({ navigation }) => {
                 setExpandedList(!expandedList);
               }}
               title="Athlete"
+              style={styles.listAccordionItem}
             />
             <List.Item
               onPress={() => {
@@ -80,6 +81,7 @@ const RegisterFirstStepView = ({ navigation }) => {
                 setExpandedList(!expandedList);
               }}
               title="Trainer"
+              style={styles.listAccordionItem}
             />
           </List.Accordion>
         </TouchableRipple>

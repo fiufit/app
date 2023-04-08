@@ -20,9 +20,15 @@ export const styles = StyleSheet.create({
     width: "80%",
     backgroundColor: "#EAEAEA",
     marginTop: 30,
+    borderRadius: 15,
   },
   listAccordionTitle: {
     backgroundColor: "#FFFFFF",
+    borderRadius: 15,
+    paddingLeft: 22,
+  },
+  listAccordionItem: {
+    backgroundColor: "#f2f2f2",
   },
   nextButton: {
     marginTop: 50,
