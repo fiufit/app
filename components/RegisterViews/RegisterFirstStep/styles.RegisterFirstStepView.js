@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   greetings: {
-    marginTop: 45,
+    marginTop: 100,
     fontSize: 16,
   },
   createAnAccount: {
@@ -35,14 +35,14 @@ export const styles = StyleSheet.create({
   checkboxPolicies: {
     flex: 2,
     flexDirection: "row",
-    marginTop: 10,
+    marginTop: 30,
     marginRight: 10,
   },
   policiesText: {
     paddingTop: 8,
   },
   registerButton: {
-    marginTop: 20,
+    marginTop: 60,
     width: "80%",
     height: 40,
     borderRadius: 10,

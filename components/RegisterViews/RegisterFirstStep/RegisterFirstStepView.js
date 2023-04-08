@@ -1,4 +1,4 @@
-import { Checkbox, List, TextInput, TouchableRipple } from "react-native-paper";
+import { Checkbox, TextInput } from "react-native-paper";
 import {
   Image,
   ScrollView,
@@ -15,18 +15,13 @@ import { WHITE } from "../../../utils/colors";
 import { styles } from "./styles.RegisterFirstStepView";
 
 const RegisterFirstStepView = ({ navigation }) => {
-  const [name, setName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [expandedList, setExpandedList] = useState(false);
-  const [optionSelected, setOptionSelected] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordRepeat, setPasswordRepeat] = useState("");
   const [passwordIsVisible, setPasswordIsVisible] = useState("false");
+  const [passwordRepeatIsVisible, setPasswordRepeatIsVisible] =
+    useState("false");
   const [checked, setChecked] = useState(false);
-
-  function togglePasswordVisibility() {
-    setPasswordIsVisible(!passwordIsVisible);
-  }
 
   function handleRegister() {
     //TO DO
@@ -58,53 +53,6 @@ const RegisterFirstStepView = ({ navigation }) => {
         >
           Create an Account
         </Text>
-        <TouchableRipple borderless style={styles.listAccordion}>
-          <List.Accordion
-            title={optionSelected ? optionSelected : "Type of User"}
-            left={(props) => <List.Icon {...props} icon="account-multiple" />}
-            expanded={expandedList}
-            onPress={() => setExpandedList(!expandedList)}
-            theme={{ colors: { primary: "black" } }}
-            style={styles.listAccordionTitle}
-          >
-            <List.Item
-              onPress={() => {
-                setOptionSelected("Athlete");
-                setExpandedList(!expandedList);
-              }}
-              title="Athlete"
-              style={styles.listAccordionItem}
-            />
-            <List.Item
-              onPress={() => {
-                setOptionSelected("Trainer");
-                setExpandedList(!expandedList);
-              }}
-              title="Trainer"
-              style={styles.listAccordionItem}
-            />
-          </List.Accordion>
-        </TouchableRipple>
-        <Input
-          value={name}
-          placeholder="First Name"
-          onChangeText={(name) => setName(name)}
-          width={"80%"}
-          height={55}
-          fontSize={14}
-          left={<TextInput.Icon icon="account" />}
-          backgroundColor={"#FFFFFF"}
-        />
-        <Input
-          value={lastName}
-          placeholder="Last Name"
-          onChangeText={(lastName) => setLastName(lastName)}
-          width={"80%"}
-          height={55}
-          fontSize={14}
-          left={<TextInput.Icon icon="account" />}
-          backgroundColor={"#FFFFFF"}
-        />
         <Input
           value={email}
           placeholder="Email"
@@ -127,9 +75,28 @@ const RegisterFirstStepView = ({ navigation }) => {
           right={
             <TextInput.Icon
               onPress={() => {
-                togglePasswordVisibility();
+                setPasswordIsVisible(!passwordIsVisible);
               }}
               icon={passwordIsVisible ? "eye-off" : "eye"}
+            />
+          }
+          left={<TextInput.Icon icon="lock" />}
+        />
+        <Input
+          value={passwordRepeat}
+          placeholder="Repeat password"
+          onChangeText={(passwordRepeat) => setPasswordRepeat(passwordRepeat)}
+          width={"80%"}
+          height={55}
+          fontSize={14}
+          backgroundColor={"#FFFFFF"}
+          secureTextEntry={!passwordRepeatIsVisible}
+          right={
+            <TextInput.Icon
+              onPress={() => {
+                setPasswordRepeatIsVisible(!passwordRepeatIsVisible);
+              }}
+              icon={passwordRepeatIsVisible ? "eye-off" : "eye"}
             />
           }
           left={<TextInput.Icon icon="lock" />}
