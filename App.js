@@ -1,7 +1,7 @@
 import * as SplashScreen from "expo-splash-screen";
 
 import { Lato_400Regular, Lato_700Bold } from "@expo-google-fonts/lato";
-import { Poppins_500Medium, Poppins_700Bold } from "@expo-google-fonts/poppins";
+import { Poppins_500Medium, Poppins_700Bold, Poppins_400Regular } from "@expo-google-fonts/poppins";
 
 import { RecoilRoot } from "recoil";
 import Routes from "./components/Routes";
@@ -14,6 +14,7 @@ const App = () => {
   const [fontsLoaded] = useFonts({
     Poppins_500Medium,
     Poppins_700Bold,
+    Poppins_400Regular,
     Lato_700Bold,
     Lato_400Regular,
   });
