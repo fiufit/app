@@ -44,29 +44,35 @@ const RegisterSecondStepView = ({user}) => {
 
   async function handleNext() {
     if(canSubmit()){
-      try{
-        setLoading(true);
-        await user.reload()
-        await user.getIdToken(true)
-        const controller = new AuthenticationController(user);
-        const {data} = await controller.finishRegister({
-          "nick_name": nickName,
-          "display_name": displayName,
-          "is_male": genderSelected === 'Male',
-          "birth_date": dateOfBirth,
-          "height": Number(height),
-          "weight": Number(weight),
-          "main_location": mainLocation,
-          "interests": [
-            interests
-          ]
-        });
-        console.log(data);
-        setUserData(data.user);
-        setLoading(false);
-      } catch (e) {
-        alert(e.description);
-        setLoading(false);
+      const numericWeight = Number(weight);
+      const numericHeight = Number(height);
+      if(Number.isInteger(numericHeight) && Number.isInteger(numericWeight)){
+        try{
+          setLoading(true);
+          await user.reload()
+          await user.getIdToken(true)
+          const controller = new AuthenticationController(user);
+          const {data} = await controller.finishRegister({
+            "nick_name": nickName,
+            "display_name": displayName,
+            "is_male": genderSelected === 'Male',
+            "birth_date": dateOfBirth,
+            "height": numericHeight,
+            "weight": numericWeight,
+            "main_location": mainLocation,
+            "interests": [
+              interests
+            ]
+          });
+          console.log(data);
+          setUserData(data.user);
+          setLoading(false);
+        } catch (e) {
+          alert(e.description);
+          setLoading(false);
+        }
+      } else {
+       alert("Width and height must be integers");
       }
     } else {
       alert("You need to complete all fields!");
