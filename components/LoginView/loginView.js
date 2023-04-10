@@ -1,4 +1,4 @@
-import { Image, Text, TouchableHighlight, View } from "react-native";
+import {Image, ScrollView, Text, TouchableHighlight, View} from "react-native";
 import { React, useState } from "react";
 import Background from "../Background/background";
 import Input from "../Shared/Input/input";
@@ -10,9 +10,10 @@ import HideEyeIcon from '../../assets/images/general/hideEyeIcon.svg'
 import EyeIcon from '../../assets/images/general/eyeIcon.svg'
 import { styles } from "./styles.loginView";
 import {WHITE} from "../../utils/colors";
+import {signInWithGoogle, singIn} from "../../firebase";
 
 
-const LoginView = () => {
+const LoginView = ({navigation}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
@@ -27,16 +28,16 @@ const LoginView = () => {
     //TO DO
   }
 
-  function handleLogIn() {
-    //TO DO
+  async function handleLogIn() {
+    await singIn(email, password);
   }
 
-  function handleGoogleLogIn() {
-    //TO DO
+  async function handleGoogleLogIn() {
+    await signInWithGoogle();
   }
 
   function handleRegister() {
-    //TO DO
+    navigation.navigate({ name: "RegisterFirstStep", merge: true });
   }
 
   return (

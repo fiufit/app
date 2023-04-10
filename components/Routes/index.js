@@ -6,17 +6,19 @@ import RegisterFirstStepView from "../RegisterViews/RegisterFirstStep/RegisterFi
 import RegisterSecondStepView from "../RegisterViews/RegisterSecondStep/RegisterSecondStepView";
 import TabBar from "../TabBar";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
 import { styles } from "./styles.routes";
+import Button from "../Shared/Button/button";
+import {signOutFromApp} from "../../firebase";
+import {useRecoilState} from "recoil";
+import {userDataState} from "../../atoms";
 
-const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const Routes = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        initialRouteName="RegisterFirstStep"
+        initialRouteName="Home"
         screenOptions={{
           headerShown: false,
           tabBarShowLabel: false,
@@ -24,10 +26,6 @@ const Routes = () => {
         tabBar={(props) => <TabBar {...props} />}
         backBehavior="history"
       >
-        <Tab.Screen
-          name="RegisterFirstStep"
-          component={RegisterFirstStepView}
-        />
         <Tab.Screen
           name="RegisterSecondStep"
           component={RegisterSecondStepView}
@@ -43,9 +41,13 @@ const Routes = () => {
   );
 };
 const InDevelopment = ({ navigation }) => {
+  const [userData, setUserData] = useRecoilState(userDataState);
+
+
   return (
     <View style={styles.container}>
       <Text>In development</Text>
+        <Button textColor={"#FFFFFF"} style={{width: "40%"}} onPress={() => signOutFromApp(() => setUserData({}))}>Log Out</Button>
     </View>
   );
 };

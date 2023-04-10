@@ -8,8 +8,13 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import Input from "../../Shared/Input/input";
 import { WHITE } from "../../../utils/colors";
 import { styles } from "./styles.RegisterSecondStepView";
+import {useRecoilState, useSetRecoilState} from "recoil";
+import {userDataState} from "../../../atoms";
+import AuthenticationController from "../../../utils/controllers/AuthenticationController";
+import {auth} from "../../../firebase";
+import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
 
-const RegisterSecondStepView = () => {
+const RegisterSecondStepView = ({user}) => {
   const [expandedList, setExpandedList] = useState(false);
   const [genderSelected, setGenderSelected] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
@@ -21,6 +26,8 @@ const RegisterSecondStepView = () => {
   const [height, setHeight] = useState("");
   const [mainLocation, setMainLocation] = useState("");
   const [interests, setInterests] = useState("");
+  const [userData, setUserData] = useRecoilState(userDataState);
+  const [loading, setLoading] = useState(false);
 
   const onChange = ({ type }, selectedDate) => {
     setShowPicker(false);
@@ -31,9 +38,47 @@ const RegisterSecondStepView = () => {
     }
   };
 
-  function handleNext() {
-    //TO DO
+  const canSubmit = () => {
+    return nickName && displayName && genderSelected && dateOfBirth && height && weight && mainLocation && interests;
   }
+
+  async function handleNext() {
+    if(canSubmit()){
+      const numericWeight = Number(weight);
+      const numericHeight = Number(height);
+      if(Number.isInteger(numericHeight) && Number.isInteger(numericWeight)){
+        try{
+          setLoading(true);
+          await user.reload()
+          await user.getIdToken(true)
+          const controller = new AuthenticationController(user);
+          const {data} = await controller.finishRegister({
+            "nick_name": nickName,
+            "display_name": displayName,
+            "is_male": genderSelected === 'Male',
+            "birth_date": dateOfBirth,
+            "height": numericHeight,
+            "weight": numericWeight,
+            "main_location": mainLocation,
+            "interests": [
+              interests
+            ]
+          });
+          console.log(data);
+          setUserData(data.user);
+          setLoading(false);
+        } catch (e) {
+          alert(e.description);
+          setLoading(false);
+        }
+      } else {
+       alert("Width and height must be integers");
+      }
+    } else {
+      alert("You need to complete all fields!");
+    }
+  }
+
 
   return (
     <Background
@@ -180,6 +225,7 @@ const RegisterSecondStepView = () => {
           Next ＞
         </Button>
       </ScrollView>
+      {loading && <LoadingModal text={"Setting up your profile"}/>}
     </Background>
   );
 };

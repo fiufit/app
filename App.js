@@ -8,6 +8,7 @@ import Routes from "./components/Routes";
 import { View } from "react-native";
 import { useCallback } from "react";
 import { useFonts } from "expo-font";
+import AuthenticationWrapper from "./components/AuthenticationWrapper/authenticationWrapper";
 
 SplashScreen.preventAutoHideAsync();
 const App = () => {
@@ -34,7 +35,9 @@ const App = () => {
         onLayout={onLayoutRootView}
         style={{ width: "100%", height: "100%" }}
       >
-        <Routes />
+        <AuthenticationWrapper>
+          <Routes/>
+        </AuthenticationWrapper>
       </View>
     </RecoilRoot>
   );
