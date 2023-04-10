@@ -14,10 +14,11 @@ const AuthenticationWrapper = ({children}) => {
     const [user, loading] = useIdToken(auth, {
         onUserChanged: async (user) => {
             if(user){
-                console.log(user)
                 const controller = new AuthenticationController(user);
-                const {data} = await controller.getUserData();
-                setUserData(data);
+                if(!userData?.DisplayName){
+                    const {data} = await controller.getUserData();
+                    setUserData(data);
+                }
                 if(!user.emailVerified){
                     await controller.sendVerificationMail();
                 }
