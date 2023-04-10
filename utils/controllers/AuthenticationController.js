@@ -20,6 +20,7 @@ class AuthenticationController{
 
     async sendVerificationMail(){
         const {stsTokenManager} = this.user;
+        //TODO: add apikey to .env file
         const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${'AIzaSyDbXF3gPXW-uggq-Fhsu_ANVgE-1mCYLcI'}`, {
             method: "POST",
             headers: {
