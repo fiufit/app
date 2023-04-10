@@ -13,23 +13,41 @@ import Button from "../..//Shared/Button/button";
 import Input from "../../Shared/Input/input";
 import { WHITE } from "../../../utils/colors";
 import { styles } from "./styles.RegisterFirstStepView";
+import {singIn} from "../../../firebase";
+import AuthenticationController from "../../../utils/controllers/AuthenticationController";
+import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
 
 const RegisterFirstStepView = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
-  const [passwordIsVisible, setPasswordIsVisible] = useState("false");
-  const [passwordRepeatIsVisible, setPasswordRepeatIsVisible] =
-    useState("false");
+  const [passwordIsVisible, setPasswordIsVisible] = useState(false);
+  const [passwordRepeatIsVisible, setPasswordRepeatIsVisible] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  function handleRegister() {
-    //TO DO
-    navigation.navigate({ name: "RegisterSecondStep", merge: true });
+  async function handleRegister() {
+    //TODO: Change alerts for error modals with error interpretation
+    if(!email || !password || !passwordRepeat){
+      alert("You need to complete all fields!");
+    } else if (password !== passwordRepeat){
+      alert("Passwords don't match!")
+    } else{
+        setLoading(true)
+        const controller= new AuthenticationController();
+        try{
+          await controller.startRegister(email, password);
+          setLoading(false)
+        } catch (e) {
+          setLoading(false)
+          alert(e.description);
+        }
+    }
   }
 
   function handleLogIn() {
     //TO DO
+    navigation.navigate({ name: "Login", merge: true });
   }
 
   function handleGoogleRegister() {
@@ -165,6 +183,7 @@ const RegisterFirstStepView = ({ navigation }) => {
           </Text>
         </View>
       </ScrollView>
+      {loading && <LoadingModal text={"Registering your profile"}/>}
     </Background>
   );
 };
