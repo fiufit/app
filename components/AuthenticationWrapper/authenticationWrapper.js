@@ -18,6 +18,9 @@ const AuthenticationWrapper = ({children}) => {
                 const controller = new AuthenticationController(user);
                 const {data} = await controller.getUserData();
                 setUserData(data);
+                if(!user.emailVerified){
+                    await controller.sendVerificationMail();
+                }
             }
         }
     });

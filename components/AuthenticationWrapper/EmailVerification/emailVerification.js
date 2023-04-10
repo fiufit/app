@@ -13,7 +13,7 @@ const EmailVerification = ({user}) => {
         if(email){
             alert(`Mail sent to: ${email}`);
         } else{
-            alert(`There was a problem sending the mail, try again later`);
+            alert(`We already sent a mail to your email, check spam or come back later`);
         }
     }
 
@@ -35,7 +35,7 @@ const EmailVerification = ({user}) => {
                 style={styles.verifyButton}
                 onPress={handleSendVerifyLink}
             >
-                Send verification link
+                Resend verification link
             </Button>
 
             <Button
