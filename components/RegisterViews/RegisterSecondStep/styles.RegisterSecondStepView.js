@@ -37,4 +37,19 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     width: "80%",
   },
+  interestsModal: {
+    paddingTop: 10,
+    width: "87%",
+    height: 200,
+    borderRadius: 20,
+    alignSelf: "center",
+    backgroundColor: "green",
+  },
+  modalContent: {
+    marginBottom: "auto",
+    alignItems: "center",
+  },
+  modalTopics: {
+    marginTop: 20,
+  },
 });
