@@ -9,13 +9,9 @@ const LoadingModal = ({text}) => {
                 {text && <Text style={styles.title}>
                     {text}
                 </Text>}
-
             </View>
         </View>
     )
-
-
-
 }
 
 export default LoadingModal;
