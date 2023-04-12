@@ -11,7 +11,7 @@ const DataSection = ({onEditProfilePress}) => {
 
     return(
         <View style={styles.profileDataSection}>
-            <Image source={exampleProfilePic} style={styles.profilePicture}/>
+            <Image source={{uri: "https://firebasestorage.googleapis.com/v0/b/fiufit.appspot.com/o/profile_pictures%2Fdefault.png?alt=media&token=8242ac98-c07e-4217-8f07-3fddc5a727bc"}} style={styles.profilePicture}/>
             <View style={styles.nameAndFollowersContainer}>
                 <View style={styles.upperSection}>
                     <Text style={styles.name}>{userData.DisplayName}</Text>
