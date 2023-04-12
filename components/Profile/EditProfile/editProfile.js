@@ -14,6 +14,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import {useAuthState} from "react-firebase-hooks/auth";
 import {auth} from "../../../firebase";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
+import ProfileController from "../../../utils/controllers/ProfileController";
 
 const EditProfile = ({navigation}) => {
     const [userData, setUserData] = useRecoilState(userDataState);
@@ -56,7 +57,8 @@ const EditProfile = ({navigation}) => {
                 value: height,
                 icon: <TextInput.Icon icon="human-male-height"/>,
                 placeholder: "Height (cm)",
-                setEditValue: setHeight
+                setEditValue: setHeight,
+                inputMode: "numeric"
             },
             displayValue: `${height} cm`,
             icon: <TextInput.Icon icon="human-male-height"/>,
@@ -67,7 +69,8 @@ const EditProfile = ({navigation}) => {
                 value: weight,
                 icon: <TextInput.Icon icon="weight"/>,
                 placeholder: "Weight (kg)",
-                setEditValue: setWeight
+                setEditValue: setWeight,
+                inputMode: "numeric"
             },
             displayValue: `${weight} kg`,
             icon: <TextInput.Icon icon="weight"/>,
@@ -112,28 +115,19 @@ const EditProfile = ({navigation}) => {
     };
 
     const handleUpdate = async () => {
-        const {stsTokenManager} = user;
         setLoading(true);
-        const patchResponse = await fetch(`https://fiufit-gateway.fly.dev/v1/users`, {
-            method: "PATCH",
-            headers: {
-                "Authorization": `Bearer ${stsTokenManager.accessToken}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                nickname: nickName,
-                display_name: displayName,
-                is_male: isMale,
-                birth_date: dateOfBirth,
-                height,
-                weight,
-                main_location: mainLocation
-            })
+
+        const controller = new ProfileController(user);
+        const {data, error} = await controller.updateProfile({
+            nickname: nickName,
+            display_name: displayName,
+            is_male: isMale,
+            birth_date: dateOfBirth,
+            height,
+            weight,
+            main_location: mainLocation
         });
-
-        const {data, error} = await patchResponse.json();
-
-
+        
         if (error) {
             alert(error.description)
         } else {
@@ -175,7 +169,7 @@ const EditProfile = ({navigation}) => {
                 onChange={onDateChange}
             />}
             {editOptions.title &&
-                <EditModal title={editOptions.title} editIcon={editOptions.icon}
+                <EditModal title={editOptions.title} editIcon={editOptions.icon} inputMode={editOptions?.inputMode}
                            editValue={editOptions.value} buttonText={"Confirm"} setEditValue={editOptions.setEditValue}
                            editPlaceHolder={editOptions.placeholder}
                            onButtonPress={() => setEditOptions({})}/>}
