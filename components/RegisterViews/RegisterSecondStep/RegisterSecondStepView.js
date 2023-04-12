@@ -53,7 +53,7 @@ const RegisterSecondStepView = ({user}) => {
           await user.getIdToken(true)
           const controller = new AuthenticationController(user);
           const {data} = await controller.finishRegister({
-            "nick_name": nickName,
+            "nickname": nickName,
             "display_name": displayName,
             "is_male": genderSelected === 'Male',
             "birth_date": dateOfBirth,
