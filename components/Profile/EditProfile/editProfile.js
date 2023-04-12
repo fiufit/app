@@ -31,28 +31,7 @@ const EditProfile = ({navigation}) => {
     const [loading, setLoading] = useState(false);
 
 
-    const options = {
-        height: {
-            title: "Edit your height",
-            value: height,
-            icon: <TextInput.Icon icon="human-male-height"/>,
-            placeholder: "Height (cm)",
-            setEditValue: setHeight
-        },
-        weight: {
-            title: "Edit your weight",
-            value: weight,
-            icon: <TextInput.Icon icon="weight"/>,
-            placeholder: "Weight (kg)",
-            setEditValue: setWeight
-        },
-        mainLocation: {
-            title: "Edit your main location",
-            value: mainLocation,
-            icon: <TextInput.Icon icon="map-marker"/>,
-            placeholder: "Main Location",
-            setEditValue: setMainLocation
-        },
+    const nameOptions = {
         displayName: {
             title: "Edit your display name",
             value: displayName,
@@ -69,7 +48,63 @@ const EditProfile = ({navigation}) => {
         }
     }
 
-    const onDateChange = ({ type }, selectedDate) => {
+
+    const inputs = [
+        {
+            editOptions: {
+                title: "Edit your height",
+                value: height,
+                icon: <TextInput.Icon icon="human-male-height"/>,
+                placeholder: "Height (cm)",
+                setEditValue: setHeight
+            },
+            displayValue: `${height} cm`,
+            icon: <TextInput.Icon icon="human-male-height"/>,
+        },
+        {
+            editOptions: {
+                title: "Edit your weight",
+                value: weight,
+                icon: <TextInput.Icon icon="weight"/>,
+                placeholder: "Weight (kg)",
+                setEditValue: setWeight
+            },
+            displayValue: `${weight} kg`,
+            icon: <TextInput.Icon icon="weight"/>,
+        },
+        {
+            editOptions: {
+                title: "Edit your main location",
+                value: mainLocation,
+                icon: <TextInput.Icon icon="map-marker"/>,
+                placeholder: "Main Location",
+                setEditValue: setMainLocation
+            },
+            displayValue: mainLocation,
+            icon: <TextInput.Icon icon="map-marker"/>,
+        },
+        {
+            displayValue: `${isMale ? "Male" : "Female"}`,
+            icon: <TextInput.Icon icon="account-multiple"/>,
+            rightIcon: <TextInput.Icon icon={isMale ? "toggle-switch-off-outline" : "toggle-switch-outline"}
+                                       onPress={() => setIsMale(!isMale)}/>,
+            onPress: () => {
+            }
+        },
+        {
+            displayValue: `${dateOfBirth.toDateString()}`,
+            icon: <TextInput.Icon icon="calendar"/>,
+            onPress: () => setShowPicker(true)
+        },
+        {
+            displayValue: `${interests ?? "Example interests"}`,
+            icon: <TextInput.Icon icon="shape"/>,
+            onPress: () => {
+            }
+        }
+    ];
+
+    const onDateChange = ({type}, selectedDate) => {
         setShowPicker(false);
         if (type === "set") {
             setDateOfBirth(selectedDate);
@@ -99,7 +134,7 @@ const EditProfile = ({navigation}) => {
         const {data, error} = await patchResponse.json();
 
 
-        if(error){
+        if (error) {
             alert(error.description)
         } else {
             setUserData(data);
@@ -118,35 +153,17 @@ const EditProfile = ({navigation}) => {
                        source={{uri: "https://firebasestorage.googleapis.com/v0/b/fiufit.appspot.com/o/profile_pictures%2Fdefault.png?alt=media&token=8242ac98-c07e-4217-8f07-3fddc5a727bc"}}/>
                 <EditIcon style={styles.editIcon} height={25} width={25}/>
             </View>
-            <Text style={styles.name} onPress={() => setEditOptions(options.displayName)}>{displayName}</Text>
-            <Text style={styles.nickName} onPress={() => setEditOptions(options.nickName)}>@{nickName}</Text>
+            <Text style={styles.name} onPress={() => setEditOptions(nameOptions.displayName)}>{displayName}</Text>
+            <Text style={styles.nickName} onPress={() => setEditOptions(nameOptions.nickName)}>@{nickName}</Text>
             <View style={styles.data}>
-                <TouchableHighlight onPress={() => setEditOptions(options.height)} underlayColor={"transparent"}>
-                    <Input editable={false} height={"30%"} value={`${height} cm`} color={"black"}
-                           left={<TextInput.Icon icon="human-male-height"/>}/>
-                </TouchableHighlight>
-                <TouchableHighlight onPress={() => setEditOptions(options.weight)} underlayColor={"transparent"}>
-                    <Input editable={false} height={"30%"} value={`${weight} kg`} color={"black"}
-                           left={<TextInput.Icon icon="weight"/>}/>
-                </TouchableHighlight>
-                <TouchableHighlight onPress={() => setEditOptions(options.mainLocation)} underlayColor={"transparent"}>
-                    <Input editable={false} height={"30%"} value={`${mainLocation}`} color={"black"}
-                           left={<TextInput.Icon icon="map-marker"/>}/>
-                </TouchableHighlight>
-                <TouchableHighlight  underlayColor={"transparent"}>
-                    <Input editable={false} height={"30%"} value={`${isMale ? "Male" : "Female"}`} color={"black"}
-                           left={<TextInput.Icon icon="account-multiple"/>}
-                           right={<TextInput.Icon icon={isMale ? "toggle-switch-off-outline" : "toggle-switch-outline"}
-                                                  onPress={() => setIsMale(!isMale)}/>}/>
-                </TouchableHighlight>
-                <TouchableHighlight onPress={() => setShowPicker(true)} underlayColor={"transparent"}>
-                    <Input editable={false} height={"30%"} value={`${dateOfBirth.toDateString()}`}
-                           color={"black"} left={<TextInput.Icon icon="calendar"/>}/>
-                </TouchableHighlight>
-                <TouchableHighlight underlayColor={"transparent"}>
-                    <Input editable={false} height={"30%"} value={`${interests ?? "Example interests"}`}
-                           color={"black"} left={<TextInput.Icon icon="shape"/>}/>
-                </TouchableHighlight>
+                {inputs.map((input, index) =>
+                    <TouchableHighlight key={index}
+                                        onPress={input.onPress ? input.onPress : () => setEditOptions(input.editOptions)}
+                                        underlayColor={"transparent"}>
+                        <Input editable={false} height={"30%"} value={input.displayValue} color={"black"}
+                               left={input.icon} right={input.rightIcon}/>
+                    </TouchableHighlight>
+                )}
             </View>
             <Button buttonColor={DARK_BLUE} style={styles.button} textColor={WHITE} onPress={handleUpdate}>
                 Update
