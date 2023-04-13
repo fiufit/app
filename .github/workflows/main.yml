@@ -1,0 +1,21 @@
+name: Deploy to Expo using eas update
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Expo CLI
+        run: npm install -g expo-cli
+      - name: Install dependencies
+        run: npm install
+      - name: Install eas-cli
+        run: npm install -g eas-cli
+      - name: Build and deploy app
+        run: |
+          expo login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
+          eas update --auto
