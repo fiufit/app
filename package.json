@@ -11,16 +11,20 @@
   "dependencies": {
     "@expo-google-fonts/lato": "^0.2.3",
     "@expo-google-fonts/poppins": "^0.2.3",
+    "@expo/cli": "^0.6.2",
     "@react-native-async-storage/async-storage": "^1.18.1",
+    "@react-native-community/datetimepicker": "6.7.3",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/stack": "^6.3.16",
     "expo": "~48.0.6",
     "expo-app-loading": "^2.1.1",
+    "expo-auth-session": "^4.0.3",
     "expo-font": "^11.1.1",
     "expo-splash-screen": "^0.18.1",
     "expo-status-bar": "~1.4.4",
     "expo-updates": "~0.16.3",
+    "expo-web-browser": "^12.1.1",
     "firebase": "^9.19.1",
     "react": "18.2.0",
     "react-firebase-hooks": "^5.1.1",
@@ -28,9 +32,7 @@
     "react-native-paper": "^5.5.2",
     "react-native-svg": "13.4.0",
     "react-native-svg-transformer": "^1.0.0",
-    "recoil": "^0.7.7",
-    "expo-updates": "~0.16.3",
-    "@react-native-community/datetimepicker": "6.7.3"
+    "recoil": "^0.7.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
