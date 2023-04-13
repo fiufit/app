@@ -1,5 +1,6 @@
-import {Image, ScrollView, Text, TouchableHighlight, View} from "react-native";
-import { React, useState } from "react";
+import {Image, Linking, ScrollView, Text, TouchableHighlight, View} from "react-native";
+import {React, useEffect, useState} from "react";
+import Expo from 'expo';
 import Background from "../Background/background";
 import Input from "../Shared/Input/input";
 import Button from "../Shared/Button/button";
@@ -11,12 +12,23 @@ import EyeIcon from '../../assets/images/general/eyeIcon.svg'
 import { styles } from "./styles.loginView";
 import {WHITE} from "../../utils/colors";
 import {signInWithGoogle, singIn} from "../../firebase";
-
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google'
+import LoadingModal from "../Shared/Modals/LoadingModal/loadingModal";
+import {makeRedirectUri} from "expo-auth-session";
+WebBrowser.maybeCompleteAuthSession();
 
 const LoginView = ({navigation}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    expoClientId: "235995330653-u65jmivq25u554uak81v7auljem4800e.apps.googleusercontent.com",
+    scopes: ['profile', 'email'],
+    redirectUri: 'https://auth.expo.io/@stein257/fiufitapp',
+  });
+
 
   function togglePasswordVisibility() {
     passwordIsVisible
@@ -33,12 +45,23 @@ const LoginView = ({navigation}) => {
   }
 
   async function handleGoogleLogIn() {
-    await signInWithGoogle();
+    setLoading(true)
+    await promptAsync()
   }
 
   function handleRegister() {
     navigation.navigate({ name: "RegisterFirstStep", merge: true });
   }
+
+  useEffect(() => {
+    console.log(response)
+    if (response?.type === "success") {
+      console.log(response.authentication.accessToken)
+      signInWithGoogle(response.authentication.accessToken).then((_) => setLoading(false))
+    } else{
+      setLoading(false)
+    }
+  }, [response]);
 
   return (
     <Background
@@ -101,7 +124,7 @@ const LoginView = ({navigation}) => {
       <Text style={styles.orText}>Or</Text>
       <TouchableHighlight
         underlayColor={"transparent"}
-        onPress={() => handleGoogleLogIn()}
+        onPress={handleGoogleLogIn}
       >
         <Image
           style={styles.googleImage}
@@ -116,6 +139,7 @@ const LoginView = ({navigation}) => {
           </Text>{" "}
         </Text>
       </View>
+      {loading && <LoadingModal/>}
     </Background>
   );
 };

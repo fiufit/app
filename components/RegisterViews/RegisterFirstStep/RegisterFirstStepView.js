@@ -6,16 +6,19 @@ import {
   TouchableHighlight,
   View,
 } from "react-native";
-import { React, useState } from "react";
+import {React, useEffect, useState} from "react";
 
 import Background from "../../Background/background";
 import Button from "../..//Shared/Button/button";
 import Input from "../../Shared/Input/input";
 import { WHITE } from "../../../utils/colors";
 import { styles } from "./styles.RegisterFirstStepView";
-import {singIn} from "../../../firebase";
 import AuthenticationController from "../../../utils/controllers/AuthenticationController";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
+import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google'
+import {signInWithGoogle} from "../../../firebase";
+WebBrowser.maybeCompleteAuthSession();
 
 const RegisterFirstStepView = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -25,6 +28,11 @@ const RegisterFirstStepView = ({ navigation }) => {
   const [passwordRepeatIsVisible, setPasswordRepeatIsVisible] = useState(false);
   const [checked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    expoClientId: "235995330653-u65jmivq25u554uak81v7auljem4800e.apps.googleusercontent.com",
+    scopes: ['profile', 'email'],
+    redirectUri: 'https://auth.expo.io/@stein257/fiufitapp'
+  });
 
   async function handleRegister() {
     //TODO: Change alerts for error modals with error interpretation
@@ -45,13 +53,23 @@ const RegisterFirstStepView = ({ navigation }) => {
     }
   }
 
+  useEffect(() => {
+    console.log(response)
+    if (response?.type === "success") {
+      console.log(response.authentication.accessToken)
+      signInWithGoogle(response.authentication.accessToken).then((_) => setLoading(false))
+    } else{
+      setLoading(false)
+    }
+  }, [response]);
+
   function handleLogIn() {
-    //TO DO
     navigation.navigate({ name: "Login", merge: true });
   }
 
-  function handleGoogleRegister() {
-    //TO DO
+  async function handleGoogleRegister() {
+    setLoading(true);
+    await promptAsync()
   }
 
   function showPrivacyPolicy() {
@@ -167,7 +185,7 @@ const RegisterFirstStepView = ({ navigation }) => {
         <Text style={styles.orText}>Or</Text>
         <TouchableHighlight
           underlayColor={"transparent"}
-          onPress={() => handleGoogleRegister()}
+          onPress={handleGoogleRegister}
         >
           <Image
             style={styles.googleImage}
