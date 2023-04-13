@@ -13,9 +13,17 @@ jobs:
         run: npm install -g expo-cli
       - name: Install dependencies
         run: npm install
-      - name: Install eas-cli
-        run: npm install -g eas-cli
-      - name: Build and deploy app
-        run: |
-          expo login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
-          eas update --auto
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create preview
+        uses: expo/expo-github-action/preview@v8
+        with:
+          command: eas update --auto
