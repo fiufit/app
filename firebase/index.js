@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 
-import {getAuth, signInWithEmailAndPassword, initializeAuth, signOut} from "firebase/auth";
+import {getAuth, signInWithEmailAndPassword, initializeAuth, signOut, GoogleAuthProvider, signInWithCredential} from "firebase/auth";
 import { getReactNativePersistence } from "firebase/auth/react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 const firebaseConfig = {
@@ -32,6 +32,13 @@ export const signOutFromApp = async (onSingOut) => {
     onSingOut();
 };
 
-export const signInWithGoogle = async () => {
-    //TODO
+export const signInWithGoogle = async (accessToken) => {
+    try{
+        const googleProvider = new GoogleAuthProvider();
+        const credential = GoogleAuthProvider.credential(null, accessToken);
+
+        return await signInWithCredential(auth, credential);
+    }catch (e) {
+        console.log(e);
+    }
 }

@@ -2,6 +2,9 @@
   "expo": {
     "name": "fiufitapp",
     "slug": "fiufitapp",
+    "scheme": "fiufitapp",
+    "currentFullName": "@stein257/fiufitapp",
+    "originalFullName": "@stein257/fiufitapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,6 +21,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.fiufit.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -25,6 +29,17 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c665eadf-9598-439f-9afc-fd4d595d8037"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/c665eadf-9598-439f-9afc-fd4d595d8037"
     }
   }
 }
