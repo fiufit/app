@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import {DARK_BLUE, DARK_GREY, WHITE} from "../../../utils/colors";
+import {DARK_BLUE, DARK_GREY, LIGHT_GREY, WHITE} from "../../../utils/colors";
 const profilePictureDimention = 80;
 
 export const styles = StyleSheet.create({
@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
         width: profilePictureDimention,
         height: profilePictureDimention,
         borderRadius: profilePictureDimention / 2,
+        backgroundColor: LIGHT_GREY,
         resizeMode: 'cover',
     },
     nameAndFollowersContainer: {

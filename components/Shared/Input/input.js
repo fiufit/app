@@ -20,6 +20,7 @@ const Input = ({
   secureTextEntry,
   editable,
   inputMode,
+  marginTop
 }) => {
   return (
     <View
@@ -28,6 +29,7 @@ const Input = ({
         backgroundColor: backgroundColor ?? "#F7F8F8",
         height,
         width,
+        marginTop: marginTop === undefined ? 20 : marginTop
       }}
     >
       <View style={styles.sideContainer}>{left}</View>
