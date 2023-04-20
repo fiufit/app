@@ -12,6 +12,7 @@ import {signOutFromApp} from "../../firebase";
 import {useRecoilState} from "recoil";
 import {userDataState} from "../../atoms";
 import EditProfile from "../Profile/EditProfile/editProfile";
+import Trainings from "../Trainings/trainings";
 
 const Tab = createBottomTabNavigator();
 
@@ -32,7 +33,7 @@ const Routes = () => {
           component={RegisterSecondStepView}
         />
         <Tab.Screen name="Home" component={InDevelopment} />
-        <Tab.Screen name="Trainings" component={InDevelopment} />
+        <Tab.Screen name="Trainings" component={Trainings} />
         <Tab.Screen name="Messages" component={InDevelopment} />
         <Tab.Screen name="Profile" component={Profile} />
         <Tab.Screen name={"Profile Settings"} component={InDevelopment} />
