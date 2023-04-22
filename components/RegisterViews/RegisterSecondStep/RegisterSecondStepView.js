@@ -1,4 +1,11 @@
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { List, Provider, TextInput, TouchableRipple } from "react-native-paper";
 import { Modal, Portal } from "react-native-paper";
 
@@ -7,6 +14,7 @@ import Background from "../../Background/background";
 import Button from "../../Shared/Button/button";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Input from "../../Shared/Input/input";
+import { LinearGradient } from "expo-linear-gradient";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
 import { WHITE } from "../../../utils/colors";
 import { styles } from "./styles.RegisterSecondStepView";
@@ -25,10 +33,19 @@ const RegisterSecondStepView = ({ user }) => {
   const [nickName, setNickName] = useState("");
   const [height, setHeight] = useState("");
   const [mainLocation, setMainLocation] = useState("");
-  const [interests, setInterests] = useState("");
   const [userData, setUserData] = useRecoilState(userDataState);
   const [loading, setLoading] = useState(false);
   const [modalIsVisible, setModalIsVisible] = useState(false);
+  const [selectedInterests, setSelectedInterests] = useState([]);
+
+  const interests = [
+    "Strength",
+    "Speed",
+    "Endurance",
+    "Lose weight",
+    "Gain weight",
+    "Yoga",
+  ];
 
   const onChange = ({ type }, selectedDate) => {
     setShowPicker(false);
@@ -86,6 +103,21 @@ const RegisterSecondStepView = ({ user }) => {
       alert("You need to complete all fields!");
     }
   }
+
+  const handleInterestPress = (interest) => {
+    const newSelectedInterests = [...selectedInterests];
+    const index = newSelectedInterests.indexOf(interest);
+
+    if (index !== -1) {
+      newSelectedInterests.splice(index, 1);
+    } else {
+      if (selectedInterests.length < 2) {
+        newSelectedInterests.push(interest);
+      }
+    }
+
+    setSelectedInterests(newSelectedInterests);
+  };
 
   return (
     <Provider>
@@ -227,7 +259,11 @@ const RegisterSecondStepView = ({ user }) => {
           />
           <Pressable onPress={() => setModalIsVisible(true)}>
             <Input
-              placeholder="Interests"
+              placeholder={
+                selectedInterests.length !== 0
+                  ? selectedInterests.join(", ")
+                  : "Interests"
+              }
               width={"77%"}
               height={55}
               fontSize={12}
@@ -242,10 +278,52 @@ const RegisterSecondStepView = ({ user }) => {
               onDismiss={() => setModalIsVisible(false)}
               contentContainerStyle={styles.interestsModal}
             >
-              <View style={styles.modalContent}>
-                <Text> Choose five topics you might find interesting!</Text>
-                <Text style={styles.modalTopics}> Topics</Text>
-              </View>
+              <LinearGradient
+                colors={["rgb(185, 213, 123)", "#FFFFFF"]}
+                style={styles.modalContent}
+              >
+                <Text style={styles.modalTitle}>
+                  {" "}
+                  Choose two topics you might find interesting!
+                </Text>
+                <View style={styles.interestsContainer}>
+                  {interests.map((interest) => (
+                    <TouchableOpacity
+                      key={interest}
+                      style={[
+                        styles.interestChip,
+                        {
+                          backgroundColor: selectedInterests.includes(interest)
+                            ? "#008F39"
+                            : "#F2F2F2",
+                        },
+                      ]}
+                      onPress={() => handleInterestPress(interest)}
+                    >
+                      <Text
+                        style={[
+                          styles.interestText,
+                          {
+                            color: selectedInterests.includes(interest)
+                              ? "#FFF"
+                              : "#000",
+                          },
+                        ]}
+                      >
+                        {interest}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                  <Button
+                    textColor={WHITE}
+                    fontSize={14}
+                    style={styles.closeButton}
+                    onPress={() => setModalIsVisible(false)}
+                  >
+                    Close
+                  </Button>
+                </View>
+              </LinearGradient>
             </Modal>
           </Portal>
           <Button

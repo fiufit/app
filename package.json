@@ -34,7 +34,8 @@
     "react-native-paper": "^5.5.2",
     "react-native-svg": "13.4.0",
     "react-native-svg-transformer": "^1.0.0",
-    "recoil": "^0.7.7"
+    "recoil": "^0.7.7",
+    "expo-linear-gradient": "~12.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
