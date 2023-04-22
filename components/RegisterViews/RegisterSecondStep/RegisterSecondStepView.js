@@ -1,20 +1,12 @@
-import {
-  Image,
-  Pressable,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, Pressable, ScrollView, Text } from "react-native";
 import { List, Provider, TextInput, TouchableRipple } from "react-native-paper";
-import { Modal, Portal } from "react-native-paper";
 
 import AuthenticationController from "../../../utils/controllers/AuthenticationController";
 import Background from "../../Background/background";
 import Button from "../../Shared/Button/button";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Input from "../../Shared/Input/input";
-import { LinearGradient } from "expo-linear-gradient";
+import InterestsModal from "../../InterestsModal/InterestsModal";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
 import { WHITE } from "../../../utils/colors";
 import { styles } from "./styles.RegisterSecondStepView";
@@ -103,21 +95,6 @@ const RegisterSecondStepView = ({ user }) => {
       alert("You need to complete all fields!");
     }
   }
-
-  const handleInterestPress = (interest) => {
-    const newSelectedInterests = [...selectedInterests];
-    const index = newSelectedInterests.indexOf(interest);
-
-    if (index !== -1) {
-      newSelectedInterests.splice(index, 1);
-    } else {
-      if (selectedInterests.length < 2) {
-        newSelectedInterests.push(interest);
-      }
-    }
-
-    setSelectedInterests(newSelectedInterests);
-  };
 
   return (
     <Provider>
@@ -272,60 +249,12 @@ const RegisterSecondStepView = ({ user }) => {
               editable={false}
             />
           </Pressable>
-          <Portal>
-            <Modal
-              visible={modalIsVisible}
-              onDismiss={() => setModalIsVisible(false)}
-              contentContainerStyle={styles.interestsModal}
-            >
-              <LinearGradient
-                colors={["rgb(185, 213, 123)", "#FFFFFF"]}
-                style={styles.modalContent}
-              >
-                <Text style={styles.modalTitle}>
-                  {" "}
-                  Choose two topics you might find interesting!
-                </Text>
-                <View style={styles.interestsContainer}>
-                  {interests.map((interest) => (
-                    <TouchableOpacity
-                      key={interest}
-                      style={[
-                        styles.interestChip,
-                        {
-                          backgroundColor: selectedInterests.includes(interest)
-                            ? "#008F39"
-                            : "#F2F2F2",
-                        },
-                      ]}
-                      onPress={() => handleInterestPress(interest)}
-                    >
-                      <Text
-                        style={[
-                          styles.interestText,
-                          {
-                            color: selectedInterests.includes(interest)
-                              ? "#FFF"
-                              : "#000",
-                          },
-                        ]}
-                      >
-                        {interest}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                  <Button
-                    textColor={WHITE}
-                    fontSize={14}
-                    style={styles.closeButton}
-                    onPress={() => setModalIsVisible(false)}
-                  >
-                    Close
-                  </Button>
-                </View>
-              </LinearGradient>
-            </Modal>
-          </Portal>
+          <InterestsModal
+            modalIsVisible={modalIsVisible}
+            setModalIsVisible={setModalIsVisible}
+            selectedInterests={selectedInterests}
+            setSelectedInterests={setSelectedInterests}
+          ></InterestsModal>
           <Button
             textColor={WHITE}
             fontSize={16}
