@@ -11,8 +11,9 @@ import { styles } from "./styles.RegisterSecondStepView";
 import {useRecoilState, useSetRecoilState} from "recoil";
 import {userDataState} from "../../../atoms";
 import AuthenticationController from "../../../utils/controllers/AuthenticationController";
-import {auth} from "../../../firebase";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
+import LogoutIcon from "../../../assets/images/general/logoutIcon.svg"
+import {signOutFromApp} from "../../../firebase";
 
 const RegisterSecondStepView = ({user}) => {
   const [expandedList, setExpandedList] = useState(false);
@@ -87,9 +88,10 @@ const RegisterSecondStepView = ({user}) => {
       styles={{ flex: 1, alignItems: "center" }}
     >
       <ScrollView
-        style={{ width: "100%" }}
+        style={{ width: "100%", position: "relative" }}
         contentContainerStyle={{ alignItems: "center" }}
       >
+        <LogoutIcon position={"absolute"} right={20} top={50} opacity={1} width={30} height={25} onPress={() => signOutFromApp(() => setUserData({}))}/>
         <Image
           style={styles.logoImage}
           source={require("../../../assets/appLogo.png")}

@@ -1,7 +1,7 @@
 import {useRecoilState} from "recoil";
 import {userDataState} from "../../atoms";
 import {useIdToken} from "react-firebase-hooks/auth";
-import {auth} from "../../firebase";
+import {auth, getImageUrl} from "../../firebase";
 import Authentication from "./Authentication/authentication";
 import RegisterSecondStepView from "../RegisterViews/RegisterSecondStep/RegisterSecondStepView";
 import AuthenticationController from "../../utils/controllers/AuthenticationController";

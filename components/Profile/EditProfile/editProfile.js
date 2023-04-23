@@ -12,9 +12,10 @@ import {React, useState} from "react";
 import EditModal from "../../Shared/Modals/EditModal/editModal";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {useAuthState} from "react-firebase-hooks/auth";
-import {auth} from "../../../firebase";
+import {auth, DEFAULT_PROFILE_PICTURE, uploadImage} from "../../../firebase";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
 import ProfileController from "../../../utils/controllers/ProfileController";
+import ImageModal from "../../Shared/Modals/ImageModal/imageModal";
 
 const EditProfile = ({navigation}) => {
     const [userData, setUserData] = useRecoilState(userDataState);
@@ -30,6 +31,7 @@ const EditProfile = ({navigation}) => {
     const [mainLocation, setMainLocation] = useState(userData.MainLocation);
     const [interests, setInterests] = useState(userData.Interests);
     const [loading, setLoading] = useState(false);
+    const [showImageModal, setShowImageModal] = useState(false);
 
 
     const nameOptions = {
@@ -127,7 +129,7 @@ const EditProfile = ({navigation}) => {
             weight,
             main_location: mainLocation
         });
-        
+
         if (error) {
             alert(error.description)
         } else {
@@ -137,6 +139,15 @@ const EditProfile = ({navigation}) => {
         setLoading(false);
     }
 
+    const handleImageUpdate = async (image) => {
+        setShowImageModal(false)
+        setLoading(true)
+        const imageUrl = await uploadImage(image, `profile_pictures/${userData.ID}/profile.png`)
+        setUserData({...userData, profilePictureUrl: imageUrl})
+        setLoading(false);
+    }
+
+
 
     return (
         <View style={styles.container}>
@@ -144,8 +155,8 @@ const EditProfile = ({navigation}) => {
             <Text style={styles.title}>Edit Profile</Text>
             <View style={styles.profilePictureContainer}>
                 <Image style={styles.profilePicture}
-                       source={{uri: "https://firebasestorage.googleapis.com/v0/b/fiufit.appspot.com/o/profile_pictures%2Fdefault.png?alt=media&token=8242ac98-c07e-4217-8f07-3fddc5a727bc"}}/>
-                <EditIcon style={styles.editIcon} height={25} width={25}/>
+                       source={{uri: userData.profilePictureUrl ?? DEFAULT_PROFILE_PICTURE}}/>
+                <EditIcon style={styles.editIcon} height={25} width={25} onPress={() => setShowImageModal(true)}/>
             </View>
             <Text style={styles.name} onPress={() => setEditOptions(nameOptions.displayName)}>{displayName}</Text>
             <Text style={styles.nickName} onPress={() => setEditOptions(nameOptions.nickName)}>@{nickName}</Text>
@@ -173,6 +184,7 @@ const EditProfile = ({navigation}) => {
                            editValue={editOptions.value} buttonText={"Confirm"} setEditValue={editOptions.setEditValue}
                            editPlaceHolder={editOptions.placeholder}
                            onButtonPress={() => setEditOptions({})}/>}
+            {showImageModal && <ImageModal onClose={() => setShowImageModal(false)} onUpload={(image) => handleImageUpdate(image)}/>}
             {loading && <LoadingModal text={"Updating your profile"}/>}
         </View>
     )
