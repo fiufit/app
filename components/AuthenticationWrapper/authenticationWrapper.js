@@ -1,7 +1,7 @@
 import {useRecoilState} from "recoil";
 import {userDataState} from "../../atoms";
 import {useIdToken} from "react-firebase-hooks/auth";
-import {auth} from "../../firebase";
+import {auth, getImageUrl} from "../../firebase";
 import Authentication from "./Authentication/authentication";
 import RegisterSecondStepView from "../RegisterViews/RegisterSecondStep/RegisterSecondStepView";
 import AuthenticationController from "../../utils/controllers/AuthenticationController";
@@ -17,7 +17,8 @@ const AuthenticationWrapper = ({children}) => {
                 const controller = new AuthenticationController(user);
                 if(!userData?.DisplayName){
                     const {data} = await controller.getUserData();
-                    setUserData(data);
+                    const profilePictureUrl = await getImageUrl(`profile_pictures/${user.uid}/profile.png`);
+                    setUserData({...data, profilePictureUrl});
                 }
                 if(!user.emailVerified){
                     await controller.sendVerificationMail();

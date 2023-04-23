@@ -5,13 +5,14 @@ import VerifiedIcon from "../../../assets/images/profile/verifiedIcon.svg";
 import {DARK_BLUE} from "../../../utils/colors";
 import {useRecoilValue} from "recoil";
 import {userDataState} from "../../../atoms";
+import {DEFAULT_PROFILE_PICTURE} from "../../../firebase";
 
 const DataSection = ({onEditProfilePress}) => {
     const userData = useRecoilValue(userDataState);
 
     return(
         <View style={styles.profileDataSection}>
-            <Image source={{uri: "https://firebasestorage.googleapis.com/v0/b/fiufit.appspot.com/o/profile_pictures%2Fdefault.png?alt=media&token=8242ac98-c07e-4217-8f07-3fddc5a727bc"}} style={styles.profilePicture}/>
+            <Image source={{uri: userData.profilePictureUrl ?? DEFAULT_PROFILE_PICTURE}} style={styles.profilePicture}/>
             <View style={styles.nameAndFollowersContainer}>
                 <View style={styles.upperSection}>
                     <Text style={styles.name}>{userData.DisplayName}</Text>
