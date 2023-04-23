@@ -22,7 +22,8 @@ const AuthenticationWrapper = ({children}) => {
             const controller = new AuthenticationController(user);
             if(!userData?.DisplayName){
                 const {data} = await controller.getUserData();
-                setUserData(data);
+                const profilePictureUrl = await getImageUrl(`profile_pictures/${user.uid}/profile.png`);
+                setUserData({...data, profilePictureUrl});
             }
             if(!user.emailVerified){
                 await controller.sendVerificationMail();
