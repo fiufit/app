@@ -1,3 +1,9 @@
+import {
+  BLACK,
+  SECONDARY_GREEN,
+  SECONDARY_WHITE,
+  TERCIARY_GREEN,
+} from "../../utils/colors";
 import { Modal, Portal } from "react-native-paper";
 import { Text, TouchableOpacity, View } from "react-native";
 
@@ -22,6 +28,9 @@ const InterestsModal = ({
     "Yoga",
   ];
 
+  const MAX_INTERESTS = 3;
+  var converter = require("number-to-words");
+
   const handleInterestPress = (interest) => {
     const newSelectedInterests = [...selectedInterests];
     const index = newSelectedInterests.indexOf(interest);
@@ -29,7 +38,7 @@ const InterestsModal = ({
     if (index !== -1) {
       newSelectedInterests.splice(index, 1);
     } else {
-      if (selectedInterests.length < 2) {
+      if (selectedInterests.length < MAX_INTERESTS) {
         newSelectedInterests.push(interest);
       }
     }
@@ -47,12 +56,13 @@ const InterestsModal = ({
         contentContainerStyle={styles.interestsModal}
       >
         <LinearGradient
-          colors={["rgb(185, 213, 123)", "#FFFFFF"]}
+          colors={[SECONDARY_GREEN, WHITE]}
           style={styles.modalContent}
         >
           <Text style={styles.modalTitle}>
             {" "}
-            Choose two topics you might find interesting!
+            Choose {converter.toWords(MAX_INTERESTS)} topics you might find
+            interesting!
           </Text>
           <View style={styles.interestsContainer}>
             {interests.map((interest) => (
@@ -62,8 +72,8 @@ const InterestsModal = ({
                   styles.interestChip,
                   {
                     backgroundColor: selectedInterests.includes(interest)
-                      ? "#008F39"
-                      : "#F2F2F2",
+                      ? TERCIARY_GREEN
+                      : SECONDARY_WHITE,
                   },
                 ]}
                 onPress={() => handleInterestPress(interest)}
@@ -73,8 +83,8 @@ const InterestsModal = ({
                     styles.interestText,
                     {
                       color: selectedInterests.includes(interest)
-                        ? "#FFF"
-                        : "#000",
+                        ? WHITE
+                        : BLACK,
                     },
                   ]}
                 >

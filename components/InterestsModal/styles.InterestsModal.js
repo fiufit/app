@@ -1,3 +1,5 @@
+import { BLACK, SECONDARY_WHITE } from "../../utils/colors";
+
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -23,19 +25,20 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: "#F2F2F2",
+    backgroundColor: SECONDARY_WHITE,
     margin: 4,
   },
   interestText: {
     fontSize: 14,
-    color: "#000",
+    color: BLACK,
     fontFamily: "Poppins_500Medium",
   },
   modalTitle: {
     fontSize: 16,
     marginTop: 10,
     fontFamily: "Poppins_500Medium",
-    color: "#000",
+    paddingHorizontal: 4,
+    color: BLACK,
   },
   closeButton: {
     borderRadius: 20,

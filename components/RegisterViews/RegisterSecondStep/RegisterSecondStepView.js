@@ -30,15 +30,6 @@ const RegisterSecondStepView = ({ user }) => {
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState([]);
 
-  const interests = [
-    "Strength",
-    "Speed",
-    "Endurance",
-    "Lose weight",
-    "Gain weight",
-    "Yoga",
-  ];
-
   const onChange = ({ type }, selectedDate) => {
     setShowPicker(false);
     if (type == "set") {
@@ -134,7 +125,7 @@ const RegisterSecondStepView = ({ user }) => {
             height={55}
             fontSize={12}
             left={<TextInput.Icon icon="account" />}
-            backgroundColor={"#FFFFFF"}
+            backgroundColor={WHITE}
           />
           <Input
             value={nickName}
@@ -144,7 +135,7 @@ const RegisterSecondStepView = ({ user }) => {
             height={55}
             fontSize={12}
             left={<TextInput.Icon icon="account" />}
-            backgroundColor={"#FFFFFF"}
+            backgroundColor={WHITE}
           />
           <TouchableRipple borderless style={styles.listAccordion}>
             <List.Accordion
@@ -190,7 +181,7 @@ const RegisterSecondStepView = ({ user }) => {
               height={55}
               fontSize={12}
               left={<TextInput.Icon icon="calendar" />}
-              backgroundColor={"#FFFFFF"}
+              backgroundColor={WHITE}
               editable={false}
             />
           </Pressable>
@@ -210,7 +201,7 @@ const RegisterSecondStepView = ({ user }) => {
             height={55}
             fontSize={12}
             left={<TextInput.Icon icon="weight" />}
-            backgroundColor={"#FFFFFF"}
+            backgroundColor={WHITE}
             inputMode={"numeric"}
           />
           <Input
@@ -221,7 +212,7 @@ const RegisterSecondStepView = ({ user }) => {
             height={55}
             fontSize={12}
             left={<TextInput.Icon icon="human-male-height" />}
-            backgroundColor={"#FFFFFF"}
+            backgroundColor={WHITE}
             inputMode={"numeric"}
           />
           <Input
@@ -232,7 +223,7 @@ const RegisterSecondStepView = ({ user }) => {
             height={55}
             fontSize={12}
             left={<TextInput.Icon icon="map-marker" />}
-            backgroundColor={"#FFFFFF"}
+            backgroundColor={WHITE}
           />
           <Pressable onPress={() => setModalIsVisible(true)}>
             <Input
@@ -245,8 +236,9 @@ const RegisterSecondStepView = ({ user }) => {
               height={55}
               fontSize={12}
               left={<TextInput.Icon icon="shape" />}
-              backgroundColor={"#FFFFFF"}
+              backgroundColor={WHITE}
               editable={false}
+              multiline={true}
             />
           </Pressable>
           <InterestsModal
