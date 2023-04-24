@@ -213,6 +213,7 @@ const RegisterFirstStepView = ({ navigation }) => {
           <ErrorModal
             modalIsVisible={errorModalIsVisible}
             setModalIsVisible={setErrorModalIsVisible}
+            errorTitle="Oooops!"
             errorDescription={errorDescription}
           ></ErrorModal>
         </ScrollView>
