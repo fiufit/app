@@ -1,4 +1,7 @@
-import { Checkbox, TextInput } from "react-native-paper";
+import * as Google from "expo-auth-session/providers/google";
+import * as WebBrowser from "expo-web-browser";
+
+import { Checkbox, Provider, TextInput } from "react-native-paper";
 import {
   Image,
   ScrollView,
@@ -6,18 +9,18 @@ import {
   TouchableHighlight,
   View,
 } from "react-native";
-import {React, useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
+import AuthenticationController from "../../../utils/controllers/AuthenticationController";
 import Background from "../../Background/background";
 import Button from "../..//Shared/Button/button";
+import ErrorModal from "../../Shared/Modals/ErrorModal/ErrorModal";
 import Input from "../../Shared/Input/input";
-import { WHITE } from "../../../utils/colors";
-import { styles } from "./styles.RegisterFirstStepView";
-import AuthenticationController from "../../../utils/controllers/AuthenticationController";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
-import * as WebBrowser from 'expo-web-browser';
-import * as Google from 'expo-auth-session/providers/google'
-import {signInWithGoogle} from "../../../firebase";
+import { WHITE } from "../../../utils/colors";
+import { signInWithGoogle } from "../../../firebase";
+import { styles } from "./styles.RegisterFirstStepView";
+
 WebBrowser.maybeCompleteAuthSession();
 
 const RegisterFirstStepView = ({ navigation }) => {
@@ -28,38 +31,44 @@ const RegisterFirstStepView = ({ navigation }) => {
   const [passwordRepeatIsVisible, setPasswordRepeatIsVisible] = useState(false);
   const [checked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorModalIsVisible, setErrorModalIsVisible] = useState(false);
+  const [errorDescription, setErrorDescription] = useState("");
   const [request, response, promptAsync] = Google.useAuthRequest({
-    expoClientId: "235995330653-u65jmivq25u554uak81v7auljem4800e.apps.googleusercontent.com",
-    scopes: ['profile', 'email'],
-    redirectUri: 'https://auth.expo.io/@stein257/fiufitapp'
+    expoClientId:
+      "235995330653-u65jmivq25u554uak81v7auljem4800e.apps.googleusercontent.com",
+    scopes: ["profile", "email"],
+    redirectUri: "https://auth.expo.io/@stein257/fiufitapp",
   });
 
   async function handleRegister() {
     //TODO: Change alerts for error modals with error interpretation
-    if(!email || !password || !passwordRepeat){
+    if (!email || !password || !passwordRepeat) {
       alert("You need to complete all fields!");
-    } else if (password !== passwordRepeat){
-      alert("Passwords don't match!")
-    } else{
-        setLoading(true)
-        const controller= new AuthenticationController();
-        try{
-          await controller.startRegister(email, password);
-          setLoading(false)
-        } catch (e) {
-          setLoading(false)
-          alert(e.description);
-        }
+    } else if (password !== passwordRepeat) {
+      setErrorModalIsVisible(true);
+      setErrorDescription("Passwords don't match!");
+    } else {
+      setLoading(true);
+      const controller = new AuthenticationController();
+      try {
+        await controller.startRegister(email, password);
+        setLoading(false);
+      } catch (e) {
+        setLoading(false);
+        alert(e.description);
+      }
     }
   }
 
   useEffect(() => {
-    console.log(response)
+    console.log(response);
     if (response?.type === "success") {
-      console.log(response.authentication.accessToken)
-      signInWithGoogle(response.authentication.accessToken).then((_) => setLoading(false))
-    } else{
-      setLoading(false)
+      console.log(response.authentication.accessToken);
+      signInWithGoogle(response.authentication.accessToken).then((_) =>
+        setLoading(false)
+      );
+    } else {
+      setLoading(false);
     }
   }, [response]);
 
@@ -69,7 +78,7 @@ const RegisterFirstStepView = ({ navigation }) => {
 
   async function handleGoogleRegister() {
     setLoading(true);
-    await promptAsync()
+    await promptAsync();
   }
 
   function showPrivacyPolicy() {
@@ -81,128 +90,136 @@ const RegisterFirstStepView = ({ navigation }) => {
   }
 
   return (
-    <Background
-      fromColor={"rgb(185, 213, 123)"}
-      toColor={"rgb(254,254,253)"}
-      styles={{ flex: 1, alignItems: "center" }}
-    >
-      <ScrollView
-        style={{ width: "100%" }}
-        contentContainerStyle={{ alignItems: "center" }}
+    <Provider>
+      <Background
+        fromColor={"rgb(185, 213, 123)"}
+        toColor={"rgb(254,254,253)"}
+        styles={{ flex: 1, alignItems: "center" }}
       >
-        <Text style={styles.greetings}>Hey there,</Text>
-        <Text
-          onPress={() => navigation.navigate({ name: "Home", merge: true })}
-          style={styles.createAnAccount}
+        <ScrollView
+          style={{ width: "100%" }}
+          contentContainerStyle={{ alignItems: "center" }}
         >
-          Create an Account
-        </Text>
-        <Input
-          value={email}
-          placeholder="Email"
-          onChangeText={(email) => setEmail(email)}
-          width={"80%"}
-          height={55}
-          fontSize={14}
-          left={<TextInput.Icon icon="email" />}
-          backgroundColor={"#FFFFFF"}
-        />
-        <Input
-          value={password}
-          placeholder="Password"
-          onChangeText={(password) => setPassword(password)}
-          width={"80%"}
-          height={55}
-          fontSize={14}
-          backgroundColor={"#FFFFFF"}
-          secureTextEntry={!passwordIsVisible}
-          right={
-            <TextInput.Icon
+          <Text style={styles.greetings}>Hey there,</Text>
+          <Text
+            onPress={() => navigation.navigate({ name: "Home", merge: true })}
+            style={styles.createAnAccount}
+          >
+            Create an Account
+          </Text>
+          <Input
+            value={email}
+            placeholder="Email"
+            onChangeText={(email) => setEmail(email)}
+            width={"80%"}
+            height={55}
+            fontSize={14}
+            left={<TextInput.Icon icon="email" />}
+            backgroundColor={"#FFFFFF"}
+          />
+          <Input
+            value={password}
+            placeholder="Password"
+            onChangeText={(password) => setPassword(password)}
+            width={"80%"}
+            height={55}
+            fontSize={14}
+            backgroundColor={"#FFFFFF"}
+            secureTextEntry={!passwordIsVisible}
+            right={
+              <TextInput.Icon
+                onPress={() => {
+                  setPasswordIsVisible(!passwordIsVisible);
+                }}
+                icon={passwordIsVisible ? "eye-off" : "eye"}
+              />
+            }
+            left={<TextInput.Icon icon="lock" />}
+          />
+          <Input
+            value={passwordRepeat}
+            placeholder="Repeat password"
+            onChangeText={(passwordRepeat) => setPasswordRepeat(passwordRepeat)}
+            width={"80%"}
+            height={55}
+            fontSize={14}
+            backgroundColor={"#FFFFFF"}
+            secureTextEntry={!passwordRepeatIsVisible}
+            right={
+              <TextInput.Icon
+                onPress={() => {
+                  setPasswordRepeatIsVisible(!passwordRepeatIsVisible);
+                }}
+                icon={passwordRepeatIsVisible ? "eye-off" : "eye"}
+              />
+            }
+            left={<TextInput.Icon icon="lock" />}
+          />
+          <View style={styles.checkboxPolicies}>
+            <Checkbox
+              color="black"
+              status={checked ? "checked" : "unchecked"}
               onPress={() => {
-                setPasswordIsVisible(!passwordIsVisible);
+                setChecked(!checked);
               }}
-              icon={passwordIsVisible ? "eye-off" : "eye"}
             />
-          }
-          left={<TextInput.Icon icon="lock" />}
-        />
-        <Input
-          value={passwordRepeat}
-          placeholder="Repeat password"
-          onChangeText={(passwordRepeat) => setPasswordRepeat(passwordRepeat)}
-          width={"80%"}
-          height={55}
-          fontSize={14}
-          backgroundColor={"#FFFFFF"}
-          secureTextEntry={!passwordRepeatIsVisible}
-          right={
-            <TextInput.Icon
-              onPress={() => {
-                setPasswordRepeatIsVisible(!passwordRepeatIsVisible);
-              }}
-              icon={passwordRepeatIsVisible ? "eye-off" : "eye"}
-            />
-          }
-          left={<TextInput.Icon icon="lock" />}
-        />
-        <View style={styles.checkboxPolicies}>
-          <Checkbox
-            color="black"
-            status={checked ? "checked" : "unchecked"}
+            <Text style={styles.policiesText}>
+              By continuing you accept our{" "}
+              <Text
+                style={styles.policies}
+                onPress={() => {
+                  showPrivacyPolicy();
+                }}
+              >
+                Privacy Policy
+              </Text>{" "}
+              and
+            </Text>
+          </View>
+          <Text
+            style={styles.policies}
             onPress={() => {
-              setChecked(!checked);
+              showTermsOfUse();
             }}
-          />
-          <Text style={styles.policiesText}>
-            By continuing you accept our{" "}
-            <Text
-              style={styles.policies}
-              onPress={() => {
-                showPrivacyPolicy();
-              }}
-            >
-              Privacy Policy
-            </Text>{" "}
-            and
+          >
+            Terms of Use
           </Text>
-        </View>
-        <Text
-          style={styles.policies}
-          onPress={() => {
-            showTermsOfUse();
-          }}
-        >
-          Terms of Use
-        </Text>
-        <Button
-          textColor={WHITE}
-          fontSize={16}
-          style={styles.registerButton}
-          onPress={() => handleRegister()}
-        >
-          Register
-        </Button>
-        <Text style={styles.orText}>Or</Text>
-        <TouchableHighlight
-          underlayColor={"transparent"}
-          onPress={handleGoogleRegister}
-        >
-          <Image
-            style={styles.googleImage}
-            source={require("../../../assets/googleIcon.png")}
-          />
-        </TouchableHighlight>
-        <View style={styles.alreadyHaveAccountContainer}>
-          <Text style={styles.alreadyHaveAccountText}>
-            Already have an account?{" "}
-            <Text onPress={() => handleLogIn()} style={styles.logIn}>
-              Login
-            </Text>{" "}
-          </Text>
-        </View>
-      </ScrollView>
-      {loading && <LoadingModal text={"Registering your profile"}/>}
-    </Background>
+          <Button
+            textColor={WHITE}
+            fontSize={16}
+            style={styles.registerButton}
+            onPress={() => handleRegister()}
+          >
+            Register
+          </Button>
+          <Text style={styles.orText}>Or</Text>
+          <TouchableHighlight
+            underlayColor={"transparent"}
+            onPress={handleGoogleRegister}
+          >
+            <Image
+              style={styles.googleImage}
+              source={require("../../../assets/googleIcon.png")}
+            />
+          </TouchableHighlight>
+          <View style={styles.alreadyHaveAccountContainer}>
+            <Text style={styles.alreadyHaveAccountText}>
+              Already have an account?{" "}
+              <Text onPress={() => handleLogIn()} style={styles.logIn}>
+                Login
+              </Text>{" "}
+            </Text>
+          </View>
+          <ErrorModal
+            modalIsVisible={errorModalIsVisible}
+            setModalIsVisible={setErrorModalIsVisible}
+            errorDescription={errorDescription}
+          ></ErrorModal>
+        </ScrollView>
+
+        {loading && <LoadingModal text={"Registering your profile"} />}
+      </Background>
+    </Provider>
   );
 };
 
