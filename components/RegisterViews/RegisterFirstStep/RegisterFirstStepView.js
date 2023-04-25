@@ -41,9 +41,9 @@ const RegisterFirstStepView = ({ navigation }) => {
   });
 
   async function handleRegister() {
-    //TODO: Change alerts for error modals with error interpretation
     if (!email || !password || !passwordRepeat) {
-      alert("You need to complete all fields!");
+      setErrorModalIsVisible(true);
+      setErrorDescription("You need to complete all fields!");
     } else if (password !== passwordRepeat) {
       setErrorModalIsVisible(true);
       setErrorDescription("Passwords don't match!");
@@ -55,7 +55,10 @@ const RegisterFirstStepView = ({ navigation }) => {
         setLoading(false);
       } catch (e) {
         setLoading(false);
-        alert(e.description);
+        setErrorModalIsVisible(true);
+        setErrorDescription(
+          "An unexpected error has occured while registering. Please try again later!"
+        );
       }
     }
   }
