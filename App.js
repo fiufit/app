@@ -1,6 +1,6 @@
 import * as SplashScreen from "expo-splash-screen";
 
-import { Lato_400Regular, Lato_700Bold } from "@expo-google-fonts/lato";
+import { Lato_400Regular, Lato_700Bold, Lato_300Light } from "@expo-google-fonts/lato";
 import { Poppins_500Medium, Poppins_700Bold, Poppins_400Regular } from "@expo-google-fonts/poppins";
 
 import { RecoilRoot } from "recoil";
@@ -18,6 +18,7 @@ const App = () => {
     Poppins_400Regular,
     Lato_700Bold,
     Lato_400Regular,
+    Lato_300Light
   });
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
