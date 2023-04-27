@@ -2,7 +2,6 @@ import { Text, View } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
 import Profile from "../Profile";
-import RegisterFirstStepView from "../RegisterViews/RegisterFirstStep/RegisterFirstStepView";
 import RegisterSecondStepView from "../RegisterViews/RegisterSecondStep/RegisterSecondStepView";
 import TabBar from "../TabBar";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -13,6 +12,7 @@ import {useRecoilState} from "recoil";
 import {userDataState} from "../../atoms";
 import EditProfile from "../Profile/EditProfile/editProfile";
 import Trainings from "../Trainings/trainings";
+import SingleTraining from "../Trainings/SingleTraining/singleTraining";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,6 +34,8 @@ const Routes = () => {
         />
         <Tab.Screen name="Home" component={InDevelopment} />
         <Tab.Screen name="Trainings" component={Trainings} />
+        <Tab.Screen name="Single Training" component={SingleTraining} />
+        <Tab.Screen name="Add Training" component={SingleTraining} />
         <Tab.Screen name="Messages" component={InDevelopment} />
         <Tab.Screen name="Profile" component={Profile} />
         <Tab.Screen name={"Profile Settings"} component={InDevelopment} />
@@ -42,9 +44,8 @@ const Routes = () => {
     </NavigationContainer>
   );
 };
-const InDevelopment = ({ navigation }) => {
+const InDevelopment = ({ navigation}) => {
   const [userData, setUserData] = useRecoilState(userDataState);
-
 
   return (
     <View style={styles.container}>
