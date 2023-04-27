@@ -13,6 +13,7 @@ import {userDataState} from "../../atoms";
 import EditProfile from "../Profile/EditProfile/editProfile";
 import Trainings from "../Trainings/trainings";
 import SingleTraining from "../Trainings/SingleTraining/singleTraining";
+import NewTraining from "../Trainings/NewTraining/newTraining";
 
 const Tab = createBottomTabNavigator();
 
@@ -35,7 +36,7 @@ const Routes = () => {
         <Tab.Screen name="Home" component={InDevelopment} />
         <Tab.Screen name="Trainings" component={Trainings} />
         <Tab.Screen name="Single Training" component={SingleTraining} />
-        <Tab.Screen name="Add Training" component={SingleTraining} />
+        <Tab.Screen name="New Training" component={NewTraining} />
         <Tab.Screen name="Messages" component={InDevelopment} />
         <Tab.Screen name="Profile" component={Profile} />
         <Tab.Screen name={"Profile Settings"} component={InDevelopment} />

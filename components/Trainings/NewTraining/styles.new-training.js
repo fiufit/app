@@ -74,5 +74,20 @@ export const styles = StyleSheet.create({
     exercisesContainer: {
         display: 'flex',
         gap: 10,
+    },
+    createButton: {
+        height: "100%",
+        borderRadius: 10,
+        width: '80%',
+    },
+    buttonContainer: {
+        position: "absolute",
+        width: "100%",
+        height: 40,
+        bottom: 40,
+        display: 'flex',
+        justifyContent: "center",
+        alignItems: "center"
+
     }
 })

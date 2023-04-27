@@ -7,6 +7,8 @@ import SearchIcon from '../../assets/images/general/searchIcon.svg'
 import FilterIcon from '../../assets/images/general/filterIcon.svg'
 import RecommendedTraining from "./RecommendedTraining/recommendedTraining";
 import FavouriteTrainings from "./FavouriteTrainings/favouriteTrainings";
+import SearchBar from "../Shared/SearchBar/searchBar";
+import {useState} from "react";
 const Trainings = ({navigation}) => {
     const favouriteTrainings = [
         {
@@ -214,21 +216,35 @@ const Trainings = ({navigation}) => {
         }
     ]
 
+    const [showInfo, setShowInfo] = useState(true);
+
     const handleTrainingPress = (training) => {
         navigation.navigate({name: 'Single Training', merge: true, params: {training}})
     }
 
     const handleAddTraining = () => {
-        navigation.navigate({name: 'Add Training', merge: true, params: {training: {add: true}}})
+        navigation.navigate({name: 'New Training', merge: true})
     }
+
+    const onSearch = (value) => {
+
+    }
+
 
     return (
         <View style={styles.container}>
             <View style={styles.inputAndButtonContainer}>
-                <Input placeholder={"Search"} height={48} width={"82%"} marginTop={0} backgroundColor={WHITE}
-                       left={<SearchIcon/>}
-                       right={<FilterIcon/>}
-                        fontFamily={"Lato_400Regular"} fontSize={14}
+                <SearchBar placeholder={"Search"}
+                           height={48}
+                           width={"82%"}
+                           marginTop={0}
+                           backgroundColor={WHITE}
+                           left={<SearchIcon/>}
+                           right={<FilterIcon/>}
+                           fontFamily={"Lato_400Regular"}
+                           fontSize={14}
+                           onSearch={(value) => onSearch(value)}
+                           filter
                 />
                 <Button style={styles.addButton}
                         buttonColor={GREEN}
