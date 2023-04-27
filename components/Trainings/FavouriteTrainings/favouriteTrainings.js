@@ -1,47 +1,20 @@
-import {View, Text, TouchableOpacity, ScrollView, Image} from "react-native";
+import {View, Text, TouchableOpacity, ScrollView, Image, Pressable} from "react-native";
 import {styles} from "./style.favourite-trainings";
 import trainingImage from "../../../assets/images/examples/woman.png";
 import {useEffect, useState} from "react";
 
 
-const FavouriteTrainings = () => {
+const FavouriteTrainings = ({favourite, recommended, onTrainingPress}) => {
     const [trainingsToShow, setTrainingsToShow] = useState([]);
-    const favouriteTrainings = [
-        {
-            title: 'Belly fat burner',
-            duration: '10 min',
-            difficulty: 'Begineer',
-            id: 1
-        },
-        {
-            title: 'Belly fat burner',
-            duration: '10 min',
-            difficulty: 'Begineer',
-            id: 2
-        },
-        {
-            title: 'Belly fat burner',
-            duration: '10 min',
-            difficulty: 'Begineer',
-            id: 3
-        },
-        {
-            title: 'Belly fat burner',
-            duration: '10 min',
-            difficulty: 'Begineer',
-            id: 4
-        },
-        {
-            title: 'Belly fat burner',
-            duration: '10 min',
-            difficulty: 'Begineer',
-            id: 5
-        }
-    ];
+
     useEffect(() => {
         //TODO fetch trainings from db and if there are not favourites show recommended
-        setTrainingsToShow(favouriteTrainings)
-    }, [])
+        if(favourite.length){
+            setTrainingsToShow(favourite)
+        } else{
+            setTrainingsToShow(recommended)
+        }
+    }, [favourite, recommended])
 
 
     const transformTrainings = (trainings) => {
@@ -64,10 +37,10 @@ const FavouriteTrainings = () => {
         <View style={styles.container}>
             <View style={styles.textContainer}>
                 <Text style={styles.title}>
-                    {favouriteTrainings.length ? 'Favourite Trainings' : 'Add these to favourites'}
+                    {favourite.length ? 'Favourite Trainings' : 'Add these to favourites'}
                 </Text>
                 <TouchableOpacity>
-                    <Text style={styles.seeAll}>{favouriteTrainings.length ? 'See all' : ''}</Text>
+                    <Text style={styles.seeAll}>{favourite.length ? 'See all' : ''}</Text>
                 </TouchableOpacity>
             </View>
 
@@ -75,16 +48,16 @@ const FavouriteTrainings = () => {
                 {transformTrainings(trainingsToShow).map((trainingColumn, idx) =>
                     <View style={styles.cardColumn} key={idx}>
                         {trainingColumn.map(training =>
-                            <View style={styles.trainingCard} key={training.id}>
+                            <TouchableOpacity style={styles.trainingCard} key={training.id} onPress={() => onTrainingPress(training)}>
                                 <Image source={trainingImage} style={styles.trainingImage}/>
                                 <View style={styles.infoContainer}>
-                                    <Text style={styles.trainingTitle}>{training.title}</Text>
+                                    <Text style={styles.trainingTitle} numberOfLines={1}>{training.title}</Text>
                                     <View style={styles.detailsContainer}>
                                         <Text style={styles.trainingDetail}>{training.duration}</Text>
                                         <Text style={styles.trainingDetail}>{training.difficulty}</Text>
                                     </View>
                                 </View>
-                            </View>
+                            </TouchableOpacity>
                         )}
                     </View>
                 )}

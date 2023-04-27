@@ -58,7 +58,8 @@ export const styles = StyleSheet.create({
     trainingTitle: {
         fontSize: 14,
         fontFamily: 'Lato_700Bold',
-        color: '#192126'
+        color: '#192126',
+        width: 100
     },
     trainingDetail: {
         backgroundColor: '#F1F1F1',
