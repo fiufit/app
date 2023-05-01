@@ -2,12 +2,10 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   logoImage: {
-    width: 162,
-    height: 102,
     marginTop: 70,
   },
   completeProfileText: {
-    marginTop: 50,
+    marginTop: 30,
     fontSize: 22,
     fontFamily: "Poppins_700Bold",
   },
