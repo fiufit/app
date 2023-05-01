@@ -7,22 +7,38 @@ import {useRecoilValue} from "recoil";
 import {userDataState} from "../../../atoms";
 import {DEFAULT_PROFILE_PICTURE} from "../../../firebase";
 
-const DataSection = ({onEditProfilePress}) => {
+const DataSection = ({onEditProfilePress, other, otherUserData}) => {
     const userData = useRecoilValue(userDataState);
+    const getImageToShow = () => {
+        if (other){
+            return otherUserData?.profilePictureUrl ?? DEFAULT_PROFILE_PICTURE;
+        } else {
+            return  userData?.profilePictureUrl ?? DEFAULT_PROFILE_PICTURE
+        }
+    }
+
+    const handleFollow = () => {
+
+    }
 
     return(
         <View style={styles.profileDataSection}>
-            <Image source={{uri: userData.profilePictureUrl ?? DEFAULT_PROFILE_PICTURE}} style={styles.profilePicture}/>
+            <Image source={{uri: getImageToShow()}} style={styles.profilePicture}/>
             <View style={styles.nameAndFollowersContainer}>
                 <View style={styles.upperSection}>
-                    <Text style={styles.name}>{userData.DisplayName}</Text>
-                    {userData.IsVerifiedTrainer && <VerifiedIcon color={DARK_BLUE}/>}
+                    <Text style={styles.name}>{other ? otherUserData.DisplayName : userData.DisplayName}</Text>
+                    {!other && userData.IsVerifiedTrainer && <VerifiedIcon color={DARK_BLUE}/>}
+                    {other && otherUserData.IsVerifiedTrainer && <VerifiedIcon color={DARK_BLUE}/>}
                 </View>
                 <View style={styles.lowerSection}>
                     <Text style={styles.followers}>127 followers</Text>
-                    <TouchableOpacity  style={styles.editProfileButton} onPress={onEditProfilePress}>
+                    {!other && <TouchableOpacity style={styles.editProfileButton} onPress={onEditProfilePress}>
                         <Text style={styles.editProfileText}>Edit Profile</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity>}
+
+                    {other && <TouchableOpacity style={styles.editProfileButton} onPress={handleFollow}>
+                        <Text style={styles.editProfileText}>Follow</Text>
+                    </TouchableOpacity>}
                 </View>
             </View>
         </View>
