@@ -30,7 +30,7 @@ const SearchBar = ({
 
     const handlePress = () => {
         if(redirect){
-            navigation.navigate({name: 'Search', merge: true, params: {
+            navigation.navigate({name: 'Search View', merge: true, params: {
                 filter,
                 searchForUsers,
                 searchForTrainings
