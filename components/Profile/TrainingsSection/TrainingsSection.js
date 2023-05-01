@@ -1,7 +1,7 @@
-import {Image, Text, TouchableOpacity, View} from "react-native";
+import {Text, TouchableOpacity, View} from "react-native";
 import {styles} from "./styles.trainings-section";
 import trainingImage from "../../../assets/images/examples/training.png";
-import ClockIcon from "../../../assets/images/profile/clockIcon.svg"
+import TrainingCard from "../../Shared/TrainingCard/trainingCard";
 
 const TrainingsSection = ({athleteProfileSelected}) => {
     return <View style={styles.trainingsSection}>
@@ -11,14 +11,7 @@ const TrainingsSection = ({athleteProfileSelected}) => {
                 <Text style={styles.seeAll}>See All</Text>
             </TouchableOpacity>
         </View>
-        <View style={styles.trainingCard}>
-            <Image source={trainingImage} style={styles.trainingImage}/>
-            <Text style={styles.trainingTitle}>Hand Training</Text>
-            <View style={styles.trainingDurationContainer}>
-                <ClockIcon color={"#000000"}/>
-                <Text style={styles.trainingDurationText}>40 min</Text>
-            </View>
-        </View>
+        <TrainingCard title={'Hand Training'} duration={40} imageSource={trainingImage}/>
     </View>;
 }
 
