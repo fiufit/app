@@ -1,21 +1,22 @@
-import { Image, Pressable, ScrollView, Text } from "react-native";
 import { List, TextInput, TouchableRipple } from "react-native-paper";
-import { React, useState } from "react";
+import { Pressable, ScrollView, Text } from "react-native";
 
+import AppLogoIcon from "../../../assets/appLogo.svg";
+import AuthenticationController from "../../../utils/controllers/AuthenticationController";
 import Background from "../../Background/background";
 import Button from "../../Shared/Button/button";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Input from "../../Shared/Input/input";
-import { WHITE } from "../../../utils/colors";
-import { styles } from "./styles.RegisterSecondStepView";
-import {useRecoilState, useSetRecoilState} from "recoil";
-import {userDataState} from "../../../atoms";
-import AuthenticationController from "../../../utils/controllers/AuthenticationController";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
-import LogoutIcon from "../../../assets/images/general/logoutIcon.svg"
-import {signOutFromApp} from "../../../firebase";
+import LogoutIcon from "../../../assets/images/general/logoutIcon.svg";
+import { WHITE } from "../../../utils/colors";
+import { signOutFromApp } from "../../../firebase";
+import { styles } from "./styles.RegisterSecondStepView";
+import { useRecoilState } from "recoil";
+import { useState } from "react";
+import { userDataState } from "../../../atoms";
 
-const RegisterSecondStepView = ({user}) => {
+const RegisterSecondStepView = ({ user }) => {
   const [expandedList, setExpandedList] = useState(false);
   const [genderSelected, setGenderSelected] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
@@ -40,30 +41,37 @@ const RegisterSecondStepView = ({user}) => {
   };
 
   const canSubmit = () => {
-    return nickName && displayName && genderSelected && dateOfBirth && height && weight && mainLocation && interests;
-  }
+    return (
+      nickName &&
+      displayName &&
+      genderSelected &&
+      dateOfBirth &&
+      height &&
+      weight &&
+      mainLocation &&
+      interests
+    );
+  };
 
   async function handleNext() {
-    if(canSubmit()){
+    if (canSubmit()) {
       const numericWeight = Number(weight);
       const numericHeight = Number(height);
-      if(Number.isInteger(numericHeight) && Number.isInteger(numericWeight)){
-        try{
+      if (Number.isInteger(numericHeight) && Number.isInteger(numericWeight)) {
+        try {
           setLoading(true);
-          await user.reload()
-          await user.getIdToken(true)
+          await user.reload();
+          await user.getIdToken(true);
           const controller = new AuthenticationController(user);
-          const {data} = await controller.finishRegister({
-            "nickname": nickName,
-            "display_name": displayName,
-            "is_male": genderSelected === 'Male',
-            "birth_date": dateOfBirth,
-            "height": numericHeight,
-            "weight": numericWeight,
-            "main_location": mainLocation,
-            "interests": [
-              interests
-            ]
+          const { data } = await controller.finishRegister({
+            nickname: nickName,
+            display_name: displayName,
+            is_male: genderSelected === "Male",
+            birth_date: dateOfBirth,
+            height: numericHeight,
+            weight: numericWeight,
+            main_location: mainLocation,
+            interests: [interests],
           });
           console.log(data);
           setUserData(data.user);
@@ -73,13 +81,12 @@ const RegisterSecondStepView = ({user}) => {
           setLoading(false);
         }
       } else {
-       alert("Width and height must be integers");
+        alert("Width and height must be integers");
       }
     } else {
       alert("You need to complete all fields!");
     }
   }
-
 
   return (
     <Background
@@ -91,11 +98,16 @@ const RegisterSecondStepView = ({user}) => {
         style={{ width: "100%", position: "relative" }}
         contentContainerStyle={{ alignItems: "center" }}
       >
-        <LogoutIcon position={"absolute"} right={20} top={50} opacity={1} width={30} height={25} onPress={() => signOutFromApp(() => setUserData({}))}/>
-        <Image
-          style={styles.logoImage}
-          source={require("../../../assets/appLogo.png")}
+        <LogoutIcon
+          position={"absolute"}
+          right={20}
+          top={50}
+          opacity={1}
+          width={30}
+          height={25}
+          onPress={() => signOutFromApp(() => setUserData({}))}
         />
+        <AppLogoIcon style={styles.logoImage} />
         <Text style={styles.completeProfileText}>
           Let's complete your profile
         </Text>
@@ -227,7 +239,7 @@ const RegisterSecondStepView = ({user}) => {
           Next ＞
         </Button>
       </ScrollView>
-      {loading && <LoadingModal text={"Setting up your profile"}/>}
+      {loading && <LoadingModal text={"Setting up your profile"} />}
     </Background>
   );
 };
