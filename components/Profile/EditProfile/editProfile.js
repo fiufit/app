@@ -1,7 +1,7 @@
 import { DARK_BLUE, WHITE } from "../../../utils/colors";
 import { DEFAULT_PROFILE_PICTURE, auth, uploadImage } from "../../../firebase";
 import { Image, Text, TouchableHighlight, View } from "react-native";
-import { Provider, TextInput } from "react-native-paper";
+import { TextInput } from "react-native-paper";
 
 import Back from "../../Shared/Back/back";
 import Button from "../../Shared/Button/button";
@@ -155,106 +155,104 @@ const EditProfile = ({ navigation }) => {
   };
 
   return (
-    <Provider>
-      <View style={styles.container}>
-        <Back
-          onPress={() => navigation.navigate({ name: "Profile", merge: true })}
+    <View style={styles.container}>
+      <Back
+        onPress={() => navigation.navigate({ name: "Profile", merge: true })}
+      />
+      <Text style={styles.title}>Edit Profile</Text>
+      <View style={styles.profilePictureContainer}>
+        <Image
+          style={styles.profilePicture}
+          source={{
+            uri: userData.profilePictureUrl ?? DEFAULT_PROFILE_PICTURE,
+          }}
         />
-        <Text style={styles.title}>Edit Profile</Text>
-        <View style={styles.profilePictureContainer}>
-          <Image
-            style={styles.profilePicture}
-            source={{
-              uri: userData.profilePictureUrl ?? DEFAULT_PROFILE_PICTURE,
-            }}
-          />
-          <EditIcon
-            style={styles.editIcon}
-            height={25}
-            width={25}
-            onPress={() => setShowImageModal(true)}
-          />
-        </View>
-        <Text
-          style={styles.name}
-          onPress={() => setEditOptions(nameOptions.displayName)}
-        >
-          {displayName}
-        </Text>
-        <Text
-          style={styles.nickName}
-          onPress={() => setEditOptions(nameOptions.nickName)}
-        >
-          @{nickName}
-        </Text>
-        <View style={styles.data}>
-          {inputs.map((input, index) => (
-            <TouchableHighlight
-              key={index}
-              onPress={
-                input.onPress
-                  ? input.onPress
-                  : () => setEditOptions(input.editOptions)
-              }
-              underlayColor={"transparent"}
-            >
-              <Input
-                editable={false}
-                height={"30%"}
-                value={input.displayValue}
-                color={"black"}
-                left={input.icon}
-                right={input.rightIcon}
-              />
-            </TouchableHighlight>
-          ))}
-        </View>
-        <Button
-          buttonColor={DARK_BLUE}
-          style={styles.button}
-          textColor={WHITE}
-          onPress={handleUpdate}
-        >
-          Update
-        </Button>
-        {showPicker && (
-          <DateTimePicker
-            mode="date"
-            display="spinner"
-            value={dateOfBirth}
-            onChange={onDateChange}
-          />
-        )}
-        {editOptions.title && (
-          <EditModal
-            title={editOptions.title}
-            editIcon={editOptions.icon}
-            inputMode={editOptions?.inputMode}
-            editValue={editOptions.value}
-            buttonText={"Confirm"}
-            setEditValue={editOptions.setEditValue}
-            editPlaceHolder={editOptions.placeholder}
-            onButtonPress={() => setEditOptions({})}
-            setErrorModalIsVisible={setErrorModalIsVisible}
-            setErrorDescription={setErrorDescription}
-          />
-        )}
-        {showImageModal && (
-          <ImageModal
-            onClose={() => setShowImageModal(false)}
-            onUpload={(image) => handleImageUpdate(image)}
-          />
-        )}
-        {loading && <LoadingModal text={"Updating your profile"} />}
-
-        <ErrorModal
-          modalIsVisible={errorModalIsVisible}
-          setModalIsVisible={setErrorModalIsVisible}
-          errorTitle="Oooops!"
-          errorDescription={errorDescription}
-        ></ErrorModal>
+        <EditIcon
+          style={styles.editIcon}
+          height={25}
+          width={25}
+          onPress={() => setShowImageModal(true)}
+        />
       </View>
-    </Provider>
+      <Text
+        style={styles.name}
+        onPress={() => setEditOptions(nameOptions.displayName)}
+      >
+        {displayName}
+      </Text>
+      <Text
+        style={styles.nickName}
+        onPress={() => setEditOptions(nameOptions.nickName)}
+      >
+        @{nickName}
+      </Text>
+      <View style={styles.data}>
+        {inputs.map((input, index) => (
+          <TouchableHighlight
+            key={index}
+            onPress={
+              input.onPress
+                ? input.onPress
+                : () => setEditOptions(input.editOptions)
+            }
+            underlayColor={"transparent"}
+          >
+            <Input
+              editable={false}
+              height={"30%"}
+              value={input.displayValue}
+              color={"black"}
+              left={input.icon}
+              right={input.rightIcon}
+            />
+          </TouchableHighlight>
+        ))}
+      </View>
+      <Button
+        buttonColor={DARK_BLUE}
+        style={styles.button}
+        textColor={WHITE}
+        onPress={handleUpdate}
+      >
+        Update
+      </Button>
+      {showPicker && (
+        <DateTimePicker
+          mode="date"
+          display="spinner"
+          value={dateOfBirth}
+          onChange={onDateChange}
+        />
+      )}
+      {editOptions.title && (
+        <EditModal
+          title={editOptions.title}
+          editIcon={editOptions.icon}
+          inputMode={editOptions?.inputMode}
+          editValue={editOptions.value}
+          buttonText={"Confirm"}
+          setEditValue={editOptions.setEditValue}
+          editPlaceHolder={editOptions.placeholder}
+          onButtonPress={() => setEditOptions({})}
+          setErrorModalIsVisible={setErrorModalIsVisible}
+          setErrorDescription={setErrorDescription}
+        />
+      )}
+      {showImageModal && (
+        <ImageModal
+          onClose={() => setShowImageModal(false)}
+          onUpload={(image) => handleImageUpdate(image)}
+        />
+      )}
+      {loading && <LoadingModal text={"Updating your profile"} />}
+
+      <ErrorModal
+        modalIsVisible={errorModalIsVisible}
+        setModalIsVisible={setErrorModalIsVisible}
+        errorTitle="Oooops!"
+        errorDescription={errorDescription}
+      ></ErrorModal>
+    </View>
   );
 };
 

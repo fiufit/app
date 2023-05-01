@@ -1,7 +1,7 @@
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
 
-import { Checkbox, Provider, TextInput } from "react-native-paper";
+import { Checkbox, TextInput } from "react-native-paper";
 import {
   Image,
   ScrollView,
@@ -93,137 +93,135 @@ const RegisterFirstStepView = ({ navigation }) => {
   }
 
   return (
-    <Provider>
-      <Background
-        fromColor={"rgb(185, 213, 123)"}
-        toColor={"rgb(254,254,253)"}
-        styles={{ flex: 1, alignItems: "center" }}
+    <Background
+      fromColor={"rgb(185, 213, 123)"}
+      toColor={"rgb(254,254,253)"}
+      styles={{ flex: 1, alignItems: "center" }}
+    >
+      <ScrollView
+        style={{ width: "100%" }}
+        contentContainerStyle={{ alignItems: "center" }}
       >
-        <ScrollView
-          style={{ width: "100%" }}
-          contentContainerStyle={{ alignItems: "center" }}
+        <Text style={styles.greetings}>Hey there,</Text>
+        <Text
+          onPress={() => navigation.navigate({ name: "Home", merge: true })}
+          style={styles.createAnAccount}
         >
-          <Text style={styles.greetings}>Hey there,</Text>
-          <Text
-            onPress={() => navigation.navigate({ name: "Home", merge: true })}
-            style={styles.createAnAccount}
-          >
-            Create an Account
-          </Text>
-          <Input
-            value={email}
-            placeholder="Email"
-            onChangeText={(email) => setEmail(email)}
-            width={"80%"}
-            height={55}
-            fontSize={14}
-            left={<TextInput.Icon icon="email" />}
-            backgroundColor={"#FFFFFF"}
-          />
-          <Input
-            value={password}
-            placeholder="Password"
-            onChangeText={(password) => setPassword(password)}
-            width={"80%"}
-            height={55}
-            fontSize={14}
-            backgroundColor={"#FFFFFF"}
-            secureTextEntry={!passwordIsVisible}
-            right={
-              <TextInput.Icon
-                onPress={() => {
-                  setPasswordIsVisible(!passwordIsVisible);
-                }}
-                icon={passwordIsVisible ? "eye-off" : "eye"}
-              />
-            }
-            left={<TextInput.Icon icon="lock" />}
-          />
-          <Input
-            value={passwordRepeat}
-            placeholder="Repeat password"
-            onChangeText={(passwordRepeat) => setPasswordRepeat(passwordRepeat)}
-            width={"80%"}
-            height={55}
-            fontSize={14}
-            backgroundColor={"#FFFFFF"}
-            secureTextEntry={!passwordRepeatIsVisible}
-            right={
-              <TextInput.Icon
-                onPress={() => {
-                  setPasswordRepeatIsVisible(!passwordRepeatIsVisible);
-                }}
-                icon={passwordRepeatIsVisible ? "eye-off" : "eye"}
-              />
-            }
-            left={<TextInput.Icon icon="lock" />}
-          />
-          <View style={styles.checkboxPolicies}>
-            <Checkbox
-              color="black"
-              status={checked ? "checked" : "unchecked"}
+          Create an Account
+        </Text>
+        <Input
+          value={email}
+          placeholder="Email"
+          onChangeText={(email) => setEmail(email)}
+          width={"80%"}
+          height={55}
+          fontSize={14}
+          left={<TextInput.Icon icon="email" />}
+          backgroundColor={"#FFFFFF"}
+        />
+        <Input
+          value={password}
+          placeholder="Password"
+          onChangeText={(password) => setPassword(password)}
+          width={"80%"}
+          height={55}
+          fontSize={14}
+          backgroundColor={"#FFFFFF"}
+          secureTextEntry={!passwordIsVisible}
+          right={
+            <TextInput.Icon
               onPress={() => {
-                setChecked(!checked);
+                setPasswordIsVisible(!passwordIsVisible);
               }}
+              icon={passwordIsVisible ? "eye-off" : "eye"}
             />
-            <Text style={styles.policiesText}>
-              By continuing you accept our{" "}
-              <Text
-                style={styles.policies}
-                onPress={() => {
-                  showPrivacyPolicy();
-                }}
-              >
-                Privacy Policy
-              </Text>{" "}
-              and
-            </Text>
-          </View>
-          <Text
-            style={styles.policies}
+          }
+          left={<TextInput.Icon icon="lock" />}
+        />
+        <Input
+          value={passwordRepeat}
+          placeholder="Repeat password"
+          onChangeText={(passwordRepeat) => setPasswordRepeat(passwordRepeat)}
+          width={"80%"}
+          height={55}
+          fontSize={14}
+          backgroundColor={"#FFFFFF"}
+          secureTextEntry={!passwordRepeatIsVisible}
+          right={
+            <TextInput.Icon
+              onPress={() => {
+                setPasswordRepeatIsVisible(!passwordRepeatIsVisible);
+              }}
+              icon={passwordRepeatIsVisible ? "eye-off" : "eye"}
+            />
+          }
+          left={<TextInput.Icon icon="lock" />}
+        />
+        <View style={styles.checkboxPolicies}>
+          <Checkbox
+            color="black"
+            status={checked ? "checked" : "unchecked"}
             onPress={() => {
-              showTermsOfUse();
+              setChecked(!checked);
             }}
-          >
-            Terms of Use
+          />
+          <Text style={styles.policiesText}>
+            By continuing you accept our{" "}
+            <Text
+              style={styles.policies}
+              onPress={() => {
+                showPrivacyPolicy();
+              }}
+            >
+              Privacy Policy
+            </Text>{" "}
+            and
           </Text>
-          <Button
-            textColor={WHITE}
-            fontSize={16}
-            style={styles.registerButton}
-            onPress={() => handleRegister()}
-          >
-            Register
-          </Button>
-          <Text style={styles.orText}>Or</Text>
-          <TouchableHighlight
-            underlayColor={"transparent"}
-            onPress={handleGoogleRegister}
-          >
-            <Image
-              style={styles.googleImage}
-              source={require("../../../assets/googleIcon.png")}
-            />
-          </TouchableHighlight>
-          <View style={styles.alreadyHaveAccountContainer}>
-            <Text style={styles.alreadyHaveAccountText}>
-              Already have an account?{" "}
-              <Text onPress={() => handleLogIn()} style={styles.logIn}>
-                Login
-              </Text>{" "}
-            </Text>
-          </View>
-          <ErrorModal
-            modalIsVisible={errorModalIsVisible}
-            setModalIsVisible={setErrorModalIsVisible}
-            errorTitle="Oooops!"
-            errorDescription={errorDescription}
-          ></ErrorModal>
-        </ScrollView>
+        </View>
+        <Text
+          style={styles.policies}
+          onPress={() => {
+            showTermsOfUse();
+          }}
+        >
+          Terms of Use
+        </Text>
+        <Button
+          textColor={WHITE}
+          fontSize={16}
+          style={styles.registerButton}
+          onPress={() => handleRegister()}
+        >
+          Register
+        </Button>
+        <Text style={styles.orText}>Or</Text>
+        <TouchableHighlight
+          underlayColor={"transparent"}
+          onPress={handleGoogleRegister}
+        >
+          <Image
+            style={styles.googleImage}
+            source={require("../../../assets/googleIcon.png")}
+          />
+        </TouchableHighlight>
+        <View style={styles.alreadyHaveAccountContainer}>
+          <Text style={styles.alreadyHaveAccountText}>
+            Already have an account?{" "}
+            <Text onPress={() => handleLogIn()} style={styles.logIn}>
+              Login
+            </Text>{" "}
+          </Text>
+        </View>
+        <ErrorModal
+          modalIsVisible={errorModalIsVisible}
+          setModalIsVisible={setErrorModalIsVisible}
+          errorTitle="Oooops!"
+          errorDescription={errorDescription}
+        ></ErrorModal>
+      </ScrollView>
 
-        {loading && <LoadingModal text={"Registering your profile"} />}
-      </Background>
-    </Provider>
+      {loading && <LoadingModal text={"Registering your profile"} />}
+    </Background>
   );
 };
 
