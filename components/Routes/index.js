@@ -14,6 +14,7 @@ import EditProfile from "../Profile/EditProfile/editProfile";
 import Trainings from "../Trainings/trainings";
 import SingleTraining from "../Trainings/SingleTraining/singleTraining";
 import NewTraining from "../Trainings/NewTraining/newTraining";
+import SearchView from "../SearchView/searchView";
 
 const Tab = createBottomTabNavigator();
 
@@ -41,6 +42,7 @@ const Routes = () => {
         <Tab.Screen name="Profile" component={Profile} />
         <Tab.Screen name={"Profile Settings"} component={InDevelopment} />
         <Tab.Screen name={"Edit Profile"} component={EditProfile} />
+        <Tab.Screen name={"Search"} component={SearchView} options={{unmountOnBlur: true}}/>
       </Tab.Navigator>
     </NavigationContainer>
   );
