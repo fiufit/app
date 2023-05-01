@@ -227,7 +227,7 @@ const Trainings = ({navigation}) => {
     }
 
     const onSearch = (value) => {
-
+        console.log(value)
     }
 
 
@@ -243,8 +243,11 @@ const Trainings = ({navigation}) => {
                            right={<FilterIcon/>}
                            fontFamily={"Lato_400Regular"}
                            fontSize={14}
-                           onSearch={(value) => onSearch(value)}
                            filter
+                           navigation={navigation}
+                           redirect
+                           searchForUsers
+                           searchForTrainings
                 />
                 <Button style={styles.addButton}
                         buttonColor={GREEN}
