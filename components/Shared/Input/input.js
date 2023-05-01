@@ -44,7 +44,7 @@ const Input = ({
           color,
           fontFamily: fontFamily ?? "Poppins_400Regular",
           paddingTop: fontFamily ? 0 : 3,
-          height: height,
+          height: multiline ? height : undefined,
         }}
         cursorColor={cursorColor ?? DARK_GREY}
         editable={editable ?? true}

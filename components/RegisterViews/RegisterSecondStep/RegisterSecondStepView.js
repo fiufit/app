@@ -8,6 +8,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import Input from "../../Shared/Input/input";
 import InterestsModal from "../../InterestsModal/InterestsModal";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
+import LogoutIcon from "../../../assets/images/general/logoutIcon.svg";
 import { WHITE } from "../../../utils/colors";
 import { styles } from "./styles.RegisterSecondStepView";
 import { useRecoilState } from "recoil";
