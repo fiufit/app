@@ -11,10 +11,9 @@ import {signOutFromApp} from "../../firebase";
 import {useRecoilState} from "recoil";
 import {userDataState} from "../../atoms";
 import EditProfile from "../Profile/EditProfile/editProfile";
-import Trainings from "../Trainings/trainings";
 import SingleTraining from "../Trainings/SingleTraining/singleTraining";
 import NewTraining from "../Trainings/NewTraining/newTraining";
-import SearchView from "../SearchView/searchView";
+import TrainingsNavigation from "../TrainingsNavigation/trainingsNavigation";
 
 const Tab = createBottomTabNavigator();
 
@@ -35,14 +34,13 @@ const Routes = () => {
           component={RegisterSecondStepView}
         />
         <Tab.Screen name="Home" component={InDevelopment} />
-        <Tab.Screen name="Trainings" component={Trainings} />
+        <Tab.Screen name="Trainings" component={TrainingsNavigation} />
         <Tab.Screen name="Single Training" component={SingleTraining} />
         <Tab.Screen name="New Training" component={NewTraining} />
         <Tab.Screen name="Messages" component={InDevelopment} />
         <Tab.Screen name="Profile" component={Profile} />
         <Tab.Screen name={"Profile Settings"} component={InDevelopment} />
         <Tab.Screen name={"Edit Profile"} component={EditProfile} />
-        <Tab.Screen name={"Search"} component={SearchView} options={{unmountOnBlur: true}}/>
       </Tab.Navigator>
     </NavigationContainer>
   );

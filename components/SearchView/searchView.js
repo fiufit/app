@@ -1,4 +1,4 @@
-import {Image, ScrollView, Text, TouchableOpacity, View} from "react-native";
+import {Image, ScrollView, Text, TouchableOpacity, View, Keyboard} from "react-native";
 import {styles} from "./styles.search-view";
 import SearchBar from "../Shared/SearchBar/searchBar";
 import {DARK_BLUE, WHITE} from "../../utils/colors";
@@ -9,6 +9,7 @@ import {auth, DEFAULT_PROFILE_PICTURE} from "../../firebase";
 import {useAuthState} from "react-firebase-hooks/auth";
 const LOADING_MAX = 4
 const SearchView = ({navigation, route}) => {
+    //TODO support trainings fetching when endpoint is available
     const [user] = useAuthState(auth);
     const {filter, searchForUsers, searchForTrainings} = route.params;
     const [searchData, setSearchData] = useState({});
@@ -61,6 +62,10 @@ const SearchView = ({navigation, route}) => {
         setSearchValue(value)
    }
 
+   const handleUserCardPress = (userData) => {
+        navigation.navigate({name: 'View Profile', merge: true, params: {userData}})
+   }
+
     return(
         <View style={styles.container}>
             <View style={styles.searchAndBackContainer}>
@@ -82,10 +87,10 @@ const SearchView = ({navigation, route}) => {
                 />
             </View>
             <View style={styles.divider}/>
-            <ScrollView style={{width: "100%", display: "flex", flexDirection: "column"}} contentContainerStyle={{alignItems: "center"}}>
+            <ScrollView style={{width: "100%", display: "flex", flexDirection: "column"}} contentContainerStyle={{alignItems: "center"}} keyboardShouldPersistTaps={'handled'}>
                 {
                     searchData[searchValue] ? searchData[searchValue].map(item => {
-                        return <TouchableOpacity style={styles.userCard} key={item.ID}>
+                        return <TouchableOpacity style={styles.userCard} key={item.ID} onPress={() => handleUserCardPress(item)}>
                             <Image source={{uri: DEFAULT_PROFILE_PICTURE}} style={styles.profilePicture}/>
                             <View>
                                 <View style={{display: "flex", flexDirection: "row", gap: 5, alignItems: "center"}}>
