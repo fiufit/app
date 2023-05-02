@@ -1,6 +1,7 @@
-import { Image, Pressable, ScrollView, Text } from "react-native";
+import { Pressable, ScrollView, Text } from "react-native";
 import { List, Provider, TextInput, TouchableRipple } from "react-native-paper";
 
+import AppLogoIcon from "../../../assets/appLogo.svg";
 import AuthenticationController from "../../../utils/controllers/AuthenticationController";
 import Background from "../../Background/background";
 import Button from "../../Shared/Button/button";
@@ -10,6 +11,7 @@ import InterestsModal from "../../InterestsModal/InterestsModal";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
 import LogoutIcon from "../../../assets/images/general/logoutIcon.svg";
 import { WHITE } from "../../../utils/colors";
+import { signOutFromApp } from "../../../firebase";
 import { styles } from "./styles.RegisterSecondStepView";
 import { useRecoilState } from "recoil";
 import { useState } from "react";
@@ -108,10 +110,7 @@ const RegisterSecondStepView = ({ user }) => {
             height={25}
             onPress={() => signOutFromApp(() => setUserData({}))}
           />
-          <Image
-            style={styles.logoImage}
-            source={require("../../../assets/appLogo.png")}
-          />
+          <AppLogoIcon style={styles.logoImage} />
           <Text style={styles.completeProfileText}>
             Let's complete your profile
           </Text>
