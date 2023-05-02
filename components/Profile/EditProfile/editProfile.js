@@ -1,7 +1,6 @@
 import { DARK_BLUE, WHITE } from "../../../utils/colors";
 import { DEFAULT_PROFILE_PICTURE, auth, uploadImage } from "../../../firebase";
 import { Image, Text, TouchableHighlight, View } from "react-native";
-import { TextInput } from "react-native-paper";
 
 import Back from "../../Shared/Back/back";
 import Button from "../../Shared/Button/button";
@@ -13,6 +12,8 @@ import ImageModal from "../../Shared/Modals/ImageModal/imageModal";
 import Input from "../../Shared/Input/input";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
 import ProfileController from "../../../utils/controllers/ProfileController";
+import SuccessModal from "../../Shared/Modals/SuccessModal/SuccessModal";
+import { TextInput } from "react-native-paper";
 import { styles } from "./styles.editProfile";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState } from "recoil";
@@ -36,6 +37,8 @@ const EditProfile = ({ navigation }) => {
   const [showImageModal, setShowImageModal] = useState(false);
   const [errorModalIsVisible, setErrorModalIsVisible] = useState(false);
   const [errorDescription, setErrorDescription] = useState("");
+  const [successModalIsVisible, setSuccessModalIsVisible] = useState(false);
+  const [successDescription, setSuccessDescription] = useState("");
 
   const nameOptions = {
     displayName: {
@@ -135,10 +138,15 @@ const EditProfile = ({ navigation }) => {
     });
 
     if (error) {
-      alert(error.description);
+      //TODO: Show different messagges according to the error.
+      setErrorModalIsVisible(true);
+      setErrorDescription(
+        "There has been an error while updating your profile. Please try again later!"
+      );
     } else {
       setUserData(data);
-      alert("Your profile has been updated successfully!");
+      setSuccessModalIsVisible(true);
+      setSuccessDescription("Your profile has been updated successfully!");
     }
     setLoading(false);
   };
@@ -252,6 +260,12 @@ const EditProfile = ({ navigation }) => {
         errorTitle="Oooops!"
         errorDescription={errorDescription}
       ></ErrorModal>
+      <SuccessModal
+        modalIsVisible={successModalIsVisible}
+        setModalIsVisible={setSuccessModalIsVisible}
+        modalTitle="Success!"
+        modalDescription={successDescription}
+      ></SuccessModal>
     </View>
   );
 };
