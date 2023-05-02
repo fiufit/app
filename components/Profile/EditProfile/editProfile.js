@@ -154,11 +154,18 @@ const EditProfile = ({ navigation }) => {
   const handleImageUpdate = async (image) => {
     setShowImageModal(false);
     setLoading(true);
-    const imageUrl = await uploadImage(
-      image,
-      `profile_pictures/${userData.ID}/profile.png`
-    );
-    setUserData({ ...userData, profilePictureUrl: imageUrl });
+    try {
+      const imageUrl = await uploadImage(
+        image,
+        `profile_pictures/${userData.ID}/profile.png`
+      );
+      setUserData({ ...userData, profilePictureUrl: imageUrl });
+    } catch (error) {
+      setErrorModalIsVisible(true);
+      setErrorDescription(
+        "There has been an error while updating your image. Please try again later!"
+      );
+    }
     setLoading(false);
   };
 

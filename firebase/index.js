@@ -64,7 +64,7 @@ export const uploadImage = async (anImage, imagePath) => {
       const uploadResult = await uploadBytes(storageRef, blob);
       return await getDownloadURL(uploadResult.ref);
     } catch (e) {
-      alert(e);
+      throw new Error(e.message);
     }
   }
 };
