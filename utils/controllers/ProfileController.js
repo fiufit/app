@@ -1,20 +1,14 @@
-class ProfileController{
+import RequestController from "./RequestController";
+
+class ProfileController {
     constructor(user) {
         this.user = user;
+        this.requestController = new RequestController(user);
     }
 
-    async updateProfile(updatedProfileData){
-        const {stsTokenManager} = this.user;
-        const patchResponse = await fetch(`https://fiufit-gateway.fly.dev/v1/users`, {
-            method: "PATCH",
-            headers: {
-                "Authorization": `Bearer ${stsTokenManager.accessToken}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(updatedProfileData)
-        });
-
-        return await patchResponse.json();
+    async updateProfile(updatedProfileData) {
+        return await this.requestController
+            .fetch('users', "PATCH", updatedProfileData)
     }
 }
 
