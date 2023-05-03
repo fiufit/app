@@ -8,7 +8,6 @@ class AuthenticationController{
     }
 
     async getUserData(){
-        console.log(`users/${this.user.uid}`)
         return await this.requestController
             .fetch(`users/${this.user.uid}`, "GET");
     }
