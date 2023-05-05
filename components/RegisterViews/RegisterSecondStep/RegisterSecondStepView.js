@@ -51,7 +51,7 @@ const RegisterSecondStepView = ({ user }) => {
       height &&
       weight &&
       mainLocation &&
-      interests
+      selectedInterests
     );
   };
 
@@ -73,7 +73,7 @@ const RegisterSecondStepView = ({ user }) => {
             height: numericHeight,
             weight: numericWeight,
             main_location: mainLocation,
-            interests: [interests],
+            interests: selectedInterests,
           });
           console.log(data);
           setUserData(data.user);
