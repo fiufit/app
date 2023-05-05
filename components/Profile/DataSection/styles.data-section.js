@@ -5,7 +5,7 @@ const profilePictureDimention = 80;
 export const styles = StyleSheet.create({
     profileDataSection: {
         width: "90%",
-        height: "12%",
+        height: 90,
         display: "flex",
         flexDirection: "row",
         justifyContent: "flex-start",

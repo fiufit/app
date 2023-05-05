@@ -7,30 +7,48 @@ import RegisterSecondStepView from "../RegisterViews/RegisterSecondStep/Register
 import AuthenticationController from "../../utils/controllers/AuthenticationController";
 import EmailVerification from "./EmailVerification/emailVerification";
 import LoadingModal from "../Shared/Modals/LoadingModal/loadingModal";
+import {useEffect, useState} from "react";
+import Background from "../Background/background";
 
 const AuthenticationWrapper = ({children}) => {
 
     const [userData, setUserData] = useRecoilState(userDataState);
-    const [user, loading] = useIdToken(auth, {
-        onUserChanged: async (user) => {
-            if(user){
-                const controller = new AuthenticationController(user);
-                if(!userData?.DisplayName){
-                    const {data} = await controller.getUserData();
-                    const profilePictureUrl = await getImageUrl(`profile_pictures/${user.uid}/profile.png`);
-                    setUserData({...data, profilePictureUrl});
-                }
-                if(!user.emailVerified){
-                    await controller.sendVerificationMail();
-                }
+    const [loadingData, setLoadingData] = useState(false);
+    const [user, loadingUser] = useIdToken(auth);
+
+    const onUserChanged = async (user) => {
+        if(user){
+            setLoadingData(true)
+            const controller = new AuthenticationController(user);
+            if(!userData?.DisplayName){
+                const {data} = await controller.getUserData();
+                const profilePictureUrl = await getImageUrl(`profile_pictures/${user.uid}/profile.png`);
+                setUserData({...data, profilePictureUrl});
             }
+            if(!user.emailVerified){
+                await controller.sendVerificationMail();
+            }
+            setLoadingData(false)
         }
-    });
+    }
+
+    useEffect(() => {
+        onUserChanged(user)
+    }, [user])
 
 
     return(
         <>
-            {
+            {(loadingUser || loadingData) ?
+                <>
+                    <Background
+                        fromColor={"rgb(185, 213, 123)"}
+                        toColor={"rgb(254,254,253)"}
+                        styles={{ height: "100%"}}
+                    />
+                    <LoadingModal/>
+                </>
+                :
                 user
                     ?
                     user.emailVerified ?
@@ -40,7 +58,6 @@ const AuthenticationWrapper = ({children}) => {
                     :
                     <Authentication/>
             }
-            {loading && <LoadingModal/>}
         </>
     );
 }

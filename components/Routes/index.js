@@ -2,7 +2,6 @@ import { Text, View } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
 import Profile from "../Profile";
-import RegisterFirstStepView from "../RegisterViews/RegisterFirstStep/RegisterFirstStepView";
 import RegisterSecondStepView from "../RegisterViews/RegisterSecondStep/RegisterSecondStepView";
 import TabBar from "../TabBar";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -12,6 +11,9 @@ import {signOutFromApp} from "../../firebase";
 import {useRecoilState} from "recoil";
 import {userDataState} from "../../atoms";
 import EditProfile from "../Profile/EditProfile/editProfile";
+import SingleTraining from "../Trainings/SingleTraining/singleTraining";
+import NewTraining from "../Trainings/NewTraining/newTraining";
+import TrainingsNavigation from "../TrainingsNavigation/trainingsNavigation";
 
 const Tab = createBottomTabNavigator();
 
@@ -32,7 +34,9 @@ const Routes = () => {
           component={RegisterSecondStepView}
         />
         <Tab.Screen name="Home" component={InDevelopment} />
-        <Tab.Screen name="Trainings" component={InDevelopment} />
+        <Tab.Screen name="Trainings" component={TrainingsNavigation} />
+        <Tab.Screen name="Single Training" component={SingleTraining} />
+        <Tab.Screen name="New Training" component={NewTraining} />
         <Tab.Screen name="Messages" component={InDevelopment} />
         <Tab.Screen name="Profile" component={Profile} />
         <Tab.Screen name={"Profile Settings"} component={InDevelopment} />
@@ -41,9 +45,8 @@ const Routes = () => {
     </NavigationContainer>
   );
 };
-const InDevelopment = ({ navigation }) => {
+const InDevelopment = ({ navigation}) => {
   const [userData, setUserData] = useRecoilState(userDataState);
-
 
   return (
     <View style={styles.container}>

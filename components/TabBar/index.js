@@ -1,10 +1,11 @@
-import { View, TouchableOpacity, LayoutAnimation } from "react-native";
+import {View, TouchableOpacity, LayoutAnimation, Keyboard} from "react-native";
 import { styles } from "./styles.tabbar";
 import HomeIcon from "../../assets/images/tabBar/homeIcon.svg";
 import MessageIcon from "../../assets/images/tabBar/messagesIcon.svg";
 import TrainingsIcon from "../../assets/images/tabBar/trainingsIcon.svg";
 import UserIcon from "../../assets/images/tabBar/userIcon.svg"
 import {GREEN} from "../../utils/colors";
+import {useEffect, useState} from "react";
 
 const icons = {
     "Home": style => <HomeIcon style={style} />,
@@ -21,9 +22,27 @@ const barPosition = {
 };
 
 function TabBar({ state, descriptors, navigation }) {
-    
+    const [keyboardActive, setKeyboardActive] = useState(false)
+    useEffect(() => {
+        const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+            //Whenever keyboard did show make it don't visible
+            setKeyboardActive(true);
+        });
+        const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+            setKeyboardActive(false);
+        });
+
+        return () => {
+            showSubscription.remove();
+            hideSubscription.remove();
+        };
+    }, []);
+    const showTabBar = (routeName) => {
+        return Object.keys(icons).includes(routeName) && !keyboardActive
+    }
+
     return (
-        Object.keys(icons).includes(state.routeNames[state.index]) && <View style={styles.tabBar}>
+          showTabBar(state.routeNames[state.index]) && <View style={styles.tabBar}>
             {state.routes.map((route, index) => {
                 const { options } = descriptors[route.key];
                 const label =
@@ -63,7 +82,7 @@ function TabBar({ state, descriptors, navigation }) {
 
 
                 return (
-                    Object.keys(icons).includes(route.name) && <TouchableOpacity
+                    showTabBar(route.name) && <TouchableOpacity
                         accessibilityRole="button"
                         accessibilityState={isFocused ? { selected: true } : {}}
                         accessibilityLabel={options.tabBarAccessibilityLabel}

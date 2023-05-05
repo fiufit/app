@@ -1,28 +1,28 @@
 import { StyleSheet } from "react-native";
-import {DARK_BLUE, MEDIUM_GREY, WHITE} from "../../../utils/colors";
+import {DARK_BLUE, GREY} from "../../utils/colors";
 
 export const styles = StyleSheet.create({
-    trainingsSection: {
-        marginBottom: 30,
+    scrollView: {
         width: "90%",
-        height: 210,
+    },
+    container: {
         position: "relative",
+        display: "flex",
+        alignItems: "center",
+        gap: 20,
+        paddingTop: 70,
+        backgroundColor: GREY,
     },
     textContainer: {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        width: "92%",
-        justifyContent: "space-between"
+        width: "90%",
+        justifyContent: "space-between",
     },
     title: {
         fontFamily: "Poppins_500Medium",
         fontSize: 24,
         color: DARK_BLUE
     },
-    seeAll: {
-        fontSize: 15,
-        fontFamily: "Poppins_500Medium",
-        color: MEDIUM_GREY
-    }
 });
