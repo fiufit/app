@@ -1,34 +1,23 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles.trainings-section";
 import TrainingCard from "../../Shared/TrainingCard/trainingCard";
-import { useEffect, useState } from "react";
-import TrainingController from "../../../utils/controllers/TrainingController";
-import { useIdToken } from "react-firebase-hooks/auth";
-import { auth } from "../../../firebase";
 import CreateTrainingCard from "../CreateTrainingCard/createTrainingCard";
 
-const CreatedTrainingsSection = ({ navigation }) => {
-  const [user] = useIdToken(auth);
-  const [createdTrainings, setCreatedTrainings] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const fetchCreatedTrainings = async () => {
-    const controller = new TrainingController(user);
-    return await controller.getTrainings();
-  };
-
-  useEffect(() => {
-    fetchCreatedTrainings().then((trainings) => {
-      setCreatedTrainings(trainings);
-      setLoading(false);
+const CreatedTrainingsSection = ({ navigation, createdTrainings, loading }) => {
+  const handleSeeAll = () => {
+    navigation.navigate({
+      name: "Training List",
+      merge: true,
+      params: { trainings: createdTrainings, title: "Created Trainings", created: true},
     });
-  }, []);
+  };
 
   return (
     <View style={styles.trainingsSection}>
       <View style={styles.textContainer}>
         <Text style={styles.title}>Created trainings</Text>
         {createdTrainings.length > 0 && (
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleSeeAll}>
             <Text style={styles.seeAll}>See All</Text>
           </TouchableOpacity>
         )}
