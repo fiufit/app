@@ -7,13 +7,14 @@ import TabBar from "../TabBar";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { styles } from "./styles.routes";
 import Button from "../Shared/Button/button";
-import {signOutFromApp} from "../../firebase";
-import {useRecoilState} from "recoil";
-import {userDataState} from "../../atoms";
+import { signOutFromApp } from "../../firebase";
+import { useRecoilState } from "recoil";
+import { userDataState } from "../../atoms";
 import EditProfile from "../Profile/EditProfile/editProfile";
 import SingleTraining from "../Trainings/SingleTraining/singleTraining";
-import NewTraining from "../Trainings/NewTraining/newTraining";
+import UploadTraining from "../Trainings/UploadTraining/uploadTraining";
 import TrainingsNavigation from "../TrainingsNavigation/trainingsNavigation";
+import TrainingList from "../TrainingList/trainingList";
 
 const Tab = createBottomTabNavigator();
 
@@ -36,7 +37,9 @@ const Routes = () => {
         <Tab.Screen name="Home" component={InDevelopment} />
         <Tab.Screen name="Trainings" component={TrainingsNavigation} />
         <Tab.Screen name="Single Training" component={SingleTraining} />
-        <Tab.Screen name="New Training" component={NewTraining} />
+        <Tab.Screen name="New Training" component={UploadTraining}/>
+        <Tab.Screen name="Edit Training" component={UploadTraining}/>
+        <Tab.Screen name="Training List" component={TrainingList} />
         <Tab.Screen name="Messages" component={InDevelopment} />
         <Tab.Screen name="Profile" component={Profile} />
         <Tab.Screen name={"Profile Settings"} component={InDevelopment} />
@@ -45,13 +48,19 @@ const Routes = () => {
     </NavigationContainer>
   );
 };
-const InDevelopment = ({ navigation}) => {
+const InDevelopment = ({ navigation }) => {
   const [userData, setUserData] = useRecoilState(userDataState);
 
   return (
     <View style={styles.container}>
       <Text>In development</Text>
-        <Button textColor={"#FFFFFF"} style={{width: "40%"}} onPress={() => signOutFromApp(() => setUserData({}))}>Log Out</Button>
+      <Button
+        textColor={"#FFFFFF"}
+        style={{ width: "40%" }}
+        onPress={() => signOutFromApp(() => setUserData({}))}
+      >
+        Log Out
+      </Button>
     </View>
   );
 };
