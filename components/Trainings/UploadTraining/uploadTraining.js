@@ -1,4 +1,4 @@
-import { styles } from "./styles.new-training";
+import { styles } from "./styles.upload-training";
 import { TextInput } from "react-native-paper";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import Back from "../../Shared/Back/back";
@@ -13,12 +13,25 @@ import TrainingController from "../../../utils/controllers/TrainingController";
 import { useIdToken } from "react-firebase-hooks/auth";
 import { auth } from "../../../firebase";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
+import { useRecoilState } from "recoil";
+import { createdTrainingsState } from "../../../atoms";
 
-const NewTraining = ({ navigation, route }) => {
-  const { edit, trainingData } = route.params;
+const UploadTraining = ({ navigation, route }) => {
+  const [createdTrainings, setCreatedTrainings] = useRecoilState(
+    createdTrainingsState
+  );
+  const { edit, trainingData } = route?.params ?? {};
   const [user] = useIdToken(auth);
+  const parseExercises = (exercises) => {
+    return exercises.map((exercise) => {
+      return {
+        title: exercise.Title,
+        description: exercise.Description,
+      };
+    });
+  };
   const [exercisesToUpload, setExercisesToUpload] = useState(
-    trainingData?.Exercises ?? []
+    trainingData?.Exercises ? parseExercises(trainingData?.Exercises) : []
   );
   const [showImageModal, setShowImageModal] = useState(false);
   const [image, setImage] = useState(trainingData?.PictureUrl ?? null);
@@ -45,7 +58,7 @@ const NewTraining = ({ navigation, route }) => {
     setExercisesError("");
     setExercisesToUpload([
       ...exercisesToUpload,
-      { Title: "Exercise Title", Description: "Exercise instruction" },
+      { title: "Exercise Title", description: "Exercise instruction" },
     ]);
   };
 
@@ -100,36 +113,48 @@ const NewTraining = ({ navigation, route }) => {
       image
     ) {
       setUploading(true);
-      if(edit){
+      if (edit) {
         // TODO
-      } else{
+      } else {
         const controller = new TrainingController(user);
 
-        const data = await controller.createTraining(
-            {
-              name: titleToUpload,
-              description: "to do",
-              difficulty: difficulties[difficultyToUploadIndex],
-              duration: durationToUpload,
-              exercises: exercisesToUpload,
-            },
-            image
+        const [{ data, error }, PictureUrl] = await controller.createTraining(
+          {
+            name: titleToUpload,
+            description: "to do",
+            difficulty: difficulties[difficultyToUploadIndex],
+            duration: durationToUpload,
+            exercises: exercisesToUpload,
+          },
+          image
         );
 
         console.log(data);
-        if (data.error) {
-          alert(data.error.description);
-          setUploading(false);
+        if (error) {
+          alert(error.description);
         } else {
           alert("Training upload successfully!");
+          setCreatedTrainings([
+            ...createdTrainings,
+            { ...data.training_plan, PictureUrl },
+          ]);
           setDifficultyToUploadIndex(0);
           setDurationToUpload("");
           setTitleToUpload("");
           setExercisesToUpload([]);
           setImage(null);
-          setUploading(false);
+          navigation.navigate({
+            name: "Training List",
+            merge: true,
+            params: {
+              trainings: createdTrainings,
+              title: "Created Trainings",
+              created: true,
+            },
+          });
         }
       }
+      setUploading(false);
     }
   };
 
@@ -234,7 +259,7 @@ const NewTraining = ({ navigation, route }) => {
                 );
               })}
               <Exercise
-                exerciseData={{ Title: "Add one exercise..." }}
+                exerciseData={{ title: "Add one exercise..." }}
                 number={"+"}
                 last
                 add
@@ -286,4 +311,4 @@ const NewTraining = ({ navigation, route }) => {
   );
 };
 
-export default NewTraining;
+export default UploadTraining;
