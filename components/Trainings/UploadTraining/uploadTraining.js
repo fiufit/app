@@ -14,26 +14,38 @@ import { useIdToken } from "react-firebase-hooks/auth";
 import { auth } from "../../../firebase";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
 
-const NewTraining = ({ navigation }) => {
+const NewTraining = ({ navigation, route }) => {
+  const { edit, trainingData } = route.params;
   const [user] = useIdToken(auth);
-  const [exercisesToUpload, setExercisesToUpload] = useState([]);
+  const [exercisesToUpload, setExercisesToUpload] = useState(
+    trainingData?.Exercises ?? []
+  );
   const [showImageModal, setShowImageModal] = useState(false);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(trainingData?.PictureUrl ?? null);
   const [editOptions, setEditOptions] = useState({});
-  const [titleToUpload, setTitleToUpload] = useState("");
-  const [durationToUpload, setDurationToUpload] = useState("");
-  const [difficultyToUploadIndex, setDifficultyToUploadIndex] = useState(0);
+  const [titleToUpload, setTitleToUpload] = useState(trainingData?.Name ?? "");
+  const [durationToUpload, setDurationToUpload] = useState(
+    trainingData?.Duration ?? ""
+  );
+
+  const difficulties = ["Beginner", "Intermediate", "Expert"];
+  const getDifficultyIndex = (difficulty) => {
+    return difficulty.indexOf(difficulty);
+  };
+  const [difficultyToUploadIndex, setDifficultyToUploadIndex] = useState(
+    trainingData?.Difficulty ? getDifficultyIndex(trainingData?.Difficulty) : 0
+  );
   const [titleError, setTitleError] = useState("");
   const [durationError, setDurationError] = useState("");
   const [exercisesError, setExercisesError] = useState("");
   const [imageError, setImageError] = useState("");
-  const [uploading, setUploading] = useState(false)
+  const [uploading, setUploading] = useState(false);
 
   const handleAddExercise = () => {
     setExercisesError("");
     setExercisesToUpload([
       ...exercisesToUpload,
-      { title: "Exercise Title", description: "Exercise instruction" },
+      { Title: "Exercise Title", Description: "Exercise instruction" },
     ]);
   };
 
@@ -64,7 +76,7 @@ const NewTraining = ({ navigation }) => {
     setExercisesToUpload(updatedExercises);
   };
 
-  const handleCreate = async () => {
+  const handleButtonPress = async () => {
     if (!titleToUpload) {
       setTitleError("Add a title!");
     }
@@ -78,7 +90,7 @@ const NewTraining = ({ navigation }) => {
     }
 
     if (!image) {
-      setImageError('Upload an image!');
+      setImageError("Upload an image!");
     }
 
     if (
@@ -87,29 +99,36 @@ const NewTraining = ({ navigation }) => {
       exercisesToUpload.length &&
       image
     ) {
-      setUploading(true)
-      const controller = new TrainingController(user);
+      setUploading(true);
+      if(edit){
+        // TODO
+      } else{
+        const controller = new TrainingController(user);
 
-      const data = await controller.createTraining({
-        name: titleToUpload,
-        description: "to do",
-        difficulty: difficulties[difficultyToUploadIndex],
-        duration: durationToUpload,
-        exercises: exercisesToUpload,
-      }, image);
+        const data = await controller.createTraining(
+            {
+              name: titleToUpload,
+              description: "to do",
+              difficulty: difficulties[difficultyToUploadIndex],
+              duration: durationToUpload,
+              exercises: exercisesToUpload,
+            },
+            image
+        );
 
-      console.log(data);
-      if(data.error){
-        alert(data.error.description)
-        setUploading(false)
-      } else {
-        alert("Training upload successfully!")
-        setDifficultyToUploadIndex(0);
-        setDurationToUpload("");
-        setTitleToUpload("");
-        setExercisesToUpload([]);
-        setImage(null);
-        setUploading(false)
+        console.log(data);
+        if (data.error) {
+          alert(data.error.description);
+          setUploading(false);
+        } else {
+          alert("Training upload successfully!");
+          setDifficultyToUploadIndex(0);
+          setDurationToUpload("");
+          setTitleToUpload("");
+          setExercisesToUpload([]);
+          setImage(null);
+          setUploading(false);
+        }
       }
     }
   };
@@ -132,8 +151,6 @@ const NewTraining = ({ navigation }) => {
     },
   };
 
-  const difficulties = ["Beginner", "Intermediate", "Expert"];
-
   return (
     <>
       <View style={styles.container}>
@@ -143,7 +160,14 @@ const NewTraining = ({ navigation }) => {
             {!image ? (
               <>
                 <AddImageIcon />
-                <Text style={{...styles.addImageText, color: imageError ? 'red' : "#464646"}}>{imageError ? imageError : 'Upload Image'}</Text>
+                <Text
+                  style={{
+                    ...styles.addImageText,
+                    color: imageError ? "red" : "#464646",
+                  }}
+                >
+                  {imageError ? imageError : "Upload Image"}
+                </Text>
               </>
             ) : (
               <Image source={{ uri: image }} style={styles.image} />
@@ -210,7 +234,7 @@ const NewTraining = ({ navigation }) => {
                 );
               })}
               <Exercise
-                exerciseData={{ title: "Add one exercise..." }}
+                exerciseData={{ Title: "Add one exercise..." }}
                 number={"+"}
                 last
                 add
@@ -224,9 +248,9 @@ const NewTraining = ({ navigation }) => {
             style={styles.createButton}
             fontSize={16}
             textColor={WHITE}
-            onPress={handleCreate}
+            onPress={handleButtonPress}
           >
-            Create
+            {edit ? "Update" : "Create"}
           </Button>
         </View>
       </View>
@@ -235,7 +259,7 @@ const NewTraining = ({ navigation }) => {
           imageAspect={[4, 3]}
           onClose={() => setShowImageModal(false)}
           onUpload={(image) => {
-            setImageError('');
+            setImageError("");
             setImage(image);
             setShowImageModal(false);
           }}
@@ -253,7 +277,11 @@ const NewTraining = ({ navigation }) => {
           onButtonPress={() => setEditOptions({})}
         />
       )}
-      {uploading && <LoadingModal text={"Creating training..."}/>}
+      {uploading && (
+        <LoadingModal
+          text={edit ? "Updating training..." : "Creating training..."}
+        />
+      )}
     </>
   );
 };
