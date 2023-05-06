@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
         color: WHITE,
         fontFamily: "Lato_700Bold",
         fontSize: 24,
-        width: 150,
+        width: "80%",
         left: "10%",
         top: "10%"
     },
@@ -55,6 +55,24 @@ export const styles = StyleSheet.create({
         gap: 5
     },
     trainingDurationText: {
+        fontFamily: "Lato_400Regular",
+        fontSize: 12
+    },
+    trainingDifficultyContainer: {
+        width: 85,
+        height: 26,
+        position: "absolute",
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        bottom: "30%",
+        left: "10%",
+        borderRadius: 9,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+        gap: 5
+    },
+    trainingDifficultyText: {
         fontFamily: "Lato_400Regular",
         fontSize: 12
     },

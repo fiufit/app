@@ -1,16 +1,23 @@
-import {Image, Text, TouchableOpacity, View} from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import ClockIcon from "../../../assets/images/profile/clockIcon.svg";
 import trainingImage from "../../../assets/images/examples/training.png";
 import { styles } from "./styles.training-card";
 
-const TrainingCard = ({ imageSource, title, duration, create, onPress }) => {
+const TrainingCard = ({
+  imageSource,
+  title,
+  duration,
+  difficulty,
+  create,
+  onPress,
+}) => {
   return (
     <TouchableOpacity style={styles.trainingCard} onPress={onPress}>
       <Image
         source={!create ? imageSource : trainingImage}
         style={styles.trainingImage}
       />
-      {title && <View style={styles.filter}/>}
+      {title && <View style={styles.filter} />}
       {title ? (
         <Text style={styles.trainingTitle}>{title}</Text>
       ) : (
@@ -20,6 +27,11 @@ const TrainingCard = ({ imageSource, title, duration, create, onPress }) => {
         <View style={styles.trainingDurationContainer}>
           <ClockIcon color={"#000000"} />
           <Text style={styles.trainingDurationText}>{duration} min</Text>
+        </View>
+      )}
+      {difficulty && (
+        <View style={styles.trainingDifficultyContainer}>
+          <Text style={styles.trainingDifficultyText}>{difficulty}</Text>
         </View>
       )}
     </TouchableOpacity>
