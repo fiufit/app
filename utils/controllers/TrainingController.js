@@ -25,6 +25,7 @@ class TrainingController {
 
     let trainings = [];
     for (const training of data.trainings) {
+      //TODO receive PictureUrl in response
       const PictureUrl = await getImageUrl(
         `training_pictures/${training.TrainerID}/${training.ID}/training.png`
       );
@@ -51,13 +52,14 @@ class TrainingController {
 
     const createdTrainingData = await response.json();
 
+    let PictureUrl;
     if (createdTrainingData.data.training_plan.ID) {
-      await uploadImage(
+      PictureUrl = await uploadImage(
         trainingImage,
         `training_pictures/${this.user.uid}/${createdTrainingData.data.training_plan.ID}/training.png`
       );
     }
-    return createdTrainingData;
+    return [createdTrainingData, PictureUrl];
   }
 }
 
