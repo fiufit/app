@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import TrainingController from "../../../utils/controllers/TrainingController";
 import { useIdToken } from "react-firebase-hooks/auth";
 import { auth } from "../../../firebase";
+import CreateTrainingCard from "../CreateTrainingCard/createTrainingCard";
 
 const CreatedTrainingsSection = ({ navigation }) => {
   const [user] = useIdToken(auth);
@@ -41,9 +42,9 @@ const CreatedTrainingsSection = ({ navigation }) => {
           duration={createdTrainings[0].Duration}
         />
       ) : (
-        <TrainingCard
-          title={"Create your first training!"}
-          create
+        <CreateTrainingCard
+          title={"You don't have any trainings created yet."}
+          callToActionText={"Create one!"}
           onPress={() =>
             navigation.navigate({ name: "New Training", merge: true })
           }
