@@ -65,5 +65,17 @@ export const styles = StyleSheet.create({
     name: {
         fontFamily: "Lato_400Regular",
         color: DARK_GREY
+    },
+    searchSelector: {
+        width: '100%',
+        height: 40,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: "space-evenly",
+        alignItems: 'center'
+    },
+    selectButton: {
+        width: '50%',
+        height: '100%',
     }
 });
