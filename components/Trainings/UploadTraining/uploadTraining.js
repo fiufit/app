@@ -15,6 +15,7 @@ import { auth } from "../../../firebase";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
 import { useRecoilState } from "recoil";
 import { createdTrainingsState } from "../../../atoms";
+import {parseExercises} from "../../../utils/trainings";
 
 const UploadTraining = ({ navigation, route }) => {
   const [createdTrainings, setCreatedTrainings] = useRecoilState(
@@ -22,14 +23,6 @@ const UploadTraining = ({ navigation, route }) => {
   );
   const { edit, trainingData } = route?.params ?? {};
   const [user] = useIdToken(auth);
-  const parseExercises = (exercises) => {
-    return exercises.map((exercise) => {
-      return {
-        title: exercise.Title,
-        description: exercise.Description,
-      };
-    });
-  };
   const [exercisesToUpload, setExercisesToUpload] = useState(
     trainingData?.Exercises ? parseExercises(trainingData?.Exercises) : []
   );
