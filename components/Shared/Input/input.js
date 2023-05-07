@@ -1,8 +1,7 @@
-import { TextInput, View } from "react-native";
-
-import { DARK_GREY } from "../../../utils/colors";
-import { React } from "react";
-import { styles } from "./styles.input";
+import {TextInput, View} from "react-native";
+import {DARK_GREY} from "../../../utils/colors";
+import {React} from "react";
+import {styles} from "./styles.input";
 
 const Input = ({
   left,
@@ -20,7 +19,9 @@ const Input = ({
   secureTextEntry,
   editable,
   inputMode,
-  marginTop
+  marginTop,
+  multiline,
+  autoFocus
 }) => {
   return (
     <View
@@ -29,7 +30,7 @@ const Input = ({
         backgroundColor: backgroundColor ?? "#F7F8F8",
         height,
         width,
-        marginTop: marginTop === undefined ? 20 : marginTop
+        marginTop: marginTop === undefined ? 20 : marginTop,
       }}
     >
       <View style={styles.sideContainer}>{left}</View>
@@ -44,10 +45,13 @@ const Input = ({
           color,
           fontFamily: fontFamily ?? "Poppins_400Regular",
           paddingTop: fontFamily ? 0 : 3,
+          height: multiline ? height : undefined,
         }}
         cursorColor={cursorColor ?? DARK_GREY}
         editable={editable ?? true}
         inputMode={inputMode ?? "text"}
+        multiline={multiline ?? false}
+        autoFocus={autoFocus}
       ></TextInput>
       <View style={styles.sideContainer}>{right}</View>
     </View>

@@ -1,12 +1,14 @@
-import { Image, Pressable, ScrollView, Text } from "react-native";
 import { List, TextInput, TouchableRipple } from "react-native-paper";
+import { Pressable, ScrollView, Text } from "react-native";
 
+import AppLogoIcon from "../../../assets/appLogo.svg";
 import AuthenticationController from "../../../utils/controllers/AuthenticationController";
 import Background from "../../Background/background";
 import Button from "../../Shared/Button/button";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ErrorModal from "../../Shared/Modals/ErrorModal/ErrorModal";
 import Input from "../../Shared/Input/input";
+import InterestsModal from "../../InterestsModal/InterestsModal";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
 import LogoutIcon from "../../../assets/images/general/logoutIcon.svg";
 import { WHITE } from "../../../utils/colors";
@@ -27,11 +29,12 @@ const RegisterSecondStepView = ({ user }) => {
   const [nickName, setNickName] = useState("");
   const [height, setHeight] = useState("");
   const [mainLocation, setMainLocation] = useState("");
-  const [interests, setInterests] = useState("");
   const [userData, setUserData] = useRecoilState(userDataState);
   const [loading, setLoading] = useState(false);
   const [errorModalIsVisible, setErrorModalIsVisible] = useState(false);
   const [errorDescription, setErrorDescription] = useState("");
+  const [modalIsVisible, setModalIsVisible] = useState(false);
+  const [selectedInterests, setSelectedInterests] = useState([]);
 
   const onChange = ({ type }, selectedDate) => {
     setShowPicker(false);
@@ -51,7 +54,7 @@ const RegisterSecondStepView = ({ user }) => {
       height &&
       weight &&
       mainLocation &&
-      interests
+      selectedInterests
     );
   };
 
@@ -73,7 +76,7 @@ const RegisterSecondStepView = ({ user }) => {
             height: numericHeight,
             weight: numericWeight,
             main_location: mainLocation,
-            interests: [interests],
+            interests: selectedInterests,
           });
           console.log(data);
           setUserData(data.user);
@@ -114,10 +117,7 @@ const RegisterSecondStepView = ({ user }) => {
           height={25}
           onPress={() => signOutFromApp(() => setUserData({}))}
         />
-        <Image
-          style={styles.logoImage}
-          source={require("../../../assets/appLogo.png")}
-        />
+        <AppLogoIcon style={styles.logoImage} />
         <Text style={styles.completeProfileText}>
           Let's complete your profile
         </Text>
@@ -132,7 +132,7 @@ const RegisterSecondStepView = ({ user }) => {
           height={55}
           fontSize={12}
           left={<TextInput.Icon icon="account" />}
-          backgroundColor={"#FFFFFF"}
+          backgroundColor={WHITE}
         />
         <Input
           value={nickName}
@@ -142,7 +142,7 @@ const RegisterSecondStepView = ({ user }) => {
           height={55}
           fontSize={12}
           left={<TextInput.Icon icon="account" />}
-          backgroundColor={"#FFFFFF"}
+          backgroundColor={WHITE}
         />
         <TouchableRipple borderless style={styles.listAccordion}>
           <List.Accordion
@@ -186,7 +186,7 @@ const RegisterSecondStepView = ({ user }) => {
             height={55}
             fontSize={12}
             left={<TextInput.Icon icon="calendar" />}
-            backgroundColor={"#FFFFFF"}
+            backgroundColor={WHITE}
             editable={false}
           />
         </Pressable>
@@ -198,6 +198,38 @@ const RegisterSecondStepView = ({ user }) => {
             onChange={onChange}
           />
         )}
+        <Input
+          value={weight}
+          placeholder="Weight (kg)"
+          onChangeText={(weight) => setWeight(weight)}
+          width={"80%"}
+          height={55}
+          fontSize={12}
+          left={<TextInput.Icon icon="weight" />}
+          backgroundColor={WHITE}
+          inputMode={"numeric"}
+        />
+        <Input
+          value={height}
+          placeholder="Height (cm)"
+          onChangeText={(height) => setHeight(height)}
+          width={"80%"}
+          height={55}
+          fontSize={12}
+          left={<TextInput.Icon icon="human-male-height" />}
+          backgroundColor={WHITE}
+          inputMode={"numeric"}
+        />
+        <Input
+          value={mainLocation}
+          placeholder="Main Location"
+          onChangeText={(mainLocation) => setMainLocation(mainLocation)}
+          width={"80%"}
+          height={55}
+          fontSize={12}
+          left={<TextInput.Icon icon="map-marker" />}
+          backgroundColor={WHITE}
+        />
         <Input
           value={weight}
           placeholder="Weight (kg)"
@@ -230,16 +262,28 @@ const RegisterSecondStepView = ({ user }) => {
           left={<TextInput.Icon icon="map-marker" />}
           backgroundColor={"#FFFFFF"}
         />
-        <Input
-          value={interests}
-          placeholder="Interests"
-          onChangeText={(interests) => setInterests(interests)}
-          width={"80%"}
-          height={55}
-          fontSize={12}
-          left={<TextInput.Icon icon="shape" />}
-          backgroundColor={"#FFFFFF"}
-        />
+        <Pressable onPress={() => setModalIsVisible(true)}>
+          <Input
+            placeholder={
+              selectedInterests.length !== 0
+                ? selectedInterests.join(", ")
+                : "Interests"
+            }
+            width={"77%"}
+            height={55}
+            fontSize={12}
+            left={<TextInput.Icon icon="shape" />}
+            backgroundColor={WHITE}
+            editable={false}
+            multiline={true}
+          />
+        </Pressable>
+        <InterestsModal
+          modalIsVisible={modalIsVisible}
+          setModalIsVisible={setModalIsVisible}
+          selectedInterests={selectedInterests}
+          setSelectedInterests={setSelectedInterests}
+        ></InterestsModal>
         <Button
           textColor={WHITE}
           fontSize={16}

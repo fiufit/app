@@ -1,7 +1,13 @@
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
 
-import { Image, Text, TouchableHighlight, View } from "react-native";
+import {
+  Image,
+  ScrollView,
+  Text,
+  TouchableHighlight,
+  View,
+} from "react-native";
 import { signInWithGoogle, singIn } from "../../firebase";
 import { useEffect, useState } from "react";
 
@@ -83,90 +89,94 @@ const LoginView = ({ navigation }) => {
       toColor={"rgb(254,254,253)"}
       styles={{ flex: 1, alignItems: "center" }}
     >
-      <Text style={styles.greetings}>Hey there,</Text>
-      <Text style={styles.welcome}>Welcome Back!</Text>
-      <Input
-        value={email}
-        placeholder="Email"
-        onChangeText={(email) => setEmail(email)}
-        width={"80%"}
-        height={48}
-        fontSize={12}
-        left={<MailIcon height={18} width={18} />}
-      />
-      <Input
-        style={styles.textInput}
-        width={"80%"}
-        height={48}
-        fontSize={12}
-        secureTextEntry={!passwordIsVisible}
-        placeholder="Password"
-        value={password}
-        onChangeText={(password) => setPassword(password)}
-        right={
-          passwordIsVisible ? (
-            <HideEyeIcon
-              height={18}
-              width={25}
-              onPress={() => {
-                togglePasswordVisibility();
-              }}
-            />
-          ) : (
-            <EyeIcon
-              height={18}
-              width={25}
-              onPress={() => {
-                togglePasswordVisibility();
-              }}
-            />
-          )
-        }
-        left={<LockIcon height={18} width={18} />}
-      />
-      <View style={styles.forgotPasswordContainer}>
-        <Text
-          onPress={() => handleForgotPassword()}
-          style={styles.forgotPasswordText}
-        >
-          Forgot your password?
-        </Text>
-      </View>
-
-      <Button
-        textColor={WHITE}
-        fontSize={16}
-        style={styles.loginButton}
-        onPress={() => handleLogIn()}
-        icon={<LoginIcon />}
+      <ScrollView
+        style={{ width: "100%" }}
+        contentContainerStyle={{ alignItems: "center" }}
       >
-        Log In
-      </Button>
-      <Text style={styles.orText}>Or</Text>
-      <TouchableHighlight
-        underlayColor={"transparent"}
-        onPress={handleGoogleLogIn}
-      >
-        <Image
-          style={styles.googleImage}
-          source={require("../../assets/googleIcon.png")}
+        <Text style={styles.greetings}>Hey there,</Text>
+        <Text style={styles.welcome}>Welcome Back!</Text>
+        <Input
+          value={email}
+          placeholder="Email"
+          onChangeText={(email) => setEmail(email)}
+          width={"80%"}
+          height={48}
+          fontSize={12}
+          left={<MailIcon height={18} width={18} />}
         />
-      </TouchableHighlight>
-      <View style={styles.doNotHaveAccountContainer}>
-        <Text style={styles.doNotHaveAccountText}>
-          Don't have an account yet?{" "}
-          <Text onPress={() => handleRegister()} style={styles.register}>
-            Register
-          </Text>{" "}
-        </Text>
-      </View>
-      <ErrorModal
-        modalIsVisible={errorModalIsVisible}
-        setModalIsVisible={setErrorModalIsVisible}
-        errorTitle="Oooops!"
-        errorDescription={errorDescription}
-      ></ErrorModal>
-      {loading && <LoadingModal />}
+        <Input
+          style={styles.textInput}
+          width={"80%"}
+          height={48}
+          fontSize={12}
+          secureTextEntry={!passwordIsVisible}
+          placeholder="Password"
+          value={password}
+          onChangeText={(password) => setPassword(password)}
+          right={
+            passwordIsVisible ? (
+              <HideEyeIcon
+                height={18}
+                width={25}
+                onPress={() => {
+                  togglePasswordVisibility();
+                }}
+              />
+            ) : (
+              <EyeIcon
+                height={18}
+                width={25}
+                onPress={() => {
+                  togglePasswordVisibility();
+                }}
+              />
+            )
+          }
+          left={<LockIcon height={18} width={18} />}
+        />
+        <View style={styles.forgotPasswordContainer}>
+          <Text
+            onPress={() => handleForgotPassword()}
+            style={styles.forgotPasswordText}
+          >
+            Forgot your password?
+          </Text>
+        </View>
+        <Button
+          textColor={WHITE}
+          fontSize={16}
+          style={styles.loginButton}
+          onPress={() => handleLogIn()}
+          icon={<LoginIcon />}
+        >
+          Log In
+        </Button>
+        <Text style={styles.orText}>Or</Text>
+        <TouchableHighlight
+          underlayColor={"transparent"}
+          onPress={handleGoogleLogIn}
+        >
+          <Image
+            style={styles.googleImage}
+            source={require("../../assets/googleIcon.png")}
+          />
+        </TouchableHighlight>
+        <View style={styles.doNotHaveAccountContainer}>
+          <Text style={styles.doNotHaveAccountText}>
+            Don't have an account yet?{" "}
+            <Text onPress={() => handleRegister()} style={styles.register}>
+              Register
+            </Text>{" "}
+          </Text>
+        </View>
+        <ErrorModal
+          modalIsVisible={errorModalIsVisible}
+          setModalIsVisible={setErrorModalIsVisible}
+          errorTitle="Oooops!"
+          errorDescription={errorDescription}
+        ></ErrorModal>
+        {loading && <LoadingModal />}
+      </ScrollView>
     </Background>
   );
 };

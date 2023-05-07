@@ -72,7 +72,7 @@ export const uploadImage = async (anImage, imagePath) => {
 export const getImageUrl = async (imagePath) => {
   try {
     const storageRef = ref(storage, imagePath);
-    return getDownloadURL(storageRef);
+    return await getDownloadURL(storageRef);
   } catch (e) {
     return null;
   }
