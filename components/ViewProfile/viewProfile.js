@@ -18,6 +18,14 @@ const ViewProfile = ({ navigation, route }) => {
     navigation.goBack();
   };
 
+  const handleTrainingPress = (training) => {
+      navigation.navigate({
+          name: "Single Training",
+          merge: true,
+          params: { training, start: true },
+      });
+  }
+
   const fetchUserCreatedTrainings = async () => {
     const controller = new TrainingController(user);
 
@@ -65,7 +73,9 @@ const ViewProfile = ({ navigation, route }) => {
                   title={training.Name}
                   duration={training.Duration}
                   imageSource={{uri: training.PictureUrl}}
+                  difficulty={training.Difficulty}
                   key={training.ID}
+                  onPress={() => {handleTrainingPress(training)}}
                 />
               );
             })
