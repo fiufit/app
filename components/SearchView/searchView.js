@@ -94,6 +94,7 @@ const SearchView = ({ navigation, route }) => {
     };
 
     if (searchValue) {
+      setLoading(true);
       const delayDebounceFunction = setTimeout(() => {
         if (userSearchSelected) {
           fetchUsers()
@@ -125,10 +126,9 @@ const SearchView = ({ navigation, route }) => {
     } else {
       setLoading(false);
     }
-  }, [searchValue]);
+  }, [searchValue, userSearchSelected]);
 
   const onSearchChange = async (value) => {
-    setLoading(true);
     setSearchValue(value);
   };
 
@@ -179,133 +179,141 @@ const SearchView = ({ navigation, route }) => {
         }}
       >
         <View style={styles.divider} />
-        <View style={styles.searchSelector}>
-          <Button
-            buttonColor={userSearchSelected ? TRANSPARENT_GREY : GREY}
-            textColor={MEDIUM_GREY}
-            style={styles.selectButton}
-            onPress={() => {
-              setUserSearchSelected(true);
-              setSearchValue("");
-            }}
-          >
-            Users
-          </Button>
-          <Button
-            buttonColor={userSearchSelected ? GREY : TRANSPARENT_GREY}
-            textColor={MEDIUM_GREY}
-            style={styles.selectButton}
-            onPress={() => {
-              setUserSearchSelected(false);
-              setSearchValue("");
-            }}
-          >
-            Trainings
-          </Button>
-        </View>
-        <View style={styles.divider} />
+        {searchForUsers && searchForTrainings && (
+          <>
+            <View style={styles.searchSelector}>
+              <Button
+                buttonColor={userSearchSelected ? TRANSPARENT_GREY : GREY}
+                textColor={MEDIUM_GREY}
+                style={styles.selectButton}
+                onPress={() => {
+                  setUserSearchSelected(true);
+                }}
+              >
+                Users
+              </Button>
+              <Button
+                buttonColor={userSearchSelected ? GREY : TRANSPARENT_GREY}
+                textColor={MEDIUM_GREY}
+                style={styles.selectButton}
+                onPress={() => {
+                  setUserSearchSelected(false);
+                }}
+              >
+                Trainings
+              </Button>
+            </View>
+            <View style={styles.divider} />
+          </>
+        )}
       </View>
       <ScrollView
         style={{ width: "100%", display: "flex", flexDirection: "column" }}
         contentContainerStyle={{ alignItems: "center" }}
         keyboardShouldPersistTaps={"handled"}
       >
-        {userSearchSelected && userSearchData[searchValue] ? (
-          userSearchData[searchValue].map((item) => {
-            return (
-              <TouchableOpacity
-                style={styles.userCard}
-                key={item.ID}
-                onPress={() => handleUserCardPress(item)}
-              >
-                <Image
-                  source={{ uri: DEFAULT_PROFILE_PICTURE }}
-                  style={styles.profilePicture}
-                />
-                <View>
-                  <View
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: 5,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={styles.nickname}>{item.Nickname}</Text>
-                    {item.IsVerifiedTrainer && (
-                      <VerifiedIcon color={DARK_BLUE} height={12} width={12} />
-                    )}
-                  </View>
-                  <Text style={styles.name}>{item.DisplayName}</Text>
-                </View>
-              </TouchableOpacity>
-            );
-          })
-        ) : (
-          <>
-            {loading &&
-              !userSearchData[searchValue] &&
-              [...Array(LOADING_MAX)].map((_, index) => {
-                return (
-                  <View style={styles.userCard} key={index}>
-                    <View style={styles.loadingPicture} />
-                    <View>
-                      <View style={styles.loadingNickname} />
-                      <View style={styles.loadingName} />
+        {userSearchSelected &&
+          (userSearchData[searchValue] ? (
+            userSearchData[searchValue].map((item) => {
+              return (
+                <TouchableOpacity
+                  style={styles.searchCard}
+                  key={item.ID}
+                  onPress={() => handleUserCardPress(item)}
+                >
+                  <Image
+                    source={{ uri: DEFAULT_PROFILE_PICTURE }}
+                    style={styles.profilePicture}
+                  />
+                  <View>
+                    <View
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: 5,
+                        alignItems: "center",
+                      }}
+                    >
+                      <Text style={styles.nickname}>{item.Nickname}</Text>
+                      {item.IsVerifiedTrainer && (
+                        <VerifiedIcon
+                          color={DARK_BLUE}
+                          height={12}
+                          width={12}
+                        />
+                      )}
                     </View>
+                    <Text style={styles.name}>{item.DisplayName}</Text>
                   </View>
-                );
-              })}
-          </>
-        )}
+                </TouchableOpacity>
+              );
+            })
+          ) : (
+            <>
+              {loading &&
+                !userSearchData[searchValue] &&
+                [...Array(LOADING_MAX)].map((_, index) => {
+                  return (
+                    <View style={styles.searchCard} key={index}>
+                      <View style={styles.loadingPicture} />
+                      <View>
+                        <View style={styles.loadingNickname} />
+                        <View style={styles.loadingName} />
+                      </View>
+                    </View>
+                  );
+                })}
+            </>
+          ))}
 
-        {!userSearchSelected && trainingSearchData[searchValue] ? (
-          trainingSearchData[searchValue].map((item) => {
-            return (
-              <TouchableOpacity
-                style={styles.userCard}
-                key={item.ID}
-                onPress={() => handleTrainingCardPress(item)}
-              >
-                <Image
-                  source={{ uri: item?.PictureUrl ?? null }}
-                  style={styles.profilePicture}
-                />
-                <View>
-                  <View
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: 5,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={styles.nickname}>{item.Name}</Text>
-                  </View>
-                  <Text style={styles.name}>
-                    {item.Difficulty} | {item.Duration} min
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            );
-          })
-        ) : (
-          <>
-            {loading &&
-              !trainingSearchData[searchValue] &&
-              [...Array(LOADING_MAX)].map((_, index) => {
-                return (
-                  <View style={styles.userCard} key={index}>
-                    <View style={styles.loadingPicture} />
-                    <View>
-                      <View style={styles.loadingNickname} />
-                      <View style={styles.loadingName} />
+        {!userSearchSelected &&
+          (trainingSearchData[searchValue] ? (
+            trainingSearchData[searchValue].map((item) => {
+              return (
+                <TouchableOpacity
+                  style={styles.searchCard}
+                  key={item.ID}
+                  onPress={() => handleTrainingCardPress(item)}
+                >
+                  <Image
+                    source={{ uri: item?.PictureUrl ?? null }}
+                    style={styles.trainingImage}
+                  />
+                  <View>
+                    <View
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: 5,
+                        alignItems: "center",
+                      }}
+                    >
+                      <Text style={styles.nickname}>{item.Name}</Text>
                     </View>
+                    <Text style={styles.name}>
+                      {item.Difficulty} | {item.Duration} min
+                    </Text>
                   </View>
-                );
-              })}
-          </>
-        )}
+                </TouchableOpacity>
+              );
+            })
+          ) : (
+            <>
+              {loading &&
+                !trainingSearchData[searchValue] &&
+                [...Array(LOADING_MAX)].map((_, index) => {
+                  return (
+                    <View style={styles.searchCard} key={index}>
+                      <View style={styles.loadingTrainingPicture} />
+                      <View>
+                        <View style={styles.loadingNickname} />
+                        <View style={styles.loadingName} />
+                      </View>
+                    </View>
+                  );
+                })}
+            </>
+          ))}
       </ScrollView>
     </View>
   );

@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
         width: "100%",
         opacity: 0.5
     },
-    userCard: {
+    searchCard: {
         width: '85%',
         height: 75,
         marginBottom: 10,
@@ -77,5 +77,18 @@ export const styles = StyleSheet.create({
     selectButton: {
         width: '50%',
         height: '100%',
-    }
+    },
+    trainingImage: {
+        width: 90,
+        height: 70,
+        borderRadius: 10,
+        backgroundColor: LIGHT_GREY,
+        resizeMode: 'cover',
+    },
+    loadingTrainingPicture: {
+        width: 90,
+        height: 70,
+        borderRadius: 10,
+        backgroundColor: LIGHT_GREY,
+    },
 });
