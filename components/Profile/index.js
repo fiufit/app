@@ -11,13 +11,19 @@ import GoalsSection from "./GoalsSection/GoalsSection";
 import { useIdToken } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
 import TrainingController from "../../utils/controllers/TrainingController";
-import {useRecoilState} from "recoil";
-import {createdTrainingsState} from "../../atoms";
+import { useRecoilState } from "recoil";
+import { createdTrainingsState, startedTrainingsState } from "../../atoms";
+import StartedTrainingsSection from "./StartedTrainingsSection/startedTrainingsSection";
 
 const Profile = ({ navigation }) => {
   const [athleteProfileSelected, setAthleteProfileSelected] = useState(true);
   const [user] = useIdToken(auth);
-  const [createdTrainings, setCreatedTrainings] = useRecoilState(createdTrainingsState);
+  const [createdTrainings, setCreatedTrainings] = useRecoilState(
+    createdTrainingsState
+  );
+  const [startedTrainings, setStartedTrainings] = useRecoilState(
+    startedTrainingsState
+  );
   const [loading, setLoading] = useState(true);
   const fetchCreatedTrainings = async () => {
     const controller = new TrainingController(user);
@@ -25,6 +31,7 @@ const Profile = ({ navigation }) => {
   };
 
   useEffect(() => {
+    //TODO fetch started trainings
     fetchCreatedTrainings().then((trainings) => {
       setCreatedTrainings(trainings);
       setLoading(false);
@@ -55,8 +62,19 @@ const Profile = ({ navigation }) => {
           contentContainerStyle={{ alignItems: "center", flexGrow: 1 }}
           style={styles.scrollView}
         >
+          {athleteProfileSelected && (
+            <StartedTrainingsSection
+              navigation={navigation}
+              startedTrainings={startedTrainings}
+              loading={loading}
+            />
+          )}
           {!athleteProfileSelected && (
-            <CreatedTrainingsSection navigation={navigation} createdTrainings={createdTrainings} loading={loading}/>
+            <CreatedTrainingsSection
+              navigation={navigation}
+              createdTrainings={createdTrainings}
+              loading={loading}
+            />
           )}
           {athleteProfileSelected && <GoalsSection />}
           <WalletSection />

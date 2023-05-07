@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles.trainings-section";
 import TrainingCard from "../../Shared/TrainingCard/trainingCard";
-import CreateTrainingCard from "../CreateTrainingCard/createTrainingCard";
+import NoTrainingsMessage from "../NoTrainingsMessage/noTrainingsMessage";
 
 const CreatedTrainingsSection = ({ navigation, createdTrainings, loading }) => {
   const handleSeeAll = () => {
@@ -11,6 +11,13 @@ const CreatedTrainingsSection = ({ navigation, createdTrainings, loading }) => {
       params: { trainings: createdTrainings, title: "Created Trainings", created: true},
     });
   };
+
+  const handleTrainingPress = () => {
+    navigation.navigate({
+      name: "Edit Training",
+      params: { edit: true, trainingData: createdTrainings[0]},
+    });
+  }
 
   return (
     <View style={styles.trainingsSection}>
@@ -29,9 +36,11 @@ const CreatedTrainingsSection = ({ navigation, createdTrainings, loading }) => {
           title={createdTrainings[0].Name}
           imageSource={{ uri: createdTrainings[0].PictureUrl }}
           duration={createdTrainings[0].Duration}
+          difficulty={createdTrainings[0].Difficulty}
+          onPress={handleTrainingPress}
         />
       ) : (
-        <CreateTrainingCard
+        <NoTrainingsMessage
           title={"You don't have any trainings created yet."}
           callToActionText={"Create one!"}
           onPress={() =>

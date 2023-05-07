@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
         width: "80%",
         textAlign: 'center'
     },
-    createButton: {
+    callToAction: {
         width: '40%',
         borderRadius: 12,
         height: 30,
