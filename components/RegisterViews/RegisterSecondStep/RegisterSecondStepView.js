@@ -33,7 +33,7 @@ const RegisterSecondStepView = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const [errorModalIsVisible, setErrorModalIsVisible] = useState(false);
   const [errorDescription, setErrorDescription] = useState("");
-  const [modalIsVisible, setModalIsVisible] = useState(false);
+  const [interestsModalIsVisible, setInterestsModalIsVisible] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState([]);
 
   const onChange = ({ type }, selectedDate) => {
@@ -262,7 +262,7 @@ const RegisterSecondStepView = ({ user }) => {
           left={<TextInput.Icon icon="map-marker" />}
           backgroundColor={"#FFFFFF"}
         />
-        <Pressable onPress={() => setModalIsVisible(true)}>
+        <Pressable onPress={() => setInterestsModalIsVisible(true)}>
           <Input
             placeholder={
               selectedInterests.length !== 0
@@ -279,8 +279,8 @@ const RegisterSecondStepView = ({ user }) => {
           />
         </Pressable>
         <InterestsModal
-          modalIsVisible={modalIsVisible}
-          setModalIsVisible={setModalIsVisible}
+          modalIsVisible={interestsModalIsVisible}
+          setModalIsVisible={setInterestsModalIsVisible}
           selectedInterests={selectedInterests}
           setSelectedInterests={setSelectedInterests}
         ></InterestsModal>

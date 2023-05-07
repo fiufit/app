@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
   successModal: {
     width: "87%",
-    height: 300,
+    height: "57%",
     borderRadius: 20,
     alignSelf: "center",
     backgroundColor: "white",
