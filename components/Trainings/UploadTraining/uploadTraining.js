@@ -15,7 +15,12 @@ import { auth } from "../../../firebase";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
 import { useRecoilState } from "recoil";
 import { createdTrainingsState } from "../../../atoms";
-import {difficulties, getDifficultyIndex, parseExercises} from "../../../utils/trainings";
+import {
+  difficulties,
+  getDifficultyIndex,
+  parseExercises,
+} from "../../../utils/trainings";
+import ErrorModal from "../../Shared/Modals/ErrorModal/ErrorModal";
 
 const UploadTraining = ({ navigation, route }) => {
   const [createdTrainings, setCreatedTrainings] = useRecoilState(
@@ -42,6 +47,8 @@ const UploadTraining = ({ navigation, route }) => {
   const [exercisesError, setExercisesError] = useState("");
   const [imageError, setImageError] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const [showErrorModal, setShowErrorModal] = useState(false);
 
   const handleAddExercise = () => {
     setExercisesError("");
@@ -76,7 +83,7 @@ const UploadTraining = ({ navigation, route }) => {
   const handleExerciseDelete = (index, exercise) => {
     const updatedExercises = exercisesToUpload.filter((_, i) => i !== index);
     setExercisesToUpload(updatedExercises);
-    if(edit){
+    if (edit) {
       setExercisesToDelete([...exercisesToDelete, exercise]);
     }
   };
@@ -112,12 +119,16 @@ const UploadTraining = ({ navigation, route }) => {
           name: titleToUpload,
           difficulty: difficulties[difficultyToUploadIndex],
           duration: durationToUpload,
-        }
-        await controller.editTraining(trainingData, updatedTrainingData,  exercisesToUpload, exercisesToDelete);
+        };
+        await controller.editTraining(
+          trainingData,
+          updatedTrainingData,
+          exercisesToUpload,
+          exercisesToDelete
+        );
 
         setExercisesToDelete([]);
       } else {
-
         const [{ data, error }, PictureUrl] = await controller.createTraining(
           {
             name: titleToUpload,
@@ -130,9 +141,10 @@ const UploadTraining = ({ navigation, route }) => {
         );
 
         console.log(data);
-        console.log("ERROR", error)
+        console.log("ERROR", error);
         if (error) {
-          alert(error.description);
+          setUploadError(error.description);
+          setShowErrorModal(true)
         } else {
           setCreatedTrainings([
             ...createdTrainings,
@@ -253,7 +265,9 @@ const UploadTraining = ({ navigation, route }) => {
                     add
                     exercises={exercisesToUpload}
                     setExercises={setExercisesToUpload}
-                    onDelete={(index, exercise) => handleExerciseDelete(index, exercise)}
+                    onDelete={(index, exercise) =>
+                      handleExerciseDelete(index, exercise)
+                    }
                     setEditOptions={setEditOptions}
                   />
                 );
@@ -307,6 +321,12 @@ const UploadTraining = ({ navigation, route }) => {
           text={edit ? "Updating training..." : "Creating training..."}
         />
       )}
+      <ErrorModal
+        errorDescription={uploadError}
+        errorTitle={"Oooops!"}
+        modalIsVisible={showErrorModal}
+        setModalIsVisible={setShowErrorModal}
+      />
     </>
   );
 };
