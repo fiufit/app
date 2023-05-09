@@ -15,7 +15,7 @@ import { auth } from "../../../firebase";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
 import { useRecoilState } from "recoil";
 import { createdTrainingsState } from "../../../atoms";
-import {parseExercises} from "../../../utils/trainings";
+import {difficulties, getDifficultyIndex, parseExercises} from "../../../utils/trainings";
 
 const UploadTraining = ({ navigation, route }) => {
   const [createdTrainings, setCreatedTrainings] = useRecoilState(
@@ -26,6 +26,7 @@ const UploadTraining = ({ navigation, route }) => {
   const [exercisesToUpload, setExercisesToUpload] = useState(
     trainingData?.Exercises ? parseExercises(trainingData?.Exercises) : []
   );
+  const [exercisesToDelete, setExercisesToDelete] = useState([]);
   const [showImageModal, setShowImageModal] = useState(false);
   const [image, setImage] = useState(trainingData?.PictureUrl ?? null);
   const [editOptions, setEditOptions] = useState({});
@@ -33,11 +34,6 @@ const UploadTraining = ({ navigation, route }) => {
   const [durationToUpload, setDurationToUpload] = useState(
     trainingData?.Duration ?? ""
   );
-
-  const difficulties = ["Beginner", "Intermediate", "Expert"];
-  const getDifficultyIndex = (difficulty) => {
-    return difficulty.indexOf(difficulty);
-  };
   const [difficultyToUploadIndex, setDifficultyToUploadIndex] = useState(
     trainingData?.Difficulty ? getDifficultyIndex(trainingData?.Difficulty) : 0
   );
@@ -77,9 +73,12 @@ const UploadTraining = ({ navigation, route }) => {
     );
   };
 
-  const handleExerciseDelete = (index) => {
+  const handleExerciseDelete = (index, exercise) => {
     const updatedExercises = exercisesToUpload.filter((_, i) => i !== index);
     setExercisesToUpload(updatedExercises);
+    if(edit){
+      setExercisesToDelete([...exercisesToDelete, exercise]);
+    }
   };
 
   const handleButtonPress = async () => {
@@ -106,10 +105,18 @@ const UploadTraining = ({ navigation, route }) => {
       image
     ) {
       setUploading(true);
+      const controller = new TrainingController(user);
+
       if (edit) {
-        // TODO
+        const updatedTrainingData = {
+          name: titleToUpload,
+          difficulty: difficulties[difficultyToUploadIndex],
+          duration: durationToUpload,
+        }
+        await controller.editTraining(trainingData, updatedTrainingData,  exercisesToUpload, exercisesToDelete);
+
+        setExercisesToDelete([]);
       } else {
-        const controller = new TrainingController(user);
 
         const [{ data, error }, PictureUrl] = await controller.createTraining(
           {
@@ -123,10 +130,10 @@ const UploadTraining = ({ navigation, route }) => {
         );
 
         console.log(data);
+        console.log("ERROR", error)
         if (error) {
           alert(error.description);
         } else {
-          alert("Training upload successfully!");
           setCreatedTrainings([
             ...createdTrainings,
             { ...data.training_plan, PictureUrl },
@@ -246,7 +253,7 @@ const UploadTraining = ({ navigation, route }) => {
                     add
                     exercises={exercisesToUpload}
                     setExercises={setExercisesToUpload}
-                    onDelete={(index) => handleExerciseDelete(index)}
+                    onDelete={(index, exercise) => handleExerciseDelete(index, exercise)}
                     setEditOptions={setEditOptions}
                   />
                 );

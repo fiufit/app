@@ -102,7 +102,7 @@ const Exercise = ({
       {add && !last && (
         <DeleteIcon
           style={styles.delete}
-          onPress={() => onDelete(number - 1)}
+          onPress={() => onDelete(number - 1, exerciseData)}
         />
       )}
     </Pressable>

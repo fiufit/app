@@ -36,30 +36,52 @@ class TrainingController {
   }
 
   async createTraining(trainingData, trainingImage) {
-    const { stsTokenManager } = this.user;
+    try {
+      const { stsTokenManager } = this.user;
 
-    const response = await fetch(
-      `https://fiufit-gateway.fly.dev/v1/trainings`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${stsTokenManager.accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(trainingData),
-      }
-    );
-
-    const createdTrainingData = await response.json();
-
-    let PictureUrl;
-    if (createdTrainingData.data.training_plan.ID) {
-      PictureUrl = await uploadImage(
-        trainingImage,
-        `training_pictures/${this.user.uid}/${createdTrainingData.data.training_plan.ID}/training.png`
+      const response = await fetch(
+        `https://fiufit-gateway.fly.dev/v1/trainings`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${stsTokenManager.accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(trainingData),
+        }
       );
+
+      const createdTrainingData = await response.json();
+      console.log(createdTrainingData);
+
+      let PictureUrl;
+      if (createdTrainingData?.data?.training_plan?.ID) {
+        PictureUrl = await uploadImage(
+          trainingImage,
+          `training_pictures/${this.user.uid}/${createdTrainingData.data.training_plan.ID}/training.png`
+        );
+      }
+      return [createdTrainingData, PictureUrl];
+    } catch (e) {
+      console.log(e);
+      return [
+        { error: { description: "Something went wrong, try again later!" } },
+      ];
     }
-    return [createdTrainingData, PictureUrl];
+  }
+
+  async editTraining(
+    originalTrainingData,
+    updatedTrainingData,
+    exercisesToUpload,
+    exercisesToDelete
+  ) {
+    console.log(
+      originalTrainingData,
+      updatedTrainingData,
+      exercisesToUpload,
+      exercisesToDelete
+    );
   }
 }
 
