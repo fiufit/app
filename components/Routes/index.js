@@ -38,7 +38,7 @@ const Routes = () => {
         <Tab.Screen name="Trainings" component={TrainingsNavigation} />
         <Tab.Screen name="Single Training" component={SingleTraining} />
         <Tab.Screen name="New Training" component={UploadTraining}/>
-        <Tab.Screen name="Edit Training" component={UploadTraining}/>
+        <Tab.Screen name="Edit Training" component={UploadTraining} options={{unmountOnBlur: true}}/>
         <Tab.Screen name="Training List" component={TrainingList} />
         <Tab.Screen name="Messages" component={InDevelopment} />
         <Tab.Screen name="Profile" component={Profile} />
