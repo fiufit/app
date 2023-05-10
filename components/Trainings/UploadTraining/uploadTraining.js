@@ -37,7 +37,7 @@ const UploadTraining = ({ navigation, route }) => {
   const [editOptions, setEditOptions] = useState({});
   const [titleToUpload, setTitleToUpload] = useState(trainingData?.Name ?? "");
   const [durationToUpload, setDurationToUpload] = useState(
-    trainingData?.Duration ?? ""
+    trainingData?.Duration ? String(trainingData?.Duration) : ""
   );
   const [difficultyToUploadIndex, setDifficultyToUploadIndex] = useState(
     trainingData?.Difficulty ? getDifficultyIndex(trainingData?.Difficulty) : 0
@@ -50,6 +50,15 @@ const UploadTraining = ({ navigation, route }) => {
   const [uploadError, setUploadError] = useState("");
   const [showErrorModal, setShowErrorModal] = useState(false);
 
+
+  const resetStates = () => {
+    setDifficultyToUploadIndex(0);
+    setDurationToUpload("");
+    setTitleToUpload("");
+    setExercisesToUpload([]);
+    setExercisesToDelete([]);
+    setImage(null);
+  }
   const handleAddExercise = () => {
     setExercisesError("");
     setExercisesToUpload([
@@ -88,11 +97,79 @@ const UploadTraining = ({ navigation, route }) => {
     }
   };
 
-  const handleButtonPress = async () => {
+  const handleEdit = async () => {
+    const controller = new TrainingController(user);
+    const updatedTrainingData = {
+      name: titleToUpload,
+      difficulty: difficulties[difficultyToUploadIndex],
+      duration: durationToUpload,
+      pictureUrl: image,
+    };
+    const {training, error} = await controller.editTraining(
+        trainingData,
+        updatedTrainingData,
+        exercisesToUpload,
+        exercisesToDelete,
+    );
+
+    if(error){
+      setUploadError(error);
+      setShowErrorModal(true);
+    } else {
+      setCreatedTrainings(createdTrainings.map(createdTraining => {
+        return createdTraining.ID === training.ID ? training : createdTraining;
+      }))
+      resetStates();
+      navigation.navigate({
+        name: "Training List",
+        merge: true,
+        params: {
+          trainings: createdTrainings,
+          title: "Created Trainings",
+          created: true,
+        },
+      });
+    }
+  }
+
+  const handleCreate = async () => {
+    const controller = new TrainingController(user);
+    const [{ data, error }, PictureUrl] = await controller.createTraining(
+        {
+          name: titleToUpload,
+          description: "to do",
+          difficulty: difficulties[difficultyToUploadIndex],
+          duration: Number(durationToUpload),
+          exercises: exercisesToUpload,
+        },
+        image
+    );
+
+    if (error) {
+      setUploadError(error.description);
+      setShowErrorModal(true)
+    } else {
+      setCreatedTrainings([
+        ...createdTrainings,
+        { ...data.training_plan, PictureUrl },
+      ]);
+      resetStates();
+      navigation.navigate({
+        name: "Training List",
+        merge: true,
+        params: {
+          trainings: createdTrainings,
+          title: "Created Trainings",
+          created: true,
+        },
+      });
+    }
+  }
+
+  const handleErrors = () => {
     if (!titleToUpload) {
       setTitleError("Add a title!");
     }
-
     if (!durationToUpload) {
       setDurationError("Add a duration!");
     }
@@ -104,7 +181,10 @@ const UploadTraining = ({ navigation, route }) => {
     if (!image) {
       setImageError("Upload an image!");
     }
+  }
 
+  const handleButtonPress = async () => {
+    handleErrors();
     if (
       titleToUpload &&
       durationToUpload &&
@@ -112,59 +192,10 @@ const UploadTraining = ({ navigation, route }) => {
       image
     ) {
       setUploading(true);
-      const controller = new TrainingController(user);
-
       if (edit) {
-        const updatedTrainingData = {
-          name: titleToUpload,
-          difficulty: difficulties[difficultyToUploadIndex],
-          duration: durationToUpload,
-        };
-        await controller.editTraining(
-          trainingData,
-          updatedTrainingData,
-          exercisesToUpload,
-          exercisesToDelete
-        );
-
-        setExercisesToDelete([]);
+        await handleEdit();
       } else {
-        const [{ data, error }, PictureUrl] = await controller.createTraining(
-          {
-            name: titleToUpload,
-            description: "to do",
-            difficulty: difficulties[difficultyToUploadIndex],
-            duration: durationToUpload,
-            exercises: exercisesToUpload,
-          },
-          image
-        );
-
-        console.log(data);
-        console.log("ERROR", error);
-        if (error) {
-          setUploadError(error.description);
-          setShowErrorModal(true)
-        } else {
-          setCreatedTrainings([
-            ...createdTrainings,
-            { ...data.training_plan, PictureUrl },
-          ]);
-          setDifficultyToUploadIndex(0);
-          setDurationToUpload("");
-          setTitleToUpload("");
-          setExercisesToUpload([]);
-          setImage(null);
-          navigation.navigate({
-            name: "Training List",
-            merge: true,
-            params: {
-              trainings: createdTrainings,
-              title: "Created Trainings",
-              created: true,
-            },
-          });
-        }
+        await handleCreate()
       }
       setUploading(false);
     }
