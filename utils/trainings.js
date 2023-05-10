@@ -11,5 +11,5 @@ export const parseExercises = (exercises) => {
 export const difficulties = ["Beginner", "Intermediate", "Expert"];
 
 export const getDifficultyIndex = (difficulty) => {
-    return difficulty.indexOf(difficulty);
+    return difficulties.indexOf(difficulty);
 };
