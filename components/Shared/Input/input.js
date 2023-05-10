@@ -1,7 +1,7 @@
-import { TextInput, View } from "react-native";
-
-import { DARK_GREY } from "../../../utils/colors";
-import { styles } from "./styles.input";
+import {TextInput, View} from "react-native";
+import {DARK_GREY} from "../../../utils/colors";
+import {React} from "react";
+import {styles} from "./styles.input";
 
 const Input = ({
   left,
@@ -21,6 +21,7 @@ const Input = ({
   inputMode,
   marginTop,
   multiline,
+  autoFocus
 }) => {
   return (
     <View
@@ -50,6 +51,7 @@ const Input = ({
         editable={editable ?? true}
         inputMode={inputMode ?? "text"}
         multiline={multiline ?? false}
+        autoFocus={autoFocus}
       ></TextInput>
       <View style={styles.sideContainer}>{right}</View>
     </View>

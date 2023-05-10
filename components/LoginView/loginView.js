@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 
 import Background from "../Background/background";
 import Button from "../Shared/Button/button";
+import ErrorModal from "../Shared/Modals/ErrorModal/ErrorModal";
 import EyeIcon from "../../assets/images/general/eyeIcon.svg";
 import HideEyeIcon from "../../assets/images/general/hideEyeIcon.svg";
 import Input from "../Shared/Input/input";
@@ -30,6 +31,8 @@ const LoginView = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorModalIsVisible, setErrorModalIsVisible] = useState(false);
+  const [errorDescription, setErrorDescription] = useState("");
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId:
       "235995330653-u65jmivq25u554uak81v7auljem4800e.apps.googleusercontent.com",
@@ -48,7 +51,15 @@ const LoginView = ({ navigation }) => {
   }
 
   async function handleLogIn() {
-    await singIn(email, password);
+    try {
+      await singIn(email, password);
+    } catch (error) {
+      //TODO: Set a different error description based on the error.
+      setErrorModalIsVisible(true);
+      setErrorDescription(
+        "There has been an error in the Login process. Please try again later!"
+      );
+    }
   }
 
   async function handleGoogleLogIn() {
@@ -158,6 +169,12 @@ const LoginView = ({ navigation }) => {
             </Text>{" "}
           </Text>
         </View>
+        <ErrorModal
+          modalIsVisible={errorModalIsVisible}
+          setModalIsVisible={setErrorModalIsVisible}
+          errorTitle="Oooops!"
+          errorDescription={errorDescription}
+        ></ErrorModal>
         {loading && <LoadingModal />}
       </ScrollView>
     </Background>
