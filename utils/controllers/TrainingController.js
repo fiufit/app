@@ -22,17 +22,7 @@ class TrainingController {
     );
 
     const { data } = await response.json();
-
-    let trainings = [];
-    for (const training of data.trainings) {
-      //TODO receive PictureUrl in response
-      const PictureUrl = await getImageUrl(
-        `training_pictures/${training.TrainerID}/${training.ID}/training.png`
-      );
-      trainings.push({ ...training, PictureUrl });
-    }
-
-    return trainings;
+    return data.trainings;
   }
 
   async createTraining(trainingData, trainingImage) {
