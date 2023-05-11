@@ -25,7 +25,6 @@ import Button from "../Shared/Button/button";
 
 const LOADING_MAX = 4;
 const SearchView = ({ navigation, route }) => {
-  //TODO support trainings fetching when endpoint is available
   const [user] = useAuthState(auth);
   const { filter, searchForUsers, searchForTrainings } = route.params;
   const [userSearchData, setUserSearchData] = useState({});
