@@ -20,7 +20,8 @@ const SearchBar = ({
                        searchForUsers,
                        searchForTrainings,
                        autoFocus,
-                       onSearch
+                       onSearch,
+                       value
                    }) => {
 
 
@@ -51,6 +52,7 @@ const SearchBar = ({
                editable={!redirect}
                onChangeText={handleInputChange}
                autoFocus={autoFocus}
+               value={value}
         />
     </Pressable>
 
