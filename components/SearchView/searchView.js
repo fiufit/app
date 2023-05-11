@@ -7,6 +7,7 @@ import VerifiedIcon from "../../assets/images/profile/verifiedIcon.svg"
 import {useEffect, useState} from "react";
 import {auth, DEFAULT_PROFILE_PICTURE} from "../../firebase";
 import {useAuthState} from "react-firebase-hooks/auth";
+import RequestController from "../../utils/controllers/RequestController";
 const LOADING_MAX = 4
 const SearchView = ({navigation, route}) => {
     //TODO support trainings fetching when endpoint is available
@@ -22,17 +23,9 @@ const SearchView = ({navigation, route}) => {
     useEffect(() => {
 
         const fetchUsers = async () => {
-            const {stsTokenManager} = user;
             if(searchForUsers && !searchData[searchValue]){
-                const userResponse = await fetch(`https://fiufit-gateway.fly.dev/v1/users?name=${searchValue}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${stsTokenManager.accessToken}`
-                    }
-                });
-
-                const {data} = await userResponse.json();
+                const controller = new RequestController(user);
+                const {data} = await controller.fetch(`users?name=${searchValue}`, 'GET');
                 return {[searchValue]: data.users.filter(userData => userData.ID !== user.uid)}
             }
         }
