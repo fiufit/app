@@ -8,7 +8,7 @@ const RecommendedTraining = ({training, onTrainingPress}) => {
         <View style={styles.trainingCard}>
             <Image source={trainingImage} style={styles.trainingImage}/>
             <View style={styles.filter}/>
-            <Text style={styles.recommendTitle}>Check this {training.title.toLowerCase()} training!</Text>
+            <Text style={styles.recommendTitle}>Check this {training.Name.toLowerCase()} training!</Text>
             <TouchableOpacity style={styles.seeMoreContainer} onPress={() => onTrainingPress(training)}>
                 <Text style={styles.seeMore}>See more </Text>
                 <View style={{paddingTop: 3}}>

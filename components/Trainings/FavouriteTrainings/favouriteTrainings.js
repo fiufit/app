@@ -48,13 +48,13 @@ const FavouriteTrainings = ({favourite, recommended, onTrainingPress}) => {
                 {transformTrainings(trainingsToShow).map((trainingColumn, idx) =>
                     <View style={styles.cardColumn} key={idx}>
                         {trainingColumn.map(training =>
-                            <TouchableOpacity style={styles.trainingCard} key={training.id} onPress={() => onTrainingPress(training)}>
+                            <TouchableOpacity style={styles.trainingCard} key={training.ID} onPress={() => onTrainingPress(training)}>
                                 <Image source={trainingImage} style={styles.trainingImage}/>
                                 <View style={styles.infoContainer}>
-                                    <Text style={styles.trainingTitle} numberOfLines={1}>{training.title}</Text>
+                                    <Text style={styles.trainingTitle} numberOfLines={1}>{training.Name}</Text>
                                     <View style={styles.detailsContainer}>
-                                        <Text style={styles.trainingDetail}>{training.duration}</Text>
-                                        <Text style={styles.trainingDetail}>{training.difficulty}</Text>
+                                        <Text style={styles.trainingDetail}>{training.Duration} min</Text>
+                                        <Text style={styles.trainingDetail}>{training.Difficulty}</Text>
                                     </View>
                                 </View>
                             </TouchableOpacity>
