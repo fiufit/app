@@ -4,6 +4,7 @@ export const DARK_BLUE = "#192126";
 export const WHITE = "#FFFFFF";
 export const SECONDARY_WHITE = "#F2F2F2";
 export const MEDIUM_GREY = "#727272";
+export const TRANSPARENT_GREY = "rgba(114,114,114,0.06)";
 export const LIGHT_GREY = "rgb(235,236,238)";
 export const DARK_GREY = "#626262";
 export const GREEN = "#BBF246";
