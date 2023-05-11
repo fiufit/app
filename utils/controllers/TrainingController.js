@@ -1,27 +1,17 @@
 import { getImageUrl, uploadImage } from "../../firebase";
+import RequestController from "./RequestController";
 
 class TrainingController {
   constructor(user) {
     this.user = user;
+    this.requestController = new RequestController(user);
   }
 
   async getTrainings(userId = null) {
-    const { stsTokenManager } = this.user;
-
-    const response = await fetch(
-      `https://fiufit-gateway.fly.dev/v1/trainings?trainer_id=${
-        userId ?? this.user.uid
-      }`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${stsTokenManager.accessToken}`,
-          "Content-Type": "application/json",
-        },
-      }
+    const { data } = await this.requestController.fetch(
+      `trainings?trainer_id=${userId ?? this.user.uid}`,
+      "GET"
     );
-
-    const { data } = await response.json();
 
     let trainings = [];
     for (const training of data.trainings) {
@@ -37,21 +27,11 @@ class TrainingController {
 
   async createTraining(trainingData, trainingImage) {
     try {
-      const { stsTokenManager } = this.user;
-
-      const response = await fetch(
-        `https://fiufit-gateway.fly.dev/v1/trainings`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${stsTokenManager.accessToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(trainingData),
-        }
+      const createdTrainingData = await this.requestController.fetch(
+        "trainings",
+        "POST",
+        trainingData
       );
-
-      const createdTrainingData = await response.json();
 
       let PictureUrl;
       if (createdTrainingData?.data?.training_plan?.ID) {
@@ -86,26 +66,18 @@ class TrainingController {
       if (
         this.needsTrainingDataEdit(originalTrainingData, updatedTrainingData)
       ) {
-        const { stsTokenManager } = this.user;
-        const trainingResponse = await fetch(
-          `https://fiufit-gateway.fly.dev/v1/trainings/${originalTrainingData.ID}`,
+        const trainingUpdateData = await this.requestController.fetch(
+          `trainings/${originalTrainingData.ID}`,
+          "PATCH",
           {
-            method: "PATCH",
-            headers: {
-              Authorization: `Bearer ${stsTokenManager.accessToken}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              name: updatedTrainingData.name,
-              duration: Number(updatedTrainingData.duration),
-              difficulty: updatedTrainingData.difficulty,
-            }),
+            name: updatedTrainingData.name,
+            duration: Number(updatedTrainingData.duration),
+            difficulty: updatedTrainingData.difficulty,
           }
         );
 
-        const trainingUpdateData = await trainingResponse.json();
         if (trainingUpdateData.error) {
-          console.log(trainingUpdateData.error)
+          console.log(trainingUpdateData.error);
           throw `There was an error updating ${originalTrainingData.Name} training`;
         }
 
@@ -114,7 +86,7 @@ class TrainingController {
         return originalTrainingData;
       }
     } catch (e) {
-      console.log(e)
+      console.log(e);
       throw `There was an error updating ${originalTrainingData.Name} training`;
     }
   }
@@ -139,69 +111,45 @@ class TrainingController {
   }
 
   async deleteExercises(exercisesToDelete) {
-    const { stsTokenManager } = this.user;
     for (const exercise of exercisesToDelete) {
-      const deleteResponse = await fetch(
-        `https://fiufit-gateway.fly.dev/v1/trainings/${exercise.exerciseOldData.TrainingPlanID}/exercises/${exercise.exerciseOldData.ID}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${stsTokenManager.accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
+      const deletedData = await this.requestController.fetch(
+        `trainings/${exercise.exerciseOldData.TrainingPlanID}/exercises/${exercise.exerciseOldData.ID}`,
+        "DELETE"
       );
 
-      const deletedData = await deleteResponse.json();
       if (deletedData.error) {
-        console.log(deletedData.error)
+        console.log(deletedData.error);
         throw `There was an error deleting ${exercise.exerciseOldData.Title} exercise`;
       }
     }
   }
 
-  async handleExercise(exercise, trainingPlanId){
-    const { stsTokenManager } = this.user;
-    if(!exercise?.exerciseOldData){
-      const createResponse = await fetch(
-          `https://fiufit-gateway.fly.dev/v1/trainings/${trainingPlanId}/exercises`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${stsTokenManager.accessToken}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              title: exercise.title,
-              description: exercise.description
-            })
-          }
+  async handleExercise(exercise, trainingPlanId) {
+    if (!exercise?.exerciseOldData) {
+      return await this.requestController.fetch(
+        `trainings/${trainingPlanId}/exercises`,
+        "POST",
+        {
+          title: exercise.title,
+          description: exercise.description,
+        }
       );
-
-      return await createResponse.json();
     } else {
       const needsUpdate = !(
-          exercise?.exerciseOldData?.Description === exercise.description &&
-          exercise?.exerciseOldData?.Title === exercise.title
+        exercise?.exerciseOldData?.Description === exercise.description &&
+        exercise?.exerciseOldData?.Title === exercise.title
       );
       if (needsUpdate) {
-        const updateResponse = await fetch(
-            `https://fiufit-gateway.fly.dev/v1/trainings/${exercise.exerciseOldData.TrainingPlanID}/exercises/${exercise.exerciseOldData.ID}`,
-            {
-              method: "PATCH",
-              headers: {
-                Authorization: `Bearer ${stsTokenManager.accessToken}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                title: exercise.title,
-                description: exercise.description
-              })
-            }
+        return await this.requestController.fetch(
+          `trainings/${trainingPlanId}/exercises/${exercise.exerciseOldData.ID}`,
+          "PATCH",
+          {
+            title: exercise.title,
+            description: exercise.description,
+          }
         );
-        return await updateResponse.json();
       } else {
-        return {data: exercise.exerciseOldData}
+        return { data: exercise.exerciseOldData };
       }
     }
   }
@@ -209,12 +157,15 @@ class TrainingController {
   async updateExercises(exercisesToUpdate, trainingPlanId) {
     let updatedExercises = [];
     for (const exercise of exercisesToUpdate) {
-      const {data, error} = await this.handleExercise(exercise, trainingPlanId);
-      if(error){
+      const { data, error } = await this.handleExercise(
+        exercise,
+        trainingPlanId
+      );
+      if (error) {
         console.log(error);
         throw `There was an error updating exercises`;
       }
-      updatedExercises.push(data)
+      updatedExercises.push(data);
     }
     return updatedExercises;
   }
@@ -241,7 +192,10 @@ class TrainingController {
 
       await this.deleteExercises(exercisesToDelete);
 
-      updatedData.training.Exercises = await this.updateExercises(exercisesToUpload, originalTrainingData.ID);
+      updatedData.training.Exercises = await this.updateExercises(
+        exercisesToUpload,
+        originalTrainingData.ID
+      );
 
       return updatedData;
     } catch (e) {
