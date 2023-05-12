@@ -2,6 +2,7 @@ export const GREY = "#F7F6FA";
 export const SECONDARY_GREY = "#DADADA";
 export const TERCIARY_GREY = "#DDDDDD";
 export const QUATERNARY_GREY = "#999";
+export const QUINARY_GREY = "#aaa";
 export const DARK_BLUE = "#192126";
 export const WHITE = "#FFFFFF";
 export const SECONDARY_WHITE = "#F2F2F2";
