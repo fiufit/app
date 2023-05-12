@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import { auth, DEFAULT_PROFILE_PICTURE, getImageUrl } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Button from "../Shared/Button/button";
+import RequestController from "../../utils/controllers/RequestController";
 
 const LOADING_MAX = 4;
 const SearchView = ({ navigation, route }) => {
@@ -38,42 +39,17 @@ const SearchView = ({ navigation, route }) => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const { stsTokenManager } = user;
-      if (searchForUsers && !userSearchData[searchValue]) {
-        const userResponse = await fetch(
-          `https://fiufit-gateway.fly.dev/v1/users?name=${searchValue}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${stsTokenManager.accessToken}`,
-            },
-          }
-        );
-
-        const { data } = await userResponse.json();
-        return {
-          [searchValue]: data.users.filter(
-            (userData) => userData.ID !== user.uid
-          ),
-        };
+      if(searchForUsers && !userSearchData[searchValue]){
+        const controller = new RequestController(user);
+        const {data} = await controller.fetch(`users?name=${searchValue}`, 'GET');
+        return {[searchValue]: data.users.filter(userData => userData.ID !== user.uid)}
       }
-    };
+    }
 
     const fetchTrainings = async () => {
-      const { stsTokenManager } = user;
       if (searchForTrainings && !trainingSearchData[searchValue]) {
-        const trainingsResponse = await fetch(
-          `https://fiufit-gateway.fly.dev/v1/trainings?name=${searchValue}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${stsTokenManager.accessToken}`,
-            },
-          }
-        );
-        const { data } = await trainingsResponse.json();
+        const controller = new RequestController(user);
+        const {data} = await controller.fetch(`trainings?name=${searchValue}`, 'GET');
 
         return {
           [searchValue]: data.trainings.filter(
