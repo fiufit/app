@@ -15,10 +15,10 @@ const TrainingList = ({ navigation, route }) => {
     navigation.goBack();
   };
 
-  const handleTrainingPress = (training) => {
+  const handleTrainingPress = (training, index) => {
     navigation.navigate({
       name: "Edit Training",
-      params: { edit: true, trainingData: training },
+      params: { edit: true, createdTrainingIndex: index},
     });
   };
 
@@ -39,7 +39,7 @@ const TrainingList = ({ navigation, route }) => {
           contentContainerStyle={{ alignItems: "center", flexGrow: 1, gap: 20 }}
           showsVerticalScrollIndicator={false}
         >
-          {trainings.map((training) => {
+          {trainings.map((training, index) => {
             return (
               <TrainingCard
                 imageSource={{ uri: training?.PictureUrl }}
@@ -47,7 +47,7 @@ const TrainingList = ({ navigation, route }) => {
                 duration={training.Duration}
                 key={training.ID}
                 difficulty={training.Difficulty}
-                onPress={() => handleTrainingPress(training)}
+                onPress={() => handleTrainingPress(training, index)}
               />
             );
           })}

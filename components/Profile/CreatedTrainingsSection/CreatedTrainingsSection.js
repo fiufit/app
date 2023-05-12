@@ -15,7 +15,7 @@ const CreatedTrainingsSection = ({ navigation, createdTrainings, loading }) => {
   const handleTrainingPress = () => {
     navigation.navigate({
       name: "Edit Training",
-      params: { edit: true, trainingData: createdTrainings[0]},
+      params: { edit: true, createdTrainingIndex: 0},
     });
   }
 
