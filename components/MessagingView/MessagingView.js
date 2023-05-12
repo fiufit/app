@@ -1,13 +1,21 @@
-import { ScrollView } from "react-native";
-import { Text } from "react-native-paper";
+import { ScrollView, View } from "react-native";
+
+import MessagingTopBar from "../MessagingTopBar/MessagingTopBar";
+import { styles } from "./styles.MessagingView";
 
 const MessagingView = ({ navigation }) => {
+  const handleEditPress = () => {
+    // handle edit button press
+  };
+
   return (
     <ScrollView
       style={{ width: "100%" }}
       contentContainerStyle={{ alignItems: "center" }}
     >
-      <Text>Hello from Messaging view.</Text>
+      <View style={styles.messagingTopBarContainer}>
+        <MessagingTopBar onEditPress={handleEditPress} />
+      </View>
     </ScrollView>
   );
 };
