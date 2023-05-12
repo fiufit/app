@@ -26,7 +26,8 @@ const UploadTraining = ({ navigation, route }) => {
   const [createdTrainings, setCreatedTrainings] = useRecoilState(
     createdTrainingsState
   );
-  const { edit, trainingData } = route?.params ?? {};
+  const { edit, createdTrainingIndex } = route?.params ?? {};
+  const trainingData = createdTrainingIndex !== undefined ? createdTrainings[createdTrainingIndex] : null
   const [user] = useIdToken(auth);
   const [exercisesToUpload, setExercisesToUpload] = useState(
     trainingData?.Exercises ? parseExercises(trainingData?.Exercises) : []
