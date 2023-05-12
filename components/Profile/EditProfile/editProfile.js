@@ -159,7 +159,7 @@ const EditProfile = ({ navigation }) => {
         image,
         `profile_pictures/${userData.ID}/profile.png`
       );
-      setUserData({ ...userData, profilePictureUrl: imageUrl });
+      setUserData({ ...userData, PictureUrl: imageUrl });
     } catch (error) {
       setErrorModalIsVisible(true);
       setErrorDescription(
@@ -179,7 +179,7 @@ const EditProfile = ({ navigation }) => {
         <Image
           style={styles.profilePicture}
           source={{
-            uri: userData.profilePictureUrl ?? DEFAULT_PROFILE_PICTURE,
+            uri: userData.PictureUrl ?? DEFAULT_PROFILE_PICTURE,
           }}
         />
         <EditIcon
