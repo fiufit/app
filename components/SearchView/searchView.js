@@ -25,7 +25,6 @@ import Button from "../Shared/Button/button";
 
 const LOADING_MAX = 4;
 const SearchView = ({ navigation, route }) => {
-  //TODO support trainings fetching when endpoint is available
   const [user] = useAuthState(auth);
   const { filter, searchForUsers, searchForTrainings } = route.params;
   const [userSearchData, setUserSearchData] = useState({});
@@ -74,19 +73,10 @@ const SearchView = ({ navigation, route }) => {
             },
           }
         );
-
         const { data } = await trainingsResponse.json();
 
-        let trainings = [];
-        for (const training of data.trainings) {
-          //TODO receive PictureUrl in response
-          const PictureUrl = await getImageUrl(
-            `training_pictures/${training.TrainerID}/${training.ID}/training.png`
-          );
-          trainings.push({ ...training, PictureUrl });
-        }
         return {
-          [searchValue]: trainings.filter(
+          [searchValue]: data.trainings.filter(
             (trainingData) => trainingData.TrainerID !== user.uid
           ),
         };
@@ -222,7 +212,7 @@ const SearchView = ({ navigation, route }) => {
                   onPress={() => handleUserCardPress(item)}
                 >
                   <Image
-                    source={{ uri: DEFAULT_PROFILE_PICTURE }}
+                    source={{ uri: item?.PictureUrl ?? DEFAULT_PROFILE_PICTURE }}
                     style={styles.profilePicture}
                   />
                   <View>
