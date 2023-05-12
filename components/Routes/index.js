@@ -1,6 +1,7 @@
 import { Text, View } from "react-native";
 
 import Button from "../Shared/Button/button";
+import Conversation from "../Conversation/Conversation";
 import EditProfile from "../Profile/EditProfile/editProfile";
 import MessagingView from "../MessagingView/MessagingView";
 import { NavigationContainer } from "@react-navigation/native";
@@ -39,6 +40,7 @@ const Routes = () => {
         <Tab.Screen name="Single Training" component={SingleTraining} />
         <Tab.Screen name="New Training" component={NewTraining} />
         <Tab.Screen name="Messages" component={MessagingView} />
+        <Tab.Screen name="Conversation" component={Conversation} />
         <Tab.Screen name="Profile" component={Profile} />
         <Tab.Screen name={"Profile Settings"} component={InDevelopment} />
         <Tab.Screen name={"Edit Profile"} component={EditProfile} />

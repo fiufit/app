@@ -10,7 +10,7 @@ const MessagingView = ({ navigation }) => {
   };
 
   const handleConversationPress = () => {
-    console.log("Conversation pressed!");
+    navigation.navigate({ name: "Conversation", merge: true });
   };
 
   return (
