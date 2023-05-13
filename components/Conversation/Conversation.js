@@ -1,8 +1,10 @@
 import { FlatList, View } from "react-native";
 
+import ConversationHeader from "../ConversationHeader/ConversationHeader";
 import Message from "../Message/Message";
+import { styles } from "./styles.Conversation";
 
-const Conversation = () => {
+const Conversation = ({ navigation }) => {
   const messages = [
     {
       id: 1,
@@ -22,17 +24,26 @@ const Conversation = () => {
 
   return (
     <View>
-      <FlatList
-        data={messages}
-        renderItem={({ item }) => (
-          <Message
-            profileImage={item.image}
-            message={item.message}
-            isCurrentUser={item.isCurrentUser}
-            timestamp={item.timestamp}
-          />
-        )}
-      />
+      <View style={styles.conversationHeaderContainer}>
+        <ConversationHeader
+          navigation={navigation}
+          name="John Doe"
+          profileImage={"https://randomuser.me/api/portraits/men/75.jpg"}
+        />
+      </View>
+      <View style={styles.messageListContainer}>
+        <FlatList
+          data={messages}
+          renderItem={({ item }) => (
+            <Message
+              profileImage={item.image}
+              message={item.message}
+              isCurrentUser={item.isCurrentUser}
+              timestamp={item.timestamp}
+            />
+          )}
+        />
+      </View>
     </View>
   );
 };
