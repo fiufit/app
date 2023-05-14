@@ -21,7 +21,8 @@ const SearchBar = ({
                        searchForTrainings,
                        autoFocus,
                        onSearch,
-                       value
+                       value,
+                       onFilterPress
                    }) => {
 
 
@@ -46,7 +47,7 @@ const SearchBar = ({
                marginTop={marginTop}
                backgroundColor={backgroundColor}
                left={<SearchIcon/>}
-               right={filter && <FilterIcon/>}
+               right={filter && <FilterIcon onPress={onFilterPress}/>}
                fontFamily={fontFamily}
                fontSize={fontSize}
                editable={!redirect}
