@@ -9,6 +9,7 @@ import EmailVerification from "./EmailVerification/emailVerification";
 import LoadingModal from "../Shared/Modals/LoadingModal/loadingModal";
 import { useEffect, useState } from "react";
 import Background from "../Background/background";
+import ProfileController from "../../utils/controllers/ProfileController";
 
 const AuthenticationWrapper = ({ children }) => {
   const [userData, setUserData] = useRecoilState(userDataState);
@@ -18,13 +19,25 @@ const AuthenticationWrapper = ({ children }) => {
   const onUserChanged = async (user) => {
     if (user) {
       setLoadingData(true);
-      const controller = new AuthenticationController(user);
       if (!userData?.DisplayName) {
-        const { data } = await controller.getUserData();
-        setUserData(data);
+        const profileController = new ProfileController(user);
+        const promises = [
+          profileController.getProfileData(),
+          profileController.getFollowers(),
+          profileController.getFollowing(),
+        ];
+        const [{ data }, { data: followersData }, { data: followingData }] =
+          await Promise.all(promises);
+
+        setUserData({
+          ...data,
+          followers: followersData.followers,
+          following: followingData.followed,
+        });
       }
       if (!user.emailVerified) {
-        await controller.sendVerificationMail();
+        const authController = new AuthenticationController(user);
+        await authController.sendVerificationMail();
       }
       setLoadingData(false);
     }
