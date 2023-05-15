@@ -7,11 +7,6 @@ class AuthenticationController{
         this.requestController = new RequestController(user);
     }
 
-    async getUserData(){
-        return await this.requestController
-            .fetch(`users/${this.user.uid}`, "GET");
-    }
-
     async sendVerificationMail(){
         const {stsTokenManager} = this.user;
         //TODO: add apikey to .env file
