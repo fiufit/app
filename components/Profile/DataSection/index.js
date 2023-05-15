@@ -5,13 +5,15 @@ import { DARK_BLUE } from "../../../utils/colors";
 import { useRecoilValue } from "recoil";
 import { userDataState } from "../../../atoms";
 
-const DataSection = ({ onEditProfilePress, other, otherUserData }) => {
+const DataSection = ({ onEditProfilePress, other, otherUserData, followers }) => {
   const userData = useRecoilValue(userDataState);
   const getImageToShow = () => {
     return other ? otherUserData?.PictureUrl : userData.PictureUrl;
   };
 
-  const handleFollow = () => {};
+  const handleFollow = () => {
+
+  };
 
   return (
     <View style={styles.profileDataSection}>
@@ -29,7 +31,7 @@ const DataSection = ({ onEditProfilePress, other, otherUserData }) => {
           )}
         </View>
         <View style={styles.lowerSection}>
-          <Text style={styles.followers}>127 followers</Text>
+          <Text style={styles.followers}>{followers.length} followers</Text>
           {!other && (
             <TouchableOpacity
               style={styles.editProfileButton}

@@ -14,6 +14,7 @@ import TrainingController from "../../utils/controllers/TrainingController";
 import { useRecoilState } from "recoil";
 import { createdTrainingsState, startedTrainingsState } from "../../atoms";
 import StartedTrainingsSection from "./StartedTrainingsSection/startedTrainingsSection";
+import ProfileController from "../../utils/controllers/ProfileController";
 
 const Profile = ({ navigation }) => {
   const [athleteProfileSelected, setAthleteProfileSelected] = useState(true);
@@ -29,6 +30,13 @@ const Profile = ({ navigation }) => {
     const controller = new TrainingController(user);
     return await controller.getTrainings();
   };
+  const [followers, setFollowers] = useState([]);
+
+  const fetchFollowers = async () => {
+      const controller = new ProfileController(user);
+      const {data} = await controller.getFollowers();
+      return data.followers;
+  }
 
   useEffect(() => {
     //TODO fetch started trainings
@@ -36,6 +44,10 @@ const Profile = ({ navigation }) => {
       setCreatedTrainings(trainings);
       setLoading(false);
     });
+    fetchFollowers().then((followers) => {
+        console.log(followers)
+        setFollowers(followers)
+    })
   }, []);
 
   return (
@@ -52,6 +64,7 @@ const Profile = ({ navigation }) => {
         onEditProfilePress={() =>
           navigation.navigate({ name: "Edit Profile", merge: true })
         }
+        followers={followers}
       />
       <ProfileSwitcher
         setAthleteProfileSelected={setAthleteProfileSelected}
