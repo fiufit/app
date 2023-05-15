@@ -9,9 +9,33 @@ const MessagingView = ({ navigation }) => {
     // handle edit button press
   };
 
-  const handleConversationPress = () => {
-    navigation.navigate({ name: "Conversation", merge: true });
+  const handleConversationPress = (conversationId) => {
+    navigation.navigate("Conversation", { conversationId: conversationId });
   };
+
+  const chatPreviews = [
+    {
+      name: "John Doe",
+      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
+      lastMessage: "Hey, how is it going?",
+      lastMessageTime: "10:30 AM",
+      conversationId: 1,
+    },
+    {
+      name: "Maria",
+      imageSource: "https://randomuser.me/api/portraits/women/65.jpg",
+      lastMessage: "hi maria",
+      lastMessageTime: "11:30 AM",
+      conversationId: 2,
+    },
+    {
+      name: "Hector",
+      imageSource: "https://randomuser.me/api/portraits/men/74.jpg",
+      lastMessage: "Hi hectorrrrrr",
+      lastMessageTime: "12:30 PM",
+      conversationId: 3,
+    },
+  ];
 
   return (
     <ScrollView
@@ -21,39 +45,20 @@ const MessagingView = ({ navigation }) => {
       <View style={styles.messagingTopBarContainer}>
         <MessagingTopBar onEditPress={handleEditPress} />
       </View>
-      <TouchableOpacity
-        onPress={handleConversationPress}
-        style={styles.chatPreviewContainer}
-      >
-        <ChatPreview
-          imageSource={require("../../assets/googleIcon.png")}
-          name="John Doe"
-          lastMessage="Hey, how's it going?"
-          lastMessageTime="10:30 AM"
-        />
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={handleConversationPress}
-        style={styles.chatPreviewContainer}
-      >
-        <ChatPreview
-          imageSource={require("../../assets/googleIcon.png")}
-          name="John Doe"
-          lastMessage="Hey, how's it going?"
-          lastMessageTime="10:30 AM"
-        />
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={handleConversationPress}
-        style={styles.chatPreviewContainer}
-      >
-        <ChatPreview
-          imageSource={require("../../assets/googleIcon.png")}
-          name="John Doe"
-          lastMessage="Hey, how's it going?"
-          lastMessageTime="10:30 AM"
-        />
-      </TouchableOpacity>
+      {chatPreviews.map((item, index) => (
+        <TouchableOpacity
+          onPress={() => handleConversationPress(item.conversationId)}
+          style={styles.chatPreviewContainer}
+          key={index}
+        >
+          <ChatPreview
+            imageSource={item.imageSource}
+            name={item.name}
+            lastMessage={item.lastMessage}
+            lastMessageTime={item.lastMessageTime}
+          />
+        </TouchableOpacity>
+      ))}
     </ScrollView>
   );
 };

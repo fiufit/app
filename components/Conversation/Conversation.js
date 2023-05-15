@@ -4,7 +4,9 @@ import ConversationHeader from "../ConversationHeader/ConversationHeader";
 import Message from "../Message/Message";
 import { styles } from "./styles.Conversation";
 
-const Conversation = ({ navigation }) => {
+const Conversation = ({ navigation, route }) => {
+  const { conversationId } = route.params;
+
   const messages = [
     {
       id: 1,
@@ -27,7 +29,7 @@ const Conversation = ({ navigation }) => {
       <View style={styles.conversationHeaderContainer}>
         <ConversationHeader
           navigation={navigation}
-          name="John Doe"
+          name={"Fetched Name"}
           profileImage={"https://randomuser.me/api/portraits/men/75.jpg"}
         />
       </View>
