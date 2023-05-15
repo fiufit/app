@@ -5,14 +5,10 @@ import { DARK_BLUE } from "../../../utils/colors";
 import { useRecoilValue } from "recoil";
 import { userDataState } from "../../../atoms";
 
-const DataSection = ({ onEditProfilePress, other, otherUserData, followers }) => {
+const DataSection = ({ other, otherUserData, followsLoading }) => {
   const userData = useRecoilValue(userDataState);
   const getImageToShow = () => {
     return other ? otherUserData?.PictureUrl : userData.PictureUrl;
-  };
-
-  const handleFollow = () => {
-
   };
 
   return (
@@ -31,24 +27,24 @@ const DataSection = ({ onEditProfilePress, other, otherUserData, followers }) =>
           )}
         </View>
         <View style={styles.lowerSection}>
-          <Text style={styles.followers}>{followers.length} followers</Text>
-          {!other && (
-            <TouchableOpacity
-              style={styles.editProfileButton}
-              onPress={onEditProfilePress}
-            >
-              <Text style={styles.editProfileText}>Edit Profile</Text>
-            </TouchableOpacity>
-          )}
-
-          {other && (
-            <TouchableOpacity
-              style={styles.editProfileButton}
-              onPress={handleFollow}
-            >
-              <Text style={styles.editProfileText}>Follow</Text>
-            </TouchableOpacity>
-          )}
+          <View style={styles.followersContainer}>
+            {!followsLoading && (
+              <>
+                <Text style={styles.followers}>
+                  {other
+                    ? otherUserData?.followers?.length
+                    : userData.followers.length}{" "}
+                  followers
+                </Text>
+                <Text style={styles.followers}>
+                  {other
+                    ? otherUserData?.following?.length
+                    : userData.following.length}{" "}
+                  following
+                </Text>
+              </>
+            )}
+          </View>
         </View>
       </View>
     </View>

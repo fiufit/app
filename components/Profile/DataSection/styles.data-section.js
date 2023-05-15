@@ -28,6 +28,13 @@ export const styles = StyleSheet.create({
         fontFamily: 'Poppins_500Medium',
         color: DARK_BLUE,
     },
+    followersContainer: {
+      display: "flex",
+      flexDirection: "row",
+      width: "90%",
+      justifyContent: "space-between",
+      alignItems: "center"
+    },
     followers: {
         fontFamily: 'Poppins_500Medium',
         fontSize: 15,
@@ -42,10 +49,10 @@ export const styles = StyleSheet.create({
     },
     lowerSection: {
         flex: 1,
-        flexDirection: "row",
+        flexDirection: "column",
         width: "90%",
         justifyContent: "space-between",
-        alignItems: "center"
+        // alignItems: "center"
     },
     editProfileButton: {
         width: "45%",
