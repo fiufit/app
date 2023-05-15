@@ -10,6 +10,11 @@ class ProfileController {
         return await this.requestController
             .fetch('users', "PATCH", updatedProfileData)
     }
+
+    async getFollowers(userId = null){
+        return await this.requestController
+            .fetch(`users/${userId ?? this.user.uid}/followers`, "GET");
+    }
 }
 
 export default ProfileController;
