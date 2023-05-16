@@ -78,6 +78,7 @@ const Profile = ({ navigation }) => {
     fetchData();
   }, []);
 
+
   return (
 
       <View style={styles.container}>
@@ -89,7 +90,7 @@ const Profile = ({ navigation }) => {
         >
           <MenuIcon color={DARK_BLUE} />
         </TouchableOpacity>
-        <DataSection />
+        <DataSection navigation={navigation}/>
         <ProfileSwitcher
           setAthleteProfileSelected={setAthleteProfileSelected}
           athleteProfileSelected={athleteProfileSelected}
