@@ -45,17 +45,17 @@ const MessagingView = ({ navigation }) => {
       <View style={styles.messagingTopBarContainer}>
         <MessagingTopBar onEditPress={handleEditPress} />
       </View>
-      {chatPreviews.map((item, index) => (
+      {chatPreviews.map((chatPreview, chatPreviewIndex) => (
         <TouchableOpacity
-          onPress={() => handleConversationPress(item.conversationId)}
+          onPress={() => handleConversationPress(chatPreview.conversationId)}
           style={styles.chatPreviewContainer}
-          key={index}
+          key={chatPreviewIndex}
         >
           <ChatPreview
-            imageSource={item.imageSource}
-            name={item.name}
-            lastMessage={item.lastMessage}
-            lastMessageTime={item.lastMessageTime}
+            imageSource={chatPreview.imageSource}
+            name={chatPreview.name}
+            lastMessage={chatPreview.lastMessage}
+            lastMessageTime={chatPreview.lastMessageTime}
           />
         </TouchableOpacity>
       ))}
