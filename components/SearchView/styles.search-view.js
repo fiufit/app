@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
         width: "100%",
         opacity: 0.5
     },
-    userCard: {
+    searchCard: {
         width: '85%',
         height: 75,
         marginBottom: 10,
@@ -65,5 +65,30 @@ export const styles = StyleSheet.create({
     name: {
         fontFamily: "Lato_400Regular",
         color: DARK_GREY
-    }
+    },
+    searchSelector: {
+        width: '100%',
+        height: 40,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: "space-evenly",
+        alignItems: 'center'
+    },
+    selectButton: {
+        width: '50%',
+        height: '100%',
+    },
+    trainingImage: {
+        width: 90,
+        height: 70,
+        borderRadius: 10,
+        backgroundColor: LIGHT_GREY,
+        resizeMode: 'cover',
+    },
+    loadingTrainingPicture: {
+        width: 90,
+        height: 70,
+        borderRadius: 10,
+        backgroundColor: LIGHT_GREY,
+    },
 });

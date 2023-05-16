@@ -1,3 +1,6 @@
+import * as Google from "expo-auth-session/providers/google";
+import * as WebBrowser from "expo-web-browser";
+
 import { Checkbox, TextInput } from "react-native-paper";
 import {
   Image,
@@ -6,18 +9,18 @@ import {
   TouchableHighlight,
   View,
 } from "react-native";
-import {React, useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
+import AuthenticationController from "../../../utils/controllers/AuthenticationController";
 import Background from "../../Background/background";
 import Button from "../..//Shared/Button/button";
+import ErrorModal from "../../Shared/Modals/ErrorModal/ErrorModal";
 import Input from "../../Shared/Input/input";
-import { WHITE } from "../../../utils/colors";
-import { styles } from "./styles.RegisterFirstStepView";
-import AuthenticationController from "../../../utils/controllers/AuthenticationController";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
-import * as WebBrowser from 'expo-web-browser';
-import * as Google from 'expo-auth-session/providers/google'
-import {signInWithGoogle} from "../../../firebase";
+import { WHITE } from "../../../utils/colors";
+import { signInWithGoogle } from "../../../firebase";
+import { styles } from "./styles.RegisterFirstStepView";
+
 WebBrowser.maybeCompleteAuthSession();
 
 const RegisterFirstStepView = ({ navigation }) => {
@@ -28,38 +31,47 @@ const RegisterFirstStepView = ({ navigation }) => {
   const [passwordRepeatIsVisible, setPasswordRepeatIsVisible] = useState(false);
   const [checked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorModalIsVisible, setErrorModalIsVisible] = useState(false);
+  const [errorDescription, setErrorDescription] = useState("");
   const [request, response, promptAsync] = Google.useAuthRequest({
-    expoClientId: "235995330653-u65jmivq25u554uak81v7auljem4800e.apps.googleusercontent.com",
-    scopes: ['profile', 'email'],
-    redirectUri: 'https://auth.expo.io/@stein257/fiufitapp'
+    expoClientId:
+      "235995330653-u65jmivq25u554uak81v7auljem4800e.apps.googleusercontent.com",
+    scopes: ["profile", "email"],
+    redirectUri: "https://auth.expo.io/@stein257/fiufitapp",
   });
 
   async function handleRegister() {
-    //TODO: Change alerts for error modals with error interpretation
-    if(!email || !password || !passwordRepeat){
-      alert("You need to complete all fields!");
-    } else if (password !== passwordRepeat){
-      alert("Passwords don't match!")
-    } else{
-        setLoading(true)
-        const controller= new AuthenticationController();
-        try{
-          await controller.startRegister(email, password);
-          setLoading(false)
-        } catch (e) {
-          setLoading(false)
-          alert(e.description);
-        }
+    if (!email || !password || !passwordRepeat) {
+      setErrorModalIsVisible(true);
+      setErrorDescription("You need to complete all fields!");
+    } else if (password !== passwordRepeat) {
+      setErrorModalIsVisible(true);
+      setErrorDescription("Passwords don't match!");
+    } else {
+      setLoading(true);
+      const controller = new AuthenticationController();
+      try {
+        await controller.startRegister(email, password);
+        setLoading(false);
+      } catch (e) {
+        setLoading(false);
+        setErrorModalIsVisible(true);
+        setErrorDescription(
+          "An unexpected error has occured while registering. Please try again later!"
+        );
+      }
     }
   }
 
   useEffect(() => {
-    console.log(response)
+    console.log(response);
     if (response?.type === "success") {
-      console.log(response.authentication.accessToken)
-      signInWithGoogle(response.authentication.accessToken).then((_) => setLoading(false))
-    } else{
-      setLoading(false)
+      console.log(response.authentication.accessToken);
+      signInWithGoogle(response.authentication.accessToken).then((_) =>
+        setLoading(false)
+      );
+    } else {
+      setLoading(false);
     }
   }, [response]);
 
@@ -69,7 +81,7 @@ const RegisterFirstStepView = ({ navigation }) => {
 
   async function handleGoogleRegister() {
     setLoading(true);
-    await promptAsync()
+    await promptAsync();
   }
 
   function showPrivacyPolicy() {
@@ -200,8 +212,15 @@ const RegisterFirstStepView = ({ navigation }) => {
             </Text>{" "}
           </Text>
         </View>
+        <ErrorModal
+          modalIsVisible={errorModalIsVisible}
+          setModalIsVisible={setErrorModalIsVisible}
+          errorTitle="Oooops!"
+          errorDescription={errorDescription}
+        ></ErrorModal>
       </ScrollView>
-      {loading && <LoadingModal text={"Registering your profile"}/>}
+
+      {loading && <LoadingModal text={"Registering your profile"} />}
     </Background>
   );
 };

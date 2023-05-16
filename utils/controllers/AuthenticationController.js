@@ -1,21 +1,15 @@
 import {singIn} from "../../firebase";
+import RequestController from "./RequestController";
 
 class AuthenticationController{
     constructor(user) {
         this.user = user;
+        this.requestController = new RequestController(user);
     }
 
     async getUserData(){
-        const {uid, stsTokenManager} = this.user;
-        const userResponse = await fetch(`https://fiufit-gateway.fly.dev/v1/users/${uid}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${stsTokenManager.accessToken}`
-            },
-        });
-
-        return await userResponse.json();
+        return await this.requestController
+            .fetch(`users/${this.user.uid}`, "GET");
     }
 
     async sendVerificationMail(){
@@ -37,17 +31,12 @@ class AuthenticationController{
     }
 
     async startRegister(email, password){
-        const response = await fetch(`https://fiufit-gateway.fly.dev/v1/users/register`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
+        const data = await this.requestController
+            .fetch('users/register', "POST", {
                 email: email.trim(),
                 password: password.trim()
-            })
-        });
-        const data = await response.json();
+            });
+
         if(data.error){
             throw data.error
         } else {
@@ -56,16 +45,9 @@ class AuthenticationController{
     }
 
     async finishRegister(userData){
-        const accessToken = this.user.stsTokenManager.accessToken;
-        const response = await fetch(`https://fiufit-gateway.fly.dev/v1/users/finish-register`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${accessToken}`
-            },
-            body: JSON.stringify(userData)
-        });
-        const data = await response.json();
+        const data = await this.requestController
+            .fetch('users/finish-register', "POST", userData);
+
         console.log(data)
         if(data.error){
             throw data.error

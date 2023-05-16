@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
     back: {
         position: "absolute",
-        top: 38,
+        top: 50,
         left: "7%",
         display: "flex",
         flexDirection: "row",
