@@ -1,4 +1,4 @@
-import { FlatList, View } from "react-native";
+import { FlatList, KeyboardAvoidingView, View } from "react-native";
 
 import ConversationHeader from "../ConversationHeader/ConversationHeader";
 import Message from "../Message/Message";
@@ -100,7 +100,7 @@ const Conversation = ({ navigation, route }) => {
   ];
 
   return (
-    <View style={styles.conversationContainer}>
+    <KeyboardAvoidingView style={styles.conversationContainer}>
       <View style={styles.conversationHeaderContainer}>
         <ConversationHeader
           navigation={navigation}
@@ -129,7 +129,7 @@ const Conversation = ({ navigation, route }) => {
           onSendMessage={handleSendMessage}
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

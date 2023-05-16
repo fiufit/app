@@ -10,16 +10,16 @@ export const styles = StyleSheet.create({
     marginTop: 40,
   },
   messageListContainer: {
-    height: "80%",
+    flex: 1,
   },
   messageList: {
     backgroundColor: WHITE,
-    height: "100%",
     flex: 1,
   },
   messageInputContainer: {
-    flex: 1,
-    justifyContent: "center",
     backgroundColor: GREY,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    justifyContent: "center",
   },
 });
