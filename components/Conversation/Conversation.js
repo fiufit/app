@@ -8,8 +8,9 @@ import { styles } from "./styles.Conversation";
 const Conversation = ({ navigation, route }) => {
   const { conversationId } = route.params;
 
-  const handleSendMessage = () => {
+  const handleSendMessage = (inputMessage) => {
     //TODO: Send message to Backend.
+    console.log(inputMessage);
   };
 
   const messages = [

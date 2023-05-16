@@ -15,24 +15,24 @@ const MessagingView = ({ navigation }) => {
 
   const chatPreviews = [
     {
-      name: "John Doe",
+      name: "John Lennon",
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
       conversationId: 1,
     },
     {
-      name: "Maria",
-      imageSource: "https://randomuser.me/api/portraits/women/65.jpg",
-      lastMessage: "hi maria",
-      lastMessageTime: "11:30 AM",
+      name: "John Lennon",
+      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
+      lastMessage: "Hey, how is it going?",
+      lastMessageTime: "10:30 AM",
       conversationId: 2,
     },
     {
-      name: "Hector",
-      imageSource: "https://randomuser.me/api/portraits/men/74.jpg",
-      lastMessage: "Hi hectorrrrrr",
-      lastMessageTime: "12:30 PM",
+      name: "John Lennon",
+      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
+      lastMessage: "Hey, how is it going?",
+      lastMessageTime: "10:30 AM",
       conversationId: 3,
     },
   ];
