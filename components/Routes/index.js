@@ -1,7 +1,6 @@
 import { Text, View } from "react-native";
 
 import { NavigationContainer } from "@react-navigation/native";
-import Profile from "../Profile";
 import RegisterSecondStepView from "../RegisterViews/RegisterSecondStep/RegisterSecondStepView";
 import TabBar from "../TabBar";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -15,6 +14,7 @@ import SingleTraining from "../Trainings/SingleTraining/singleTraining";
 import UploadTraining from "../Trainings/UploadTraining/uploadTraining";
 import TrainingsNavigation from "../TrainingsNavigation/trainingsNavigation";
 import TrainingList from "../TrainingList/trainingList";
+import ProfileNavigation from "../ProfileNavigation/profileNavigation";
 
 const Tab = createBottomTabNavigator();
 
@@ -41,7 +41,7 @@ const Routes = () => {
         <Tab.Screen name="Edit Training" component={UploadTraining} options={{unmountOnBlur: true}}/>
         <Tab.Screen name="Training List" component={TrainingList} />
         <Tab.Screen name="Messages" component={InDevelopment} />
-        <Tab.Screen name="Profile" component={Profile} />
+        <Tab.Screen name="Profile" component={ProfileNavigation} />
         <Tab.Screen name={"Profile Settings"} component={EditProfile} />
       </Tab.Navigator>
     </NavigationContainer>
