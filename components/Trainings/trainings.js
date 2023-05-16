@@ -223,7 +223,6 @@ const Trainings = ({ navigation }) => {
           right={<FilterIcon />}
           fontFamily={"Lato_400Regular"}
           fontSize={14}
-          filter
           navigation={navigation}
           redirect
           searchForUsers
