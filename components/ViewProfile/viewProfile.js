@@ -1,4 +1,4 @@
-import {RefreshControl, ScrollView, Text, View} from "react-native";
+import { RefreshControl, ScrollView, Text, View } from "react-native";
 import { styles } from "./styles.view-profile";
 import DataSection from "../Profile/DataSection";
 import Back from "../Shared/Back/back";
@@ -23,7 +23,9 @@ const ViewProfile = ({ navigation, route }) => {
   const [userData, setUserData] = useRecoilState(userDataState);
 
   const userIsFollowing = () => {
-    return userData.following.some((followed) => followed.ID === route.params.userData.ID);
+    return userData.following.some(
+      (followed) => followed.ID === route.params.userData.ID
+    );
   };
 
   const handleBack = () => {
@@ -39,35 +41,33 @@ const ViewProfile = ({ navigation, route }) => {
   };
 
   const handleFollow = async () => {
-      setUserData({
-        ...userData,
-        following: [...userData.following, route.params.userData],
-      });
-      setFollowers([...followers, userData]);
+    setUserData({
+      ...userData,
+      following: [...userData.following, route.params.userData],
+    });
+    setFollowers([...followers, userData]);
 
-      const controller = new ProfileController(user);
+    const controller = new ProfileController(user);
 
-      const data = await controller.followUser(route.params.userData.ID);
+    const data = await controller.followUser(route.params.userData.ID);
 
-      console.log("FOLLOW", data);
+    console.log("FOLLOW", data);
   };
 
   const handleUnfollow = async () => {
-      setUserData({
-        ...userData,
-        following: userData.following.filter(
-            (followed) => followed.ID !== route.params.userData.ID
-        ),
-      });
-      setFollowers([
-        followers.filter((follower) => follower.ID !== userData.ID),
-      ]);
+    setUserData({
+      ...userData,
+      following: userData.following.filter(
+        (followed) => followed.ID !== route.params.userData.ID
+      ),
+    });
+    setFollowers([followers.filter((follower) => follower.ID !== userData.ID)]);
 
-      const controller = new ProfileController(user);
+    const controller = new ProfileController(user);
 
-      const data = await controller.unfollowUser(route.params.userData.ID);
+    const data = await controller.unfollowUser(route.params.userData.ID);
 
-      console.log("UNFOLLOW", data);
+    console.log("UNFOLLOW", data);
   };
 
   const fetchUserCreatedTrainings = async () => {
@@ -102,9 +102,11 @@ const ViewProfile = ({ navigation, route }) => {
       setFollowing(following);
       setFollowsLoading(false);
     });
-  }
+  };
 
   useEffect(() => {
+    setTrainingsLoading(true);
+    setFollowsLoading(true);
     fetchUserCreatedTrainings().then((trainings) => {
       setCreatedTrainings(trainings);
       setTrainingsLoading(false);
@@ -114,7 +116,7 @@ const ViewProfile = ({ navigation, route }) => {
       setFollowing(following);
       setFollowsLoading(false);
     });
-  }, []);
+  }, [route.params.userData]);
 
   return (
     <View style={styles.container}>
@@ -123,6 +125,7 @@ const ViewProfile = ({ navigation, route }) => {
         otherUserData={{ ...route.params.userData, followers, following }}
         other
         followsLoading={followsLoading}
+        navigation={navigation}
       />
       <View
         style={{
@@ -139,7 +142,7 @@ const ViewProfile = ({ navigation, route }) => {
             buttonColor={userIsFollowing() ? DARK_BLUE : LIGHT_GREY}
             onPress={!userIsFollowing() ? handleFollow : handleUnfollow}
           >
-            { userIsFollowing() ? "Unfollow" : "Follow"}
+            {userIsFollowing() ? "Unfollow" : "Follow"}
           </Button>
           <Button
             style={styles.button}
@@ -154,7 +157,10 @@ const ViewProfile = ({ navigation, route }) => {
         </View>
         <ScrollView
           refreshControl={
-            <RefreshControl refreshing={(followsLoading || trainingsLoading)} onRefresh={refreshData} />
+            <RefreshControl
+              refreshing={followsLoading || trainingsLoading}
+              onRefresh={refreshData}
+            />
           }
           contentContainerStyle={{ alignItems: "center", flexGrow: 1, gap: 10 }}
           style={styles.scrollView}
