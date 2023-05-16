@@ -1,5 +1,6 @@
+import { GREY, WHITE } from "../../utils/colors";
+
 import { StyleSheet } from "react-native";
-import { WHITE } from "../../utils/colors";
 
 export const styles = StyleSheet.create({
   conversationContainer: {
@@ -14,7 +15,11 @@ export const styles = StyleSheet.create({
   messageList: {
     backgroundColor: WHITE,
     height: "100%",
-    paddingTop: 10,
     flex: 1,
+  },
+  messageInputContainer: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: GREY,
   },
 });

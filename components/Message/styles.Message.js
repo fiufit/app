@@ -1,4 +1,9 @@
-import { BLACK, GREY, QUINARY_GREY, SECONDARY_GREY } from "../../utils/colors";
+import {
+  AZURE,
+  BLACK,
+  QUATERNARY_GREEN,
+  QUINARY_GREY,
+} from "../../utils/colors";
 
 import { StyleSheet } from "react-native";
 
@@ -6,12 +11,14 @@ export const styles = StyleSheet.create({
   messageContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   containerCurrentUser: {
     flexDirection: "row-reverse",
     alignItems: "center",
-    marginBottom: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   profileImage: {
     width: 40,
@@ -20,14 +27,14 @@ export const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   messageBubble: {
-    backgroundColor: GREY,
+    backgroundColor: AZURE,
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 15,
     maxWidth: "80%",
   },
   bubbleCurrentUser: {
-    backgroundColor: SECONDARY_GREY,
+    backgroundColor: QUATERNARY_GREEN,
   },
   message: {
     fontSize: 16,

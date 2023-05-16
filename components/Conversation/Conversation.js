@@ -2,10 +2,15 @@ import { FlatList, View } from "react-native";
 
 import ConversationHeader from "../ConversationHeader/ConversationHeader";
 import Message from "../Message/Message";
+import MessageInput from "../MessageInput/MessageInput";
 import { styles } from "./styles.Conversation";
 
 const Conversation = ({ navigation, route }) => {
   const { conversationId } = route.params;
+
+  const handleSendMessage = () => {
+    //TODO: Send message to Backend.
+  };
 
   const messages = [
     {
@@ -117,6 +122,12 @@ const Conversation = ({ navigation, route }) => {
             )}
           />
         </View>
+      </View>
+      <View style={styles.messageInputContainer}>
+        <MessageInput
+          placeholder="Type your message"
+          onSendMessage={handleSendMessage}
+        />
       </View>
     </View>
   );
