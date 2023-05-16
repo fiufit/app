@@ -35,31 +35,93 @@ const MessagingView = ({ navigation }) => {
       lastMessageTime: "10:30 AM",
       conversationId: 3,
     },
+    {
+      name: "John Lennon",
+      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
+      lastMessage: "Hey, how is it going?",
+      lastMessageTime: "10:30 AM",
+      conversationId: 1,
+    },
+    {
+      name: "John Lennon",
+      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
+      lastMessage: "Hey, how is it going?",
+      lastMessageTime: "10:30 AM",
+      conversationId: 2,
+    },
+    {
+      name: "John Lennon",
+      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
+      lastMessage: "Hey, how is it going?",
+      lastMessageTime: "10:30 AM",
+      conversationId: 3,
+    },
+    {
+      name: "John Lennon",
+      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
+      lastMessage: "Hey, how is it going?",
+      lastMessageTime: "10:30 AM",
+      conversationId: 1,
+    },
+    {
+      name: "John Lennon",
+      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
+      lastMessage: "Hey, how is it going?",
+      lastMessageTime: "10:30 AM",
+      conversationId: 2,
+    },
+    {
+      name: "John Lennon",
+      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
+      lastMessage: "Hey, how is it going?",
+      lastMessageTime: "10:30 AM",
+      conversationId: 3,
+    },
+    {
+      name: "John Lennon",
+      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
+      lastMessage: "Hey, how is it going?",
+      lastMessageTime: "10:30 AM",
+      conversationId: 1,
+    },
+    {
+      name: "John Lennon",
+      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
+      lastMessage: "Hey, how is it going?",
+      lastMessageTime: "10:30 AM",
+      conversationId: 2,
+    },
+    {
+      name: "John Lennon",
+      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
+      lastMessage: "Hey, how is it going?",
+      lastMessageTime: "10:30 AM",
+      conversationId: 3,
+    },
   ];
 
   return (
-    <ScrollView
-      style={{ width: "100%" }}
-      contentContainerStyle={{ alignItems: "center" }}
-    >
+    <View style={styles.messagingViewContainer}>
       <View style={styles.messagingTopBarContainer}>
         <MessagingTopBar onEditPress={handleEditPress} />
       </View>
-      {chatPreviews.map((chatPreview, chatPreviewIndex) => (
-        <TouchableOpacity
-          onPress={() => handleConversationPress(chatPreview.conversationId)}
-          style={styles.chatPreviewContainer}
-          key={chatPreviewIndex}
-        >
-          <ChatPreview
-            imageSource={chatPreview.imageSource}
-            name={chatPreview.name}
-            lastMessage={chatPreview.lastMessage}
-            lastMessageTime={chatPreview.lastMessageTime}
-          />
-        </TouchableOpacity>
-      ))}
-    </ScrollView>
+      <ScrollView style={styles.chatPreviewList}>
+        {chatPreviews.map((chatPreview, chatPreviewIndex) => (
+          <TouchableOpacity
+            onPress={() => handleConversationPress(chatPreview.conversationId)}
+            style={styles.chatPreviewContainer}
+            key={chatPreviewIndex}
+          >
+            <ChatPreview
+              imageSource={chatPreview.imageSource}
+              name={chatPreview.name}
+              lastMessage={chatPreview.lastMessage}
+              lastMessageTime={chatPreview.lastMessageTime}
+            />
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </View>
   );
 };
 
