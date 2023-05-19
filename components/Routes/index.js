@@ -17,6 +17,7 @@ import { signOutFromApp } from "../../firebase";
 import { styles } from "./styles.routes";
 import { useRecoilState } from "recoil";
 import { userDataState } from "../../atoms";
+import Ratings from "../Ratings/ratings";
 
 const Tab = createBottomTabNavigator();
 
@@ -51,6 +52,7 @@ const Routes = () => {
         <Tab.Screen name="Profile" component={Profile} />
         <Tab.Screen name={"Profile Settings"} component={InDevelopment} />
         <Tab.Screen name={"Edit Profile"} component={EditProfile} />
+        <Tab.Screen name={"Ratings"} component={Ratings} />
       </Tab.Navigator>
     </NavigationContainer>
   );
