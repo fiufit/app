@@ -1,8 +1,9 @@
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import {Image, Pressable, ScrollView, Text, TouchableOpacity, View} from "react-native";
 import { styles } from "./style.single-training";
 import Back from "../../Shared/Back/back";
 import trainingImage from "../../../assets/images/examples/woman.png";
 import FavouriteIcon from "../../../assets/images/general/favouriteIcon.svg";
+import StarIcon from "../../../assets/images/general/star.svg";
 import { React, useState } from "react";
 import { WHITE } from "../../../utils/colors";
 import Exercise from "./Exercise/exercise";
@@ -30,6 +31,10 @@ const SingleTraining = ({ navigation, route }) => {
     <>
       <View style={styles.container}>
         <Back onPress={() => navigation.goBack()} />
+        <Pressable style={styles.ratingContainer} onPress={() => navigation.navigate({name: 'Ratings', merge: true})}>
+            <Text style={styles.rating}>4.5</Text>
+            <StarIcon color={WHITE} width={12} height={12}/>
+        </Pressable>
         <View style={styles.imageContainer}>
           <Image style={styles.image} source={pictureUrl ? {uri: pictureUrl} : trainingImage} />
         </View>
