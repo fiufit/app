@@ -1,20 +1,21 @@
 import { Text, View } from "react-native";
 
+import Button from "../Shared/Button/button";
+import Conversation from "../Conversation/Conversation";
+import EditProfile from "../Profile/EditProfile/editProfile";
+import MessagingView from "../MessagingView/MessagingView";
 import { NavigationContainer } from "@react-navigation/native";
 import RegisterSecondStepView from "../RegisterViews/RegisterSecondStep/RegisterSecondStepView";
+import SingleTraining from "../Trainings/SingleTraining/singleTraining";
 import TabBar from "../TabBar";
+import TrainingList from "../TrainingList/trainingList";
+import TrainingsNavigation from "../TrainingsNavigation/trainingsNavigation";
+import UploadTraining from "../Trainings/UploadTraining/uploadTraining";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { styles } from "./styles.routes";
-import Button from "../Shared/Button/button";
 import { signOutFromApp } from "../../firebase";
+import { styles } from "./styles.routes";
 import { useRecoilState } from "recoil";
 import { userDataState } from "../../atoms";
-import EditProfile from "../Profile/EditProfile/editProfile";
-import SingleTraining from "../Trainings/SingleTraining/singleTraining";
-import UploadTraining from "../Trainings/UploadTraining/uploadTraining";
-import TrainingsNavigation from "../TrainingsNavigation/trainingsNavigation";
-import TrainingList from "../TrainingList/trainingList";
-import ProfileNavigation from "../ProfileNavigation/profileNavigation";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,12 +38,18 @@ const Routes = () => {
         <Tab.Screen name="Home" component={InDevelopment} />
         <Tab.Screen name="Trainings" component={TrainingsNavigation} />
         <Tab.Screen name="Single Training" component={SingleTraining} />
-        <Tab.Screen name="New Training" component={UploadTraining}/>
-        <Tab.Screen name="Edit Training" component={UploadTraining} options={{unmountOnBlur: true}}/>
+        <Tab.Screen name="New Training" component={UploadTraining} />
+        <Tab.Screen
+          name="Edit Training"
+          component={UploadTraining}
+          options={{ unmountOnBlur: true }}
+        />
         <Tab.Screen name="Training List" component={TrainingList} />
-        <Tab.Screen name="Messages" component={InDevelopment} />
-        <Tab.Screen name="Profile" component={ProfileNavigation} />
-        <Tab.Screen name={"Profile Settings"} component={EditProfile} />
+        <Tab.Screen name="Messages" component={MessagingView} />
+        <Tab.Screen name="Conversation" component={Conversation} />
+        <Tab.Screen name="Profile" component={Profile} />
+        <Tab.Screen name={"Profile Settings"} component={InDevelopment} />
+        <Tab.Screen name={"Edit Profile"} component={EditProfile} />
       </Tab.Navigator>
     </NavigationContainer>
   );
