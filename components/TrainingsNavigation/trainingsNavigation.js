@@ -2,6 +2,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 import Trainings from "../Trainings/trainings";
 import ViewProfile from "../ViewProfile/viewProfile";
 import SearchView from "../SearchView/searchView";
+import UserList from "../UserList/userList";
 const Stack = createStackNavigator();
 
 const TrainingsNavigation = () => {
@@ -27,6 +28,10 @@ const TrainingsNavigation = () => {
                     name={"Search View"}
                     component={SearchView}
                     options={{unmountOnBlur: true}}
+                />
+                <Stack.Screen
+                    name={"View Follows List"}
+                    component={UserList}
                 />
             </Stack.Navigator>
     )
