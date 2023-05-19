@@ -61,7 +61,7 @@ const ViewProfile = ({ navigation, route }) => {
         (followed) => followed.ID !== route.params.userData.ID
       ),
     });
-    setFollowers([followers.filter((follower) => follower.ID !== userData.ID)]);
+    setFollowers(followers.filter((follower) => follower.ID !== userData.ID));
 
     const controller = new ProfileController(user);
 
