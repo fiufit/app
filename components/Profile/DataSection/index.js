@@ -13,22 +13,19 @@ const DataSection = ({ navigation, other, otherUserData, followsLoading }) => {
 
   const handleFollowersPress = () => {
     if (!other) {
-      if(userData.followers.length){
-        navigation.navigate({
-          name: "Follows List",
-          merge: true,
-          params: {title: "Followers", showFollowers: true},
+      if (userData.followers.length) {
+        navigation.push("User List", {
+          title: "Followers",
+          showFollowers: true,
+          other: false,
         });
       }
     } else {
-      if(otherUserData.followers.length){
-        navigation.navigate({
-          name: "View Follows List",
-          merge: true,
-          params: {
-            users: otherUserData.followers,
-            title: `${otherUserData.Nickname}'s followers`,
-          },
+      if (otherUserData.followers.length) {
+        navigation.push("User List", {
+          other: true,
+          users: otherUserData.followers,
+          title: `${otherUserData.Nickname}'s followers`,
         });
       }
     }
@@ -36,22 +33,20 @@ const DataSection = ({ navigation, other, otherUserData, followsLoading }) => {
 
   const handleFollowingPress = () => {
     if (!other) {
-      if(userData.following.length){
-        navigation.navigate({
-          name: "Follows List",
-          merge: true,
-          params: { title: "Following" },
+      if (userData.following.length) {
+        navigation.push("User List", {
+          name: "User List",
+          title: "Following",
+          showFollowers: false,
+          other: false,
         });
       }
     } else {
-      if(otherUserData.following.length){
-        navigation.navigate({
-          name: "View Follows List",
-          merge: true,
-          params: {
-            users: otherUserData.following,
-            title: `${otherUserData.Nickname} is following`,
-          },
+      if (otherUserData.following.length) {
+        navigation.push("User List", {
+          other: true,
+          users: otherUserData.following,
+          title: `${otherUserData.Nickname} is following`,
         });
       }
     }
