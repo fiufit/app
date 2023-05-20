@@ -24,6 +24,8 @@ import { styles } from "./styles.RegisterFirstStepView";
 WebBrowser.maybeCompleteAuthSession();
 
 const RegisterFirstStepView = ({ navigation }) => {
+  const PASSWORD_MIN_CHARACTERS = 6;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
@@ -47,6 +49,9 @@ const RegisterFirstStepView = ({ navigation }) => {
     } else if (password !== passwordRepeat) {
       setErrorModalIsVisible(true);
       setErrorDescription("Passwords don't match!");
+    } else if (password?.length < PASSWORD_MIN_CHARACTERS) {
+      setErrorModalIsVisible(true);
+      setErrorDescription("The password should have at least 6 characters.");
     } else {
       setLoading(true);
       const controller = new AuthenticationController();
