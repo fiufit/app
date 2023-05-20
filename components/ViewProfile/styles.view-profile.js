@@ -14,6 +14,7 @@ export const styles = StyleSheet.create({
         backgroundColor: GREY,
     },
     textContainer: {
+        marginTop: 15,
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
@@ -25,4 +26,15 @@ export const styles = StyleSheet.create({
         fontSize: 24,
         color: DARK_BLUE
     },
+    buttonContainer: {
+        display: "flex",
+        flexDirection: "row",
+        width: '90%',
+        gap: 10,
+        height: 30
+    },
+    button: {
+        width: '40%',
+        borderRadius: 5
+    }
 });
