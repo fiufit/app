@@ -145,7 +145,7 @@ const EditProfile = ({ navigation }) => {
         "There has been an error while updating your profile. Please try again later!"
       );
     } else {
-      setUserData(data);
+      setUserData({ ...data, followers: userData.followers, following: userData.following });
       setSuccessModalIsVisible(true);
       setSuccessDescription("Your profile has been updated successfully!");
     }
