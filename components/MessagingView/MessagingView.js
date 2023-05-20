@@ -19,6 +19,7 @@ const MessagingView = ({ navigation }) => {
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
+      hasUnreadMessage: true,
       conversationId: 1,
     },
     {
@@ -26,6 +27,7 @@ const MessagingView = ({ navigation }) => {
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
+      hasUnreadMessage: false,
       conversationId: 2,
     },
     {
@@ -33,6 +35,7 @@ const MessagingView = ({ navigation }) => {
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
+      hasUnreadMessage: false,
       conversationId: 3,
     },
     {
@@ -40,6 +43,7 @@ const MessagingView = ({ navigation }) => {
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
+      hasUnreadMessage: false,
       conversationId: 1,
     },
     {
@@ -47,6 +51,7 @@ const MessagingView = ({ navigation }) => {
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
+      hasUnreadMessage: false,
       conversationId: 2,
     },
     {
@@ -54,6 +59,7 @@ const MessagingView = ({ navigation }) => {
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
+      hasUnreadMessage: false,
       conversationId: 3,
     },
     {
@@ -61,6 +67,7 @@ const MessagingView = ({ navigation }) => {
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
+      hasUnreadMessage: false,
       conversationId: 1,
     },
     {
@@ -68,6 +75,7 @@ const MessagingView = ({ navigation }) => {
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
+      hasUnreadMessage: true,
       conversationId: 2,
     },
     {
@@ -75,6 +83,7 @@ const MessagingView = ({ navigation }) => {
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
+      hasUnreadMessage: false,
       conversationId: 3,
     },
     {
@@ -82,6 +91,7 @@ const MessagingView = ({ navigation }) => {
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
+      hasUnreadMessage: false,
       conversationId: 1,
     },
     {
@@ -89,6 +99,7 @@ const MessagingView = ({ navigation }) => {
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
+      hasUnreadMessage: false,
       conversationId: 2,
     },
     {
@@ -96,6 +107,7 @@ const MessagingView = ({ navigation }) => {
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
+      hasUnreadMessage: false,
       conversationId: 3,
     },
   ];
@@ -117,6 +129,7 @@ const MessagingView = ({ navigation }) => {
               name={chatPreview.name}
               lastMessage={chatPreview.lastMessage}
               lastMessageTime={chatPreview.lastMessageTime}
+              hasUnreadMessage={chatPreview.hasUnreadMessage}
             />
           </TouchableOpacity>
         ))}
