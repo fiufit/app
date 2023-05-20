@@ -64,6 +64,35 @@ export const styles = StyleSheet.create({
         backgroundColor: LIGHT_GREY,
         resizeMode: 'cover',
     },
+    loadingPicture: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        backgroundColor: LIGHT_GREY,
+    },
+    loadingName: {
+        height: 10,
+        width: 80,
+        backgroundColor: LIGHT_GREY,
+        borderRadius: 10,
+        marginBottom: 5
+    },
+    loadingRating: {
+        height: 10,
+        backgroundColor: LIGHT_GREY,
+        borderRadius: 10,
+        fontSize: 15,
+        width: '100%',
+        marginBottom: 10,
+    },
+    loadingRatingLast: {
+        height: 10,
+        backgroundColor: LIGHT_GREY,
+        borderRadius: 10,
+        fontSize: 15,
+        width: '100%',
+        marginBottom: 25,
+    },
     nickname: {
         fontFamily: "Lato_700Bold",
     },
