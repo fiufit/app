@@ -8,23 +8,24 @@ import { useRecoilValue } from "recoil";
 import { userDataState } from "../../atoms";
 
 const UserList = ({ navigation, route }) => {
-  const { users, title, showFollowers } = route.params;
+  const { other, users, title, showFollowers } = route.params;
   const userData = useRecoilValue(userDataState);
+
   const getUsersToShow = () => {
-      return users ?? (showFollowers ? userData.followers : userData.following)
-  }
+    if (other) return users;
+    if (showFollowers) return userData.followers;
+    return userData.following;
+  };
   const handleBack = () => {
-    navigation.goBack();
+    navigation.pop();
   };
 
   const handleUserCardPress = (user) => {
     if (user.ID === userData.ID) {
-      navigation.navigate({ name: "ProfileView", merge: true });
+      navigation.navigate("Profile");
     } else {
-      navigation.navigate('Trainings', {
-        screen: "View Profile",
-        merge: true,
-        params: { userData: user },
+      navigation.push("View Profile", {
+        userData: user,
       });
     }
   };
