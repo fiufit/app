@@ -16,7 +16,8 @@ const SingleTraining = ({ navigation, route }) => {
     Duration: duration,
     Difficulty: difficulty,
     Exercises: trainingExercises,
-    PictureUrl: pictureUrl
+    PictureUrl: pictureUrl,
+    MeanScore: meanScore,
   } = route.params.training;
   const start = route.params.start;
   const { isFavourite } = route.params;
@@ -31,12 +32,18 @@ const SingleTraining = ({ navigation, route }) => {
     <>
       <View style={styles.container}>
         <Back onPress={() => navigation.goBack()} />
-        <Pressable style={styles.ratingContainer} onPress={() => navigation.navigate({name: 'Ratings', merge: true})}>
-            <Text style={styles.rating}>4.5</Text>
-            <StarIcon color={WHITE} width={12} height={12}/>
+        <Pressable
+          style={styles.ratingContainer}
+          onPress={() => navigation.navigate({ name: "Ratings", merge: true, params: { training: route.params.training } })}
+        >
+          <Text style={styles.rating}>{meanScore > 0 ? meanScore.toFixed(1) : "Rate"}</Text>
+          <StarIcon color={WHITE} width={12} height={12} />
         </Pressable>
         <View style={styles.imageContainer}>
-          <Image style={styles.image} source={pictureUrl ? {uri: pictureUrl} : trainingImage} />
+          <Image
+            style={styles.image}
+            source={pictureUrl ? { uri: pictureUrl } : trainingImage}
+          />
         </View>
         <View style={styles.infoContainer}>
           <View style={styles.titleAndIconContainer}>
