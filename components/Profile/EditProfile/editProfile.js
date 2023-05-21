@@ -1,5 +1,10 @@
 import { DARK_BLUE, WHITE } from "../../../utils/colors";
-import {DEFAULT_PROFILE_PICTURE, auth, uploadImage, signOutFromApp} from "../../../firebase";
+import {
+  DEFAULT_PROFILE_PICTURE,
+  auth,
+  signOutFromApp,
+  uploadImage,
+} from "../../../firebase";
 import { Image, Text, TouchableHighlight, View } from "react-native";
 
 import Back from "../../Shared/Back/back";
@@ -11,6 +16,7 @@ import ErrorModal from "../../Shared/Modals/ErrorModal/ErrorModal";
 import ImageModal from "../../Shared/Modals/ImageModal/imageModal";
 import Input from "../../Shared/Input/input";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
+import LogoutIcon from "../../../assets/images/general/logoutIcon.svg";
 import ProfileController from "../../../utils/controllers/ProfileController";
 import SuccessModal from "../../Shared/Modals/SuccessModal/SuccessModal";
 import { TextInput } from "react-native-paper";
@@ -19,7 +25,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState } from "recoil";
 import { useState } from "react";
 import { userDataState } from "../../../atoms";
-import LogoutIcon from "../../../assets/images/general/logoutIcon.svg";
 
 const EditProfile = ({ navigation }) => {
   const [userData, setUserData] = useRecoilState(userDataState);
@@ -125,31 +130,42 @@ const EditProfile = ({ navigation }) => {
   };
 
   const handleUpdate = async () => {
-    setLoading(true);
+    const numericWeight = Number(weight);
+    const numericHeight = Number(height);
+    if (Number.isInteger(numericHeight) && Number.isInteger(numericWeight)) {
+      setLoading(true);
 
-    const controller = new ProfileController(user);
-    const { data, error } = await controller.updateProfile({
-      nickname: nickName,
-      display_name: displayName,
-      is_male: isMale,
-      birth_date: dateOfBirth,
-      height,
-      weight,
-      main_location: mainLocation,
-    });
+      const controller = new ProfileController(user);
+      const { data, error } = await controller.updateProfile({
+        nickname: nickName,
+        display_name: displayName,
+        is_male: isMale,
+        birth_date: dateOfBirth,
+        height,
+        weight,
+        main_location: mainLocation,
+      });
 
-    if (error) {
-      //TODO: Show different messagges according to the error.
-      setErrorModalIsVisible(true);
-      setErrorDescription(
-        "There has been an error while updating your profile. Please try again later!"
-      );
+      if (error) {
+        //TODO: Show different messagges according to the error.
+        setErrorModalIsVisible(true);
+        setErrorDescription(
+          "There has been an error while updating your profile. Please try again later!"
+        );
+      } else {
+        setUserData({
+          ...data,
+          followers: userData.followers,
+          following: userData.following,
+        });
+        setSuccessModalIsVisible(true);
+        setSuccessDescription("Your profile has been updated successfully!");
+      }
+      setLoading(false);
     } else {
-      setUserData({ ...data, followers: userData.followers, following: userData.following });
-      setSuccessModalIsVisible(true);
-      setSuccessDescription("Your profile has been updated successfully!");
+      setErrorModalIsVisible(true);
+      setErrorDescription("Width and height must be integers.");
     }
-    setLoading(false);
   };
 
   const handleImageUpdate = async (image) => {
@@ -173,13 +189,13 @@ const EditProfile = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <LogoutIcon
-          position={"absolute"}
-          right={20}
-          top={50}
-          opacity={1}
-          width={30}
-          height={25}
-          onPress={() => signOutFromApp(() => setUserData({}))}
+        position={"absolute"}
+        right={20}
+        top={50}
+        opacity={1}
+        width={30}
+        height={25}
+        onPress={() => signOutFromApp(() => setUserData({}))}
       />
       <Back
         onPress={() => navigation.navigate({ name: "Profile", merge: true })}
