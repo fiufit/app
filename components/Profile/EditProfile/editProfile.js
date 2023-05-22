@@ -5,7 +5,7 @@ import {
   signOutFromApp,
   uploadImage,
 } from "../../../firebase";
-import { Image, Text, TouchableHighlight, View } from "react-native";
+import { Image, Pressable, Text, TouchableHighlight, View } from "react-native";
 
 import Back from "../../Shared/Back/back";
 import Button from "../../Shared/Button/button";
@@ -15,6 +15,7 @@ import EditModal from "../../Shared/Modals/EditModal/editModal";
 import ErrorModal from "../../Shared/Modals/ErrorModal/ErrorModal";
 import ImageModal from "../../Shared/Modals/ImageModal/imageModal";
 import Input from "../../Shared/Input/input";
+import InterestsModal from "../../InterestsModal/InterestsModal";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
 import LogoutIcon from "../../../assets/images/general/logoutIcon.svg";
 import ProfileController from "../../../utils/controllers/ProfileController";
@@ -38,7 +39,8 @@ const EditProfile = ({ navigation }) => {
   const [displayName, setDisplayName] = useState(userData.DisplayName);
   const [nickName, setNickName] = useState(userData.Nickname);
   const [mainLocation, setMainLocation] = useState(userData.MainLocation);
-  const [interests, setInterests] = useState(userData.Interests);
+  const [interestsModalIsVisible, setInterestsModalIsVisible] = useState(false);
+  const [selectedInterests, setSelectedInterests] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [errorModalIsVisible, setErrorModalIsVisible] = useState(false);
@@ -114,11 +116,6 @@ const EditProfile = ({ navigation }) => {
       displayValue: `${dateOfBirth.toDateString()}`,
       icon: <TextInput.Icon icon="calendar" />,
       onPress: () => setShowPicker(true),
-    },
-    {
-      displayValue: `${interests ?? "Example interests"}`,
-      icon: <TextInput.Icon icon="shape" />,
-      onPress: () => {},
     },
   ];
 
@@ -248,6 +245,21 @@ const EditProfile = ({ navigation }) => {
             />
           </TouchableHighlight>
         ))}
+        <Pressable onPress={() => setInterestsModalIsVisible(true)}>
+          <Input
+            placeholder={
+              selectedInterests.length !== 0
+                ? selectedInterests.join(", ")
+                : "Example interests"
+            }
+            height={55}
+            fontSize={12}
+            left={<TextInput.Icon icon="shape" />}
+            editable={false}
+            multiline={true}
+            borderRadius={18}
+          />
+        </Pressable>
       </View>
       <Button
         buttonColor={DARK_BLUE}
@@ -286,7 +298,12 @@ const EditProfile = ({ navigation }) => {
         />
       )}
       {loading && <LoadingModal text={"Updating your profile"} />}
-
+      <InterestsModal
+        modalIsVisible={interestsModalIsVisible}
+        setModalIsVisible={setInterestsModalIsVisible}
+        selectedInterests={selectedInterests}
+        setSelectedInterests={setSelectedInterests}
+      ></InterestsModal>
       <ErrorModal
         modalIsVisible={errorModalIsVisible}
         setModalIsVisible={setErrorModalIsVisible}
