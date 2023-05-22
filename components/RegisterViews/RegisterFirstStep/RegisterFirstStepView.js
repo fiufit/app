@@ -31,7 +31,7 @@ const RegisterFirstStepView = ({ navigation }) => {
   const [passwordRepeat, setPasswordRepeat] = useState("");
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   const [passwordRepeatIsVisible, setPasswordRepeatIsVisible] = useState(false);
-  const [checked, setChecked] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorModalIsVisible, setErrorModalIsVisible] = useState(false);
   const [errorDescription, setErrorDescription] = useState("");
@@ -52,6 +52,9 @@ const RegisterFirstStepView = ({ navigation }) => {
     } else if (password?.length < PASSWORD_MIN_CHARACTERS) {
       setErrorModalIsVisible(true);
       setErrorDescription("The password should have at least 6 characters.");
+    } else if (!termsAccepted) {
+      setErrorModalIsVisible(true);
+      setErrorDescription("Terms of use and Privacy policy were not accepted!");
     } else {
       setLoading(true);
       const controller = new AuthenticationController();
@@ -165,9 +168,9 @@ const RegisterFirstStepView = ({ navigation }) => {
         <View style={styles.checkboxPolicies}>
           <Checkbox
             color="black"
-            status={checked ? "checked" : "unchecked"}
+            status={termsAccepted ? "checked" : "unchecked"}
             onPress={() => {
-              setChecked(!checked);
+              setTermsAccepted(!termsAccepted);
             }}
           />
           <Text style={styles.policiesText}>
