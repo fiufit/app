@@ -6,7 +6,7 @@ import MessageInput from "../MessageInput/MessageInput";
 import { styles } from "./styles.Conversation";
 
 const Conversation = ({ navigation, route }) => {
-  const { conversationId } = route.params;
+  const { conversationId, conversationUserId } = route.params;
 
   const handleSendMessage = (inputMessage) => {
     //TODO: Send message to Backend.

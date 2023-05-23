@@ -11,8 +11,15 @@ import { useState } from "react";
 const MessagingView = ({ navigation }) => {
   const [searchedUser, setSearchedUser] = useState("");
 
-  const handleEditPress = () => {
-    // handle edit button press
+  const handleNewMessage = () => {
+    navigation.navigate({
+      name: "Search View",
+      merge: true,
+      params: {
+        searchForUsers: true,
+        messageUsers: true,
+      },
+    });
   };
 
   const handleConversationPress = (conversationId) => {
@@ -121,7 +128,7 @@ const MessagingView = ({ navigation }) => {
   return (
     <View style={styles.messagingViewContainer}>
       <View style={styles.messagingTopBarContainer}>
-        <MessagingTopBar onEditPress={handleEditPress} />
+        <MessagingTopBar onEditPress={handleNewMessage} />
       </View>
       <View style={styles.usersSearchBar}>
         <Input
