@@ -14,3 +14,8 @@ export const startedTrainingsState = atom({
     key: 'startedTrainingsState',
     default: [],
 });
+
+export const selectedTrainingState = atom({
+    key: 'selectedTrainingState',
+    default: {},
+});
