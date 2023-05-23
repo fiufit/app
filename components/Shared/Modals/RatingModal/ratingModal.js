@@ -8,7 +8,7 @@ import Button from "../../Button/button";
 import CloseIcon from "../../../../assets/images/general/closeIcon.svg";
 const MAX_RATING = 5;
 
-const RatingModal = ({ onClose, initialRating, initialComment, onSubmit }) => {
+const RatingModal = ({ onClose, initialRating, initialComment, onSubmit, submitting }) => {
   const [rating, setRating] = useState(initialRating);
   const [comment, setComment] = useState(initialComment);
 
@@ -52,8 +52,16 @@ const RatingModal = ({ onClose, initialRating, initialComment, onSubmit }) => {
           value={comment}
           onChangeText={handleCommentChange}
         />
-        <Button textColor={WHITE} style={styles.button} onPress={() => onSubmit(rating, comment)}>
-          Rate!
+        <Button
+          textColor={WHITE}
+          style={styles.button}
+          onPress={() => {
+            if(!submitting) {
+              onSubmit(rating, comment);
+            }
+          }}
+        >
+          {submitting ? "Rating..." : "Rate!"}
         </Button>
       </View>
     </View>
