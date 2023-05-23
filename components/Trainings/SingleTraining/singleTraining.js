@@ -9,8 +9,11 @@ import { WHITE } from "../../../utils/colors";
 import Exercise from "./Exercise/exercise";
 import Button from "../../Shared/Button/button";
 import {parseExercises} from "../../../utils/trainings";
+import {useRecoilValue} from "recoil";
+import {selectedTrainingState} from "../../../atoms";
 
 const SingleTraining = ({ navigation, route }) => {
+  const selectedTraining = useRecoilValue(selectedTrainingState);
   const {
     Name: title,
     Duration: duration,
@@ -18,7 +21,7 @@ const SingleTraining = ({ navigation, route }) => {
     Exercises: trainingExercises,
     PictureUrl: pictureUrl,
     MeanScore: meanScore,
-  } = route.params.training;
+  } = selectedTraining;
   const start = route.params.start;
   const { isFavourite } = route.params;
   const [favourite, setFavourite] = useState(isFavourite);
@@ -34,9 +37,17 @@ const SingleTraining = ({ navigation, route }) => {
         <Back onPress={() => navigation.goBack()} />
         <Pressable
           style={styles.ratingContainer}
-          onPress={() => navigation.navigate({ name: "Ratings", merge: true, params: { training: route.params.training } })}
+          onPress={() =>
+            navigation.navigate({
+              name: "Ratings",
+              merge: true,
+              params: { training: route.params.training, userTraining: false },
+            })
+          }
         >
-          <Text style={styles.rating}>{meanScore > 0 ? meanScore.toFixed(1) : "Rate"}</Text>
+          <Text style={styles.rating}>
+            {meanScore > 0 ? meanScore.toFixed(1) : "Rate"}
+          </Text>
           <StarIcon color={WHITE} width={12} height={12} />
         </Pressable>
         <View style={styles.imageContainer}>
