@@ -6,8 +6,11 @@ import MessagingTopBar from "../MessagingTopBar/MessagingTopBar";
 import SearchIcon from "../../assets/images/general/searchIcon.svg";
 import { WHITE } from "../../utils/colors";
 import { styles } from "./styles.MessagingView";
+import { useState } from "react";
 
 const MessagingView = ({ navigation }) => {
+  const [searchedUser, setSearchedUser] = useState("");
+
   const handleEditPress = () => {
     // handle edit button press
   };
@@ -18,7 +21,7 @@ const MessagingView = ({ navigation }) => {
 
   const chatPreviews = [
     {
-      name: "John Lennon",
+      name: "Alejandro",
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
@@ -26,7 +29,7 @@ const MessagingView = ({ navigation }) => {
       conversationId: 1,
     },
     {
-      name: "John Lennon",
+      name: "Alejo",
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
@@ -34,7 +37,7 @@ const MessagingView = ({ navigation }) => {
       conversationId: 2,
     },
     {
-      name: "John Lennon",
+      name: "Barbara",
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
@@ -42,7 +45,7 @@ const MessagingView = ({ navigation }) => {
       conversationId: 3,
     },
     {
-      name: "John Lennon",
+      name: "Carlos",
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
@@ -50,7 +53,7 @@ const MessagingView = ({ navigation }) => {
       conversationId: 1,
     },
     {
-      name: "John Lennon",
+      name: "Carla",
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
@@ -58,7 +61,7 @@ const MessagingView = ({ navigation }) => {
       conversationId: 2,
     },
     {
-      name: "John Lennon",
+      name: "Cecilia",
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
@@ -66,7 +69,7 @@ const MessagingView = ({ navigation }) => {
       conversationId: 3,
     },
     {
-      name: "John Lennon",
+      name: "Dario",
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
@@ -74,7 +77,7 @@ const MessagingView = ({ navigation }) => {
       conversationId: 1,
     },
     {
-      name: "John Lennon",
+      name: "Pedro",
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
@@ -82,7 +85,7 @@ const MessagingView = ({ navigation }) => {
       conversationId: 2,
     },
     {
-      name: "John Lennon",
+      name: "Pablo",
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
@@ -90,7 +93,7 @@ const MessagingView = ({ navigation }) => {
       conversationId: 3,
     },
     {
-      name: "John Lennon",
+      name: "Cristian",
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
@@ -98,7 +101,7 @@ const MessagingView = ({ navigation }) => {
       conversationId: 1,
     },
     {
-      name: "John Lennon",
+      name: "Pepe",
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
@@ -106,7 +109,7 @@ const MessagingView = ({ navigation }) => {
       conversationId: 2,
     },
     {
-      name: "John Lennon",
+      name: "Jorge",
       imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
       lastMessage: "Hey, how is it going?",
       lastMessageTime: "10:30 AM",
@@ -126,25 +129,30 @@ const MessagingView = ({ navigation }) => {
           backgroundColor={WHITE}
           height={50}
           marginTop={15}
+          onChangeText={(searchedUser) => setSearchedUser(searchedUser)}
           left={<SearchIcon />}
         ></Input>
       </View>
       <ScrollView style={styles.chatPreviewList}>
-        {chatPreviews.map((chatPreview, chatPreviewIndex) => (
-          <TouchableOpacity
-            onPress={() => handleConversationPress(chatPreview.conversationId)}
-            style={styles.chatPreviewContainer}
-            key={chatPreviewIndex}
-          >
-            <ChatPreview
-              imageSource={chatPreview.imageSource}
-              name={chatPreview.name}
-              lastMessage={chatPreview.lastMessage}
-              lastMessageTime={chatPreview.lastMessageTime}
-              hasUnreadMessage={chatPreview.hasUnreadMessage}
-            />
-          </TouchableOpacity>
-        ))}
+        {chatPreviews
+          .filter((chatPreview) => chatPreview.name.startsWith(searchedUser))
+          .map((chatPreview, chatPreviewIndex) => (
+            <TouchableOpacity
+              onPress={() =>
+                handleConversationPress(chatPreview.conversationId)
+              }
+              style={styles.chatPreviewContainer}
+              key={chatPreviewIndex}
+            >
+              <ChatPreview
+                imageSource={chatPreview.imageSource}
+                name={chatPreview.name}
+                lastMessage={chatPreview.lastMessage}
+                lastMessageTime={chatPreview.lastMessageTime}
+                hasUnreadMessage={chatPreview.hasUnreadMessage}
+              />
+            </TouchableOpacity>
+          ))}
       </ScrollView>
     </View>
   );
