@@ -12,6 +12,22 @@ class ReviewController {
       "GET"
     );
   }
+
+  async postReview(trainingId, rating, comment) {
+    return await this.requestController.fetch(
+      `trainings/${trainingId}/reviews`,
+      "POST",
+      { score: rating, comment }
+    );
+  }
+
+  async updateReview(trainingId, reviewId, rating, comment) {
+    return await this.requestController.fetch(
+      `trainings/${trainingId}/reviews/${reviewId}`,
+      "PATCH",
+      { score: rating, comment }
+    );
+  }
 }
 
 export default ReviewController;
