@@ -7,8 +7,13 @@ import FilterIcon from "../../assets/images/general/filterIcon.svg";
 import RecommendedTraining from "./RecommendedTraining/recommendedTraining";
 import FavouriteTrainings from "./FavouriteTrainings/favouriteTrainings";
 import SearchBar from "../Shared/SearchBar/searchBar";
+import {useSetRecoilState} from "recoil";
+import {selectedTrainingState} from "../../atoms";
 
 const Trainings = ({ navigation }) => {
+  const setSelectedTraining = useSetRecoilState(selectedTrainingState);
+
+
   const favouriteTrainings = [
     {
       Name: "Belly fat burner",
@@ -198,12 +203,15 @@ const Trainings = ({ navigation }) => {
     },
   ];
 
+
   const handleTrainingPress = (training) => {
-    navigation.navigate({
-      name: "Single Training",
-      merge: true,
-      params: { training, start: true },
-    });
+    // Commented for now until the trainings are not hardcoded
+    // setSelectedTraining(training);
+    // navigation.navigate({
+    //   name: "Single Training",
+    //   merge: true,
+    //   params: { training, start: true },
+    // });
   };
 
   const handleAddTraining = () => {
