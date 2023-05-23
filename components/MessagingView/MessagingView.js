@@ -1,7 +1,10 @@
 import { ScrollView, TouchableOpacity, View } from "react-native";
 
 import ChatPreview from "../ChatPreview/ChatPreview";
+import Input from "../Shared/Input/input";
 import MessagingTopBar from "../MessagingTopBar/MessagingTopBar";
+import SearchIcon from "../../assets/images/general/searchIcon.svg";
+import { WHITE } from "../../utils/colors";
 import { styles } from "./styles.MessagingView";
 
 const MessagingView = ({ navigation }) => {
@@ -116,6 +119,15 @@ const MessagingView = ({ navigation }) => {
     <View style={styles.messagingViewContainer}>
       <View style={styles.messagingTopBarContainer}>
         <MessagingTopBar onEditPress={handleEditPress} />
+      </View>
+      <View style={styles.usersSearchBar}>
+        <Input
+          placeholder={"Search user"}
+          backgroundColor={WHITE}
+          height={50}
+          marginTop={15}
+          left={<SearchIcon />}
+        ></Input>
       </View>
       <ScrollView style={styles.chatPreviewList}>
         {chatPreviews.map((chatPreview, chatPreviewIndex) => (

@@ -6,14 +6,17 @@ export const styles = StyleSheet.create({
   },
   chatPreviewList: {
     width: "100%",
-    height: "76.5%",
+    height: "67%",
   },
   messagingTopBarContainer: {
     width: "80%",
     paddingTop: 40,
-    marginBottom: 15,
+    marginTop: 10,
   },
   chatPreviewContainer: {
     width: "100%",
+  },
+  usersSearchBar: {
+    marginBottom: 15,
   },
 });
