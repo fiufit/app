@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import {SECONDARY_GREY, WHITE} from "../../../utils/colors";
+import {MEDIUM_GREY, SECONDARY_GREY, WHITE} from "../../../utils/colors";
 
 export const styles = StyleSheet.create({
     container: {
@@ -88,6 +88,5 @@ export const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: "center",
         alignItems: "center"
-
-    }
+    },
 })
