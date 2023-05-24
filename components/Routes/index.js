@@ -50,9 +50,8 @@ const Routes = () => {
         <Tab.Screen name="Messages" component={MessagingView} />
         <Tab.Screen name="Conversation" component={Conversation} />
         <Tab.Screen name="Profile" component={ProfileNavigation} />
-        <Tab.Screen name={"Profile Settings"} component={InDevelopment} />
-        <Tab.Screen name={"Edit Profile"} component={EditProfile} />
         <Tab.Screen name={"Ratings"} component={Ratings} options={{unmountOnBlur: true}}/>
+        <Tab.Screen name={"Profile Settings"} component={EditProfile} />
       </Tab.Navigator>
     </NavigationContainer>
   );
