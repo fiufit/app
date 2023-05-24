@@ -1,32 +1,28 @@
 import {
-  Image,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-  Keyboard,
-} from "react-native";
-import { styles } from "./styles.search-view";
-import SearchBar from "../Shared/SearchBar/searchBar";
-import {
   DARK_BLUE,
   GREY,
   MEDIUM_GREY,
   TRANSPARENT_GREY,
   WHITE,
 } from "../../utils/colors";
-import BackIcon from "../../assets/images/general/backIcon.svg";
-import VerifiedIcon from "../../assets/images/profile/verifiedIcon.svg";
+import { DEFAULT_PROFILE_PICTURE, auth } from "../../firebase";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useEffect, useState } from "react";
-import { auth, DEFAULT_PROFILE_PICTURE, getImageUrl } from "../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+
+import BackIcon from "../../assets/images/general/backIcon.svg";
 import Button from "../Shared/Button/button";
 import RequestController from "../../utils/controllers/RequestController";
-import LoadingModal from "../Shared/Modals/LoadingModal/loadingModal";
+import SearchBar from "../Shared/SearchBar/searchBar";
 import TrainingFilterModal from "../Shared/Modals/TrainingFilterModal/trainingFilterModal";
+
 import { useRecoilState } from "recoil";
 import { selectedTrainingState } from "../../atoms";
 import { useIsFocused } from "@react-navigation/native";
+
+import VerifiedIcon from "../../assets/images/profile/verifiedIcon.svg";
+import { styles } from "./styles.search-view";
+import { useAuthState } from "react-firebase-hooks/auth";
+
 
 const LOADING_MAX = 4;
 const SearchView = ({ navigation, route }) => {
@@ -35,7 +31,7 @@ const SearchView = ({ navigation, route }) => {
   const [selectedTraining, setSelectedTraining] = useRecoilState(
     selectedTrainingState
   );
-  const { searchForUsers, searchForTrainings } = route.params;
+  const { searchForUsers, searchForTrainings, messageUsers } = route.params;
   const [userSearchData, setUserSearchData] = useState({});
   const [trainingSearchData, setTrainingsSearchData] = useState({
     beginner: {},
@@ -187,11 +183,17 @@ const SearchView = ({ navigation, route }) => {
   };
 
   const handleUserCardPress = (userData) => {
-    navigation.navigate({
-      name: "View Profile",
-      merge: true,
-      params: { userData },
-    });
+    if (messageUsers) {
+      navigation.navigate("Conversation", {
+        conversationUserId: "userData.ID",
+      });
+    } else {
+      navigation.navigate({
+        name: "View Profile",
+        merge: true,
+        params: { userData },
+      });
+    }
   };
 
   const handleTrainingCardPress = (training) => {
@@ -223,7 +225,9 @@ const SearchView = ({ navigation, route }) => {
             height={48}
             fontFamily={"Lato_400Regular"}
             fontSize={14}
-            placeholder={"Search"}
+            placeholder={
+              messageUsers ? "Who do you want to talk to?" : "Search"
+            }
             marginTop={0}
             onSearch={onSearchChange}
             autoFocus

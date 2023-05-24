@@ -7,6 +7,7 @@ import MessagingView from "../MessagingView/MessagingView";
 import { NavigationContainer } from "@react-navigation/native";
 import ProfileNavigation from "../ProfileNavigation/profileNavigation";
 import RegisterSecondStepView from "../RegisterViews/RegisterSecondStep/RegisterSecondStepView";
+import SearchView from "../SearchView/searchView";
 import SingleTraining from "../Trainings/SingleTraining/singleTraining";
 import TabBar from "../TabBar";
 import TrainingList from "../TrainingList/trainingList";
@@ -49,6 +50,7 @@ const Routes = () => {
         <Tab.Screen name="Training List" component={TrainingList} />
         <Tab.Screen name="Messages" component={MessagingView} />
         <Tab.Screen name="Conversation" component={Conversation} />
+        <Tab.Screen name="Search View" component={SearchView} />
         <Tab.Screen name="Profile" component={ProfileNavigation} />
         <Tab.Screen name={"Ratings"} component={Ratings} options={{unmountOnBlur: true}}/>
         <Tab.Screen name={"Profile Settings"} component={EditProfile} />
