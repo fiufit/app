@@ -6,11 +6,17 @@ import MessageInput from "../MessageInput/MessageInput";
 import { styles } from "./styles.Conversation";
 
 const Conversation = ({ navigation, route }) => {
-  const { conversationId } = route.params;
+  const { conversationId, conversationUserId } = route.params;
 
   const handleSendMessage = (inputMessage) => {
     //TODO: Send message to Backend.
+    //Besides sending the message to the backend, the attribute hasUnreadMessage from this conversation should be set to true.
     console.log(inputMessage);
+  };
+
+  const handleGoBack = () => {
+    //Before going back, the attribute hasUnreadMessage from the conversation should be set to false.
+    navigation.goBack();
   };
 
   const messages = [
@@ -104,7 +110,7 @@ const Conversation = ({ navigation, route }) => {
     <KeyboardAvoidingView style={styles.conversationContainer}>
       <View style={styles.conversationHeaderContainer}>
         <ConversationHeader
-          navigation={navigation}
+          onGoBack={handleGoBack}
           name={"Fetched Name"}
           profileImage={"https://randomuser.me/api/portraits/men/75.jpg"}
         />

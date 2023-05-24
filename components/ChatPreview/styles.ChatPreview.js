@@ -1,4 +1,10 @@
-import { QUATERNARY_GREY, TERCIARY_GREY, WHITE } from "../../utils/colors";
+import {
+  AZURE,
+  BLACK,
+  QUATERNARY_GREY,
+  TERCIARY_GREY,
+  WHITE,
+} from "../../utils/colors";
 
 import { StyleSheet } from "react-native";
 
@@ -11,6 +17,9 @@ export const styles = StyleSheet.create({
     backgroundColor: WHITE,
     borderWidth: 1,
     borderColor: TERCIARY_GREY,
+  },
+  chatPreviewContainerWithUnreadMessage: {
+    backgroundColor: AZURE,
   },
   profileImage: {
     width: 50,
@@ -36,5 +45,9 @@ export const styles = StyleSheet.create({
     color: QUATERNARY_GREY,
     marginLeft: 16,
     fontFamily: "Lato_400Regular",
+  },
+  unreadMessage: {
+    fontFamily: "Poppins_700Bold",
+    color: BLACK,
   },
 });
