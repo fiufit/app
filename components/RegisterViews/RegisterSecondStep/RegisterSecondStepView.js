@@ -54,7 +54,7 @@ const RegisterSecondStepView = ({ user }) => {
       height &&
       weight &&
       mainLocation &&
-      selectedInterests
+      selectedInterests.length
     );
   };
 
@@ -76,10 +76,10 @@ const RegisterSecondStepView = ({ user }) => {
             height: numericHeight,
             weight: numericWeight,
             main_location: mainLocation,
-            interests: selectedInterests,
+            interests: selectedInterests.map((interest) => interest.toLowerCase()),
           });
           console.log(data);
-          setUserData(data.user);
+          setUserData({...data.user, followers: [], following: []});
           setLoading(false);
         } catch (e) {
           setErrorModalIsVisible(true);
@@ -229,38 +229,6 @@ const RegisterSecondStepView = ({ user }) => {
           fontSize={12}
           left={<TextInput.Icon icon="map-marker" />}
           backgroundColor={WHITE}
-        />
-        <Input
-          value={weight}
-          placeholder="Weight (kg)"
-          onChangeText={(weight) => setWeight(weight)}
-          width={"80%"}
-          height={55}
-          fontSize={12}
-          left={<TextInput.Icon icon="weight" />}
-          backgroundColor={"#FFFFFF"}
-          inputMode={"numeric"}
-        />
-        <Input
-          value={height}
-          placeholder="Height (cm)"
-          onChangeText={(height) => setHeight(height)}
-          width={"80%"}
-          height={55}
-          fontSize={12}
-          left={<TextInput.Icon icon="human-male-height" />}
-          backgroundColor={"#FFFFFF"}
-          inputMode={"numeric"}
-        />
-        <Input
-          value={mainLocation}
-          placeholder="Main Location"
-          onChangeText={(mainLocation) => setMainLocation(mainLocation)}
-          width={"80%"}
-          height={55}
-          fontSize={12}
-          left={<TextInput.Icon icon="map-marker" />}
-          backgroundColor={"#FFFFFF"}
         />
         <Pressable onPress={() => setInterestsModalIsVisible(true)}>
           <Input

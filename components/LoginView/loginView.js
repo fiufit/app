@@ -175,8 +175,8 @@ const LoginView = ({ navigation }) => {
           errorTitle="Oooops!"
           errorDescription={errorDescription}
         ></ErrorModal>
-        {loading && <LoadingModal />}
       </ScrollView>
+      {loading && <LoadingModal />}
     </Background>
   );
 };
