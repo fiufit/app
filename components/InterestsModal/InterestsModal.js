@@ -19,13 +19,12 @@ const InterestsModal = ({
   setSelectedInterests,
 }) => {
   const interests = [
-    // TODO: Fetch interests from Database.
     "Strength",
     "Speed",
     "Endurance",
     "Lose weight",
     "Gain weight",
-    "Yoga",
+    "Sports"
   ];
 
   const MAX_INTERESTS = 3;
