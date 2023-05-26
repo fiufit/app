@@ -24,6 +24,7 @@ const SingleTraining = ({ navigation, route }) => {
 
   const handleStartPress = () => {
     //TODO
+    navigation.navigate({name: "Training Attempt", merge: true, params: {training: route.params.training}})
   };
 
   return (
