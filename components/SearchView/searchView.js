@@ -14,13 +14,23 @@ import Button from "../Shared/Button/button";
 import RequestController from "../../utils/controllers/RequestController";
 import SearchBar from "../Shared/SearchBar/searchBar";
 import TrainingFilterModal from "../Shared/Modals/TrainingFilterModal/trainingFilterModal";
+
+import { useRecoilState } from "recoil";
+import { selectedTrainingState } from "../../atoms";
+import { useIsFocused } from "@react-navigation/native";
+
 import VerifiedIcon from "../../assets/images/profile/verifiedIcon.svg";
 import { styles } from "./styles.search-view";
 import { useAuthState } from "react-firebase-hooks/auth";
 
+
 const LOADING_MAX = 4;
 const SearchView = ({ navigation, route }) => {
+  const isFocused = useIsFocused();
   const [user] = useAuthState(auth);
+  const [selectedTraining, setSelectedTraining] = useRecoilState(
+    selectedTrainingState
+  );
   const { searchForUsers, searchForTrainings, messageUsers } = route.params;
   const [userSearchData, setUserSearchData] = useState({});
   const [trainingSearchData, setTrainingsSearchData] = useState({
@@ -39,42 +49,43 @@ const SearchView = ({ navigation, route }) => {
     navigation.goBack();
   };
 
+  const fetchUsers = async () => {
+    if (searchForUsers && !userSearchData[searchValue]) {
+      const controller = new RequestController(user);
+      const { data } = await controller.fetch(
+        `users?name=${searchValue}`,
+        "GET"
+      );
+      return {
+        [searchValue]: data.users.filter(
+          (userData) => userData.ID !== user.uid
+        ),
+      };
+    }
+  };
+
+  const fetchTrainings = async (force = false) => {
+    if (
+      (searchForTrainings &&
+        !trainingSearchData[trainingDifficulty][searchValue]) ||
+      force
+    ) {
+      const controller = new RequestController(user);
+      const route =
+        trainingDifficulty === "all"
+          ? `trainings?name=${searchValue}`
+          : `trainings?name=${searchValue}&difficulty=${trainingDifficulty}`;
+      const { data } = await controller.fetch(route, "GET");
+
+      return {
+        [searchValue]: data.trainings.filter(
+          (trainingData) => trainingData.TrainerID !== user.uid
+        ),
+      };
+    }
+  };
+
   useEffect(() => {
-    const fetchUsers = async () => {
-      if (searchForUsers && !userSearchData[searchValue]) {
-        const controller = new RequestController(user);
-        const { data } = await controller.fetch(
-          `users?name=${searchValue}`,
-          "GET"
-        );
-        return {
-          [searchValue]: data.users.filter(
-            (userData) => userData.ID !== user.uid
-          ),
-        };
-      }
-    };
-
-    const fetchTrainings = async () => {
-      if (
-        searchForTrainings &&
-        !trainingSearchData[trainingDifficulty][searchValue]
-      ) {
-        const controller = new RequestController(user);
-        const route =
-          trainingDifficulty === "all"
-            ? `trainings?name=${searchValue}`
-            : `trainings?name=${searchValue}&difficulty=${trainingDifficulty}`;
-        const { data } = await controller.fetch(route, "GET");
-
-        return {
-          [searchValue]: data.trainings.filter(
-            (trainingData) => trainingData.TrainerID !== user.uid
-          ),
-        };
-      }
-    };
-
     if (userSearchSelected) {
       if (searchValue) {
         setLoading(true);
@@ -140,6 +151,33 @@ const SearchView = ({ navigation, route }) => {
     }
   }, [searchValue, userSearchSelected, trainingDifficulty]);
 
+  useEffect(() => {
+    if (isFocused && searchValue) {
+      setLoading(true);
+      setTrainingsSearchData({
+        beginner: {},
+        intermediate: {},
+        expert: {},
+        all: {},
+      });
+      fetchTrainings(true)
+        .then((searchResult) => {
+          setTrainingsSearchData({
+            ...trainingSearchData,
+            [trainingDifficulty]: {
+              ...trainingSearchData[trainingDifficulty],
+              ...searchResult,
+            },
+          });
+          setLoading(false);
+        })
+        .catch((e) => {
+          console.log(e);
+          setLoading(false);
+        });
+    }
+  }, [isFocused]);
+
   const onSearchChange = async (value) => {
     setSearchValue(value);
   };
@@ -159,6 +197,7 @@ const SearchView = ({ navigation, route }) => {
   };
 
   const handleTrainingCardPress = (training) => {
+    setSelectedTraining(training);
     navigation.navigate({
       name: "Single Training",
       merge: true,
