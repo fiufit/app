@@ -181,7 +181,7 @@ const Ratings = ({ navigation, route }) => {
                           </View>
                         </View>
                       </View>
-                      <Text style={styles.ratingText}>{review.Comment}</Text>
+                      {review.Comment && <Text style={styles.ratingText}>{review.Comment}</Text>}
                     </View>
                   );
                 })}
