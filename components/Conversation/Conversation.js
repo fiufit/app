@@ -10,8 +10,12 @@ import { useRecoilValue } from "recoil";
 import { userDataState } from "../../atoms";
 
 const Conversation = ({ navigation, route }) => {
-  const { conversationId, otherUserName, otherUserProfilePicture } =
-    route.params;
+  const {
+    conversationId,
+    otherUserName,
+    otherUserProfilePicture,
+    remountConversation,
+  } = route.params;
   const [messages, setMessages] = useState([]);
 
   const userData = useRecoilValue(userDataState);
@@ -25,6 +29,9 @@ const Conversation = ({ navigation, route }) => {
         timestamp: message.timestamp,
       };
     });
+
+    newMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
     setMessages([...messages, ...newMessages]);
   };
 
@@ -38,7 +45,7 @@ const Conversation = ({ navigation, route }) => {
       .catch((error) => {
         console.log(error);
       });
-  }, [conversationId]);
+  }, [remountConversation]);
 
   const handleSendMessage = (inputMessage) => {
     const messageController = new MessageController();
@@ -48,7 +55,9 @@ const Conversation = ({ navigation, route }) => {
         from: userData.DisplayName,
         message: inputMessage,
         read: false,
-        timestamp: 30,
+        timestamp: new Date().toLocaleString("en-US", {
+          timeZone: "America/Argentina/Buenos_Aires",
+        }),
       })
       .then((newMessage) => {
         setMessages([
@@ -61,8 +70,6 @@ const Conversation = ({ navigation, route }) => {
           },
         ]);
       });
-
-    console.log(inputMessage);
   };
 
   const handleGoBack = () => {
@@ -83,7 +90,7 @@ const Conversation = ({ navigation, route }) => {
       <View style={styles.messageListContainer}>
         <View style={styles.messageList}>
           <FlatList
-            data={messages}
+            data={messages.reverse()}
             renderItem={({ item }) => (
               <Message
                 profileImage={item.image}

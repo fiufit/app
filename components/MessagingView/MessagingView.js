@@ -14,6 +14,7 @@ import { userDataState } from "../../atoms";
 const MessagingView = ({ navigation }) => {
   const [searchedUser, setSearchedUser] = useState("");
   const [chatPreviews, setChatPreviews] = useState([]);
+  const [remountConversation, setRemountConversation] = useState(false);
 
   const userData = useRecoilValue(userDataState);
 
@@ -59,10 +60,12 @@ const MessagingView = ({ navigation }) => {
     otherUserName,
     otherUserProfilePicture
   ) => {
+    setRemountConversation(!remountConversation);
     navigation.navigate("Conversation", {
       conversationId: conversationId,
       otherUserName: otherUserName,
       otherUserProfilePicture: otherUserProfilePicture,
+      remountConversation: remountConversation,
     });
   };
 
