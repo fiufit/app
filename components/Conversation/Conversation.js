@@ -6,7 +6,7 @@ import MessageInput from "../MessageInput/MessageInput";
 import { styles } from "./styles.Conversation";
 
 const Conversation = ({ navigation, route }) => {
-  const { conversationId, conversationUserId } = route.params;
+  const { conversationId, otherUserName } = route.params;
 
   const handleSendMessage = (inputMessage) => {
     //TODO: Send message to Backend.
@@ -19,99 +19,14 @@ const Conversation = ({ navigation, route }) => {
     navigation.goBack();
   };
 
-  const messages = [
-    {
-      id: 1,
-      image: "https://randomuser.me/api/portraits/women/65.jpg",
-      message: "Hello, how are you?",
-      isCurrentUser: false,
-      timestamp: "12:34 PM, May 12, 2023",
-    },
-    {
-      id: 2,
-      image: "https://randomuser.me/api/portraits/men/75.jpg",
-      message: "I'm doing great, thanks! How about you? ",
-      isCurrentUser: true,
-      timestamp: "12:36 PM, May 12, 2023",
-    },
-    {
-      id: 3,
-      image: "https://randomuser.me/api/portraits/women/65.jpg",
-      message: "Hello, how are you?",
-      isCurrentUser: false,
-      timestamp: "12:34 PM, May 12, 2023",
-    },
-    {
-      id: 4,
-      image: "https://randomuser.me/api/portraits/men/75.jpg",
-      message: "I'm doing great, thanks! How about you? ",
-      isCurrentUser: true,
-      timestamp: "12:36 PM, May 12, 2023",
-    },
-    {
-      id: 5,
-      image: "https://randomuser.me/api/portraits/women/65.jpg",
-      message: "Hello, how are you?",
-      isCurrentUser: false,
-      timestamp: "12:34 PM, May 12, 2023",
-    },
-    {
-      id: 6,
-      image: "https://randomuser.me/api/portraits/men/75.jpg",
-      message: "I'm doing great, thanks! How about you? ",
-      isCurrentUser: true,
-      timestamp: "12:36 PM, May 12, 2023",
-    },
-    {
-      id: 7,
-      image: "https://randomuser.me/api/portraits/women/65.jpg",
-      message: "Hello, how are you?",
-      isCurrentUser: false,
-      timestamp: "12:34 PM, May 12, 2023",
-    },
-    {
-      id: 8,
-      image: "https://randomuser.me/api/portraits/men/75.jpg",
-      message: "I'm doing great, thanks! How about you? ",
-      isCurrentUser: true,
-      timestamp: "12:36 PM, May 12, 2023",
-    },
-    {
-      id: 9,
-      image: "https://randomuser.me/api/portraits/women/65.jpg",
-      message: "Hello, how are you?",
-      isCurrentUser: false,
-      timestamp: "12:34 PM, May 12, 2023",
-    },
-    {
-      id: 10,
-      image: "https://randomuser.me/api/portraits/men/75.jpg",
-      message: "I'm doing great, thanks! How about you? ",
-      isCurrentUser: true,
-      timestamp: "12:36 PM, May 12, 2023",
-    },
-    {
-      id: 11,
-      image: "https://randomuser.me/api/portraits/women/65.jpg",
-      message: "Hello, how are you?",
-      isCurrentUser: false,
-      timestamp: "12:34 PM, May 12, 2023",
-    },
-    {
-      id: 12,
-      image: "https://randomuser.me/api/portraits/men/75.jpg",
-      message: "I'm doing great, thanks! How about you? ",
-      isCurrentUser: true,
-      timestamp: "12:36 PM, May 12, 2023",
-    },
-  ];
+  const messages = [];
 
   return (
     <KeyboardAvoidingView style={styles.conversationContainer}>
       <View style={styles.conversationHeaderContainer}>
         <ConversationHeader
           onGoBack={handleGoBack}
-          name={"Fetched Name"}
+          name={otherUserName}
           profileImage={"https://randomuser.me/api/portraits/men/75.jpg"}
         />
       </View>

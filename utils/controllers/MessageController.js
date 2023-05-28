@@ -39,33 +39,40 @@ class MessageController {
     );
     const querySnapshot = await getDocs(q);
 
-    const conversationsPromises = querySnapshot.docs.map(async (doc) => {
-      const data = doc.data();
-      const qMessages = query(
-        messagesRef,
-        where("conversationId", "==", doc.id)
-      );
-      const querySnapshotMessages = await getDocs(qMessages);
-      const messages = await Promise.all(
-        querySnapshotMessages.docs.map((doc) => doc.data())
-      );
+    const conversationsPromises = querySnapshot.docs.map(
+      async (docConversation) => {
+        const data = docConversation.data();
+        const qMessages = query(
+          messagesRef,
+          where("conversationId", "==", docConversation.id)
+        );
+        const querySnapshotMessages = await getDocs(qMessages);
+        const messages = await Promise.all(
+          querySnapshotMessages.docs.map((docMessage) => docMessage.data())
+        );
 
-      let highestTimestamp = 0;
-      let lastMessage = "";
+        let highestTimestamp = 0;
+        let lastMessage = "";
+        let messageWasRead;
 
-      for (const message of messages) {
-        const timestamp = parseInt(message.timestamp);
-        if (timestamp > highestTimestamp) {
-          highestTimestamp = timestamp;
-          lastMessage = message.message;
+        for (const message of messages) {
+          const timestamp = parseInt(message.timestamp);
+          if (timestamp > highestTimestamp) {
+            highestTimestamp = timestamp;
+            lastMessage = message.message;
+            messageWasRead = message.read;
+          }
         }
-      }
 
-      return {
-        ...data,
-        lastMessage: lastMessage,
-      };
-    });
+        return {
+          ...data,
+          lastMessage: lastMessage,
+          conversationId: docConversation.id,
+          timestamp: highestTimestamp,
+          read: messageWasRead,
+        };
+      }
+    );
 
     const conversations = await Promise.all(conversationsPromises);
     return conversations;

@@ -29,11 +29,11 @@ const MessagingView = ({ navigation }) => {
           );
           return {
             name: otherMemberName,
-            imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
+            imageSource: "https://randomuser.me/api/portraits/men/75.jpg", //TODO: Fetch image from Firebase.
             lastMessage: item.lastMessage,
-            lastMessageTime: "10:30 AM",
-            hasUnreadMessage: true,
-            conversationId: 1,
+            lastMessageTime: item.timestamp,
+            hasUnreadMessage: item.hasUnreadMessage,
+            conversationId: item.conversationId,
           };
         });
         setChatPreviews([...chatPreviews, ...newChatPreviews]);
@@ -54,8 +54,11 @@ const MessagingView = ({ navigation }) => {
     });
   };
 
-  const handleConversationPress = (conversationId) => {
-    navigation.navigate("Conversation", { conversationId: conversationId });
+  const handleConversationPress = (conversationId, otherUserName) => {
+    navigation.navigate("Conversation", {
+      conversationId: conversationId,
+      otherUserName: otherUserName,
+    });
   };
 
   return (
@@ -79,7 +82,10 @@ const MessagingView = ({ navigation }) => {
           .map((chatPreview, chatPreviewIndex) => (
             <TouchableOpacity
               onPress={() =>
-                handleConversationPress(chatPreview.conversationId)
+                handleConversationPress(
+                  chatPreview.conversationId,
+                  chatPreview.name
+                )
               }
               style={styles.chatPreviewContainer}
               key={chatPreviewIndex}
