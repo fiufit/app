@@ -29,7 +29,7 @@ const MessagingView = ({ navigation }) => {
           );
           return {
             name: otherMemberName,
-            imageSource: "https://randomuser.me/api/portraits/men/75.jpg", //TODO: Fetch image from Firebase.
+            imageSource: "https://randomuser.me/api/portraits/men/77.jpg", //TODO: Fetch image from Firebase.
             lastMessage: item.lastMessage,
             lastMessageTime: item.timestamp,
             hasUnreadMessage: item.hasUnreadMessage,
@@ -54,10 +54,15 @@ const MessagingView = ({ navigation }) => {
     });
   };
 
-  const handleConversationPress = (conversationId, otherUserName) => {
+  const handleConversationPress = (
+    conversationId,
+    otherUserName,
+    otherUserProfilePicture
+  ) => {
     navigation.navigate("Conversation", {
       conversationId: conversationId,
       otherUserName: otherUserName,
+      otherUserProfilePicture: otherUserProfilePicture,
     });
   };
 
@@ -84,7 +89,8 @@ const MessagingView = ({ navigation }) => {
               onPress={() =>
                 handleConversationPress(
                   chatPreview.conversationId,
-                  chatPreview.name
+                  chatPreview.name,
+                  chatPreview.imageSource
                 )
               }
               style={styles.chatPreviewContainer}

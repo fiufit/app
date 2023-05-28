@@ -1,12 +1,41 @@
 import { FlatList, KeyboardAvoidingView, View } from "react-native";
+import { useEffect, useState } from "react";
 
 import ConversationHeader from "../ConversationHeader/ConversationHeader";
 import Message from "../Message/Message";
+import MessageController from "../../utils/controllers/MessageController";
 import MessageInput from "../MessageInput/MessageInput";
 import { styles } from "./styles.Conversation";
+import { useRecoilValue } from "recoil";
+import { userDataState } from "../../atoms";
 
 const Conversation = ({ navigation, route }) => {
-  const { conversationId, otherUserName } = route.params;
+  const { conversationId, otherUserName, otherUserProfilePicture } =
+    route.params;
+  const [messages, setMessages] = useState([]);
+
+  const userData = useRecoilValue(userDataState);
+
+  useEffect(() => {
+    const messageController = new MessageController();
+
+    messageController
+      .getMessagesFromConversationId(conversationId)
+      .then((data) => {
+        const newMessages = data.map((message) => {
+          return {
+            image: otherUserProfilePicture,
+            message: message.message,
+            isCurrentUser: message.from === userData.DisplayName,
+            timestamp: message.timestamp,
+          };
+        });
+        setMessages([...messages, ...newMessages]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [conversationId]);
 
   const handleSendMessage = (inputMessage) => {
     //TODO: Send message to Backend.
@@ -16,10 +45,9 @@ const Conversation = ({ navigation, route }) => {
 
   const handleGoBack = () => {
     //Before going back, the attribute hasUnreadMessage from the conversation should be set to false.
+    setMessages([]);
     navigation.goBack();
   };
-
-  const messages = [];
 
   return (
     <KeyboardAvoidingView style={styles.conversationContainer}>
@@ -27,7 +55,7 @@ const Conversation = ({ navigation, route }) => {
         <ConversationHeader
           onGoBack={handleGoBack}
           name={otherUserName}
-          profileImage={"https://randomuser.me/api/portraits/men/75.jpg"}
+          profileImage={otherUserProfilePicture}
         />
       </View>
       <View style={styles.messageListContainer}>

@@ -22,6 +22,18 @@ class MessageController {
     return data;
   }
 
+  async getMessagesFromConversationId(conversationId) {
+    const messagesRef = collection(db, "messages");
+    const q = query(messagesRef, where("conversationId", "==", conversationId));
+    const querySnapshot = await getDocs(q);
+
+    const messages = await Promise.all(
+      querySnapshot.docs.map((doc) => doc.data())
+    );
+
+    return messages;
+  }
+
   onGetConversationById(conversationId, onGet) {
     return onSnapshot(doc(db, "conversations", conversationId), (doc) => {
       const conversationData = doc.data();
