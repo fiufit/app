@@ -13,8 +13,8 @@ import { db } from "../../firebase";
 class MessageController {
   constructor() {}
 
-  async getConversationById(converstionId) {
-    const docRef = doc(db, "conversations", converstionId);
+  async getConversationById(conversationId) {
+    const docRef = doc(db, "conversations", conversationId);
     const docSnap = await getDoc(docRef);
 
     const data = await docSnap.data();
@@ -22,8 +22,8 @@ class MessageController {
     return data;
   }
 
-  onGetConversationById(converstionId, onGet) {
-    return onSnapshot(doc(db, "conversations", converstionId), (doc) => {
+  onGetConversationById(conversationId, onGet) {
+    return onSnapshot(doc(db, "conversations", conversationId), (doc) => {
       const conversationData = doc.data();
 
       onGet(conversationData);
@@ -32,13 +32,42 @@ class MessageController {
 
   async getConversationsFromUser(userName) {
     const conversationsRef = collection(db, "conversations");
+    const messagesRef = collection(db, "messages");
     const q = query(
       conversationsRef,
       where("members", "array-contains", userName)
     );
     const querySnapshot = await getDocs(q);
-    const conversations = querySnapshot.docs.map((doc) => doc.data());
 
+    const conversationsPromises = querySnapshot.docs.map(async (doc) => {
+      const data = doc.data();
+      const qMessages = query(
+        messagesRef,
+        where("conversationId", "==", doc.id)
+      );
+      const querySnapshotMessages = await getDocs(qMessages);
+      const messages = await Promise.all(
+        querySnapshotMessages.docs.map((doc) => doc.data())
+      );
+
+      let highestTimestamp = 0;
+      let lastMessage = "";
+
+      for (const message of messages) {
+        const timestamp = parseInt(message.timestamp);
+        if (timestamp > highestTimestamp) {
+          highestTimestamp = timestamp;
+          lastMessage = message.message;
+        }
+      }
+
+      return {
+        ...data,
+        lastMessage: lastMessage,
+      };
+    });
+
+    const conversations = await Promise.all(conversationsPromises);
     return conversations;
   }
 }

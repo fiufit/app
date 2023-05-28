@@ -30,7 +30,7 @@ const MessagingView = ({ navigation }) => {
           return {
             name: otherMemberName,
             imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
-            lastMessage: "Hey, how is it going?",
+            lastMessage: item.lastMessage,
             lastMessageTime: "10:30 AM",
             hasUnreadMessage: true,
             conversationId: 1,
