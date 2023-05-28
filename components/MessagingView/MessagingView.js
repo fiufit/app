@@ -8,25 +8,34 @@ import MessagingTopBar from "../MessagingTopBar/MessagingTopBar";
 import SearchIcon from "../../assets/images/general/searchIcon.svg";
 import { WHITE } from "../../utils/colors";
 import { styles } from "./styles.MessagingView";
+import { useRecoilValue } from "recoil";
+import { userDataState } from "../../atoms";
 
 const MessagingView = ({ navigation }) => {
   const [searchedUser, setSearchedUser] = useState("");
   const [chatPreviews, setChatPreviews] = useState([]);
 
+  const userData = useRecoilValue(userDataState);
+
   useEffect(() => {
     const messageController = new MessageController();
 
     messageController
-      .getConversationsFromUser("pepe")
+      .getConversationsFromUser(userData.DisplayName)
       .then((data) => {
-        const newChatPreviews = data.map((item) => ({
-          name: item.members.join(", "),
-          imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
-          lastMessage: "Hey, how is it going?",
-          lastMessageTime: "10:30 AM",
-          hasUnreadMessage: true,
-          conversationId: 1,
-        }));
+        const newChatPreviews = data.map((item) => {
+          const otherMemberName = item.members.find(
+            (member) => member !== userData.DisplayName
+          );
+          return {
+            name: otherMemberName,
+            imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
+            lastMessage: "Hey, how is it going?",
+            lastMessageTime: "10:30 AM",
+            hasUnreadMessage: true,
+            conversationId: 1,
+          };
+        });
         setChatPreviews([...chatPreviews, ...newChatPreviews]);
       })
       .catch((error) => {
