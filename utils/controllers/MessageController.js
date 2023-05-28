@@ -1,4 +1,5 @@
 import {
+  addDoc,
   collection,
   doc,
   getDoc,
@@ -32,6 +33,16 @@ class MessageController {
     );
 
     return messages;
+  }
+
+  async writeMessageToConversationId(messageData) {
+    const messagesRef = collection(db, "messages");
+
+    const docRef = await addDoc(messagesRef, messageData);
+
+    const addedDoc = await getDoc(docRef);
+
+    return addedDoc.data();
   }
 
   onGetConversationById(conversationId, onGet) {

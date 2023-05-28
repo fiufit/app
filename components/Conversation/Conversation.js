@@ -16,21 +16,24 @@ const Conversation = ({ navigation, route }) => {
 
   const userData = useRecoilValue(userDataState);
 
+  const addNewMessages = (data) => {
+    const newMessages = data.map((message) => {
+      return {
+        image: otherUserProfilePicture,
+        message: message.message,
+        isCurrentUser: message.from === userData.DisplayName,
+        timestamp: message.timestamp,
+      };
+    });
+    setMessages([...messages, ...newMessages]);
+  };
+
   useEffect(() => {
     const messageController = new MessageController();
-
     messageController
       .getMessagesFromConversationId(conversationId)
       .then((data) => {
-        const newMessages = data.map((message) => {
-          return {
-            image: otherUserProfilePicture,
-            message: message.message,
-            isCurrentUser: message.from === userData.DisplayName,
-            timestamp: message.timestamp,
-          };
-        });
-        setMessages([...messages, ...newMessages]);
+        addNewMessages(data);
       })
       .catch((error) => {
         console.log(error);
@@ -38,8 +41,27 @@ const Conversation = ({ navigation, route }) => {
   }, [conversationId]);
 
   const handleSendMessage = (inputMessage) => {
-    //TODO: Send message to Backend.
-    //Besides sending the message to the backend, the attribute hasUnreadMessage from this conversation should be set to true.
+    const messageController = new MessageController();
+    messageController
+      .writeMessageToConversationId({
+        conversationId: conversationId,
+        from: userData.DisplayName,
+        message: inputMessage,
+        read: false,
+        timestamp: 30,
+      })
+      .then((newMessage) => {
+        setMessages([
+          ...messages,
+          {
+            image: userData.PictureUrl,
+            message: newMessage.message,
+            isCurrentUser: true,
+            timestamp: newMessage.timestamp,
+          },
+        ]);
+      });
+
     console.log(inputMessage);
   };
 
