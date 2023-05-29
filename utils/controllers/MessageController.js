@@ -35,14 +35,108 @@ class MessageController {
     return messages;
   }
 
-  async writeMessageToConversationId(messageData) {
+  async getConversationWithUsers(currentUser, otherUser) {
+    const conversationRef = collection(db, "conversations");
+
+    const currentUserQuery = query(
+      conversationRef,
+      where("members", "array-contains", currentUser)
+    );
+
+    const otherUserQuery = query(
+      conversationRef,
+      where("members", "array-contains", otherUser)
+    );
+
+    const [currentUserConversations, otherUserConversations] =
+      await Promise.all([getDocs(currentUserQuery), getDocs(otherUserQuery)]);
+
+    const currentUserConversationIds = currentUserConversations.docs.map(
+      (doc) => doc.id
+    );
+    const otherUserConversationIds = otherUserConversations.docs.map(
+      (doc) => doc.id
+    );
+
+    const commonConversationIds = currentUserConversationIds.filter(
+      (conversationId) => otherUserConversationIds.includes(conversationId)
+    );
+
+    if (commonConversationIds.length === 0) {
+      return null; // Return null if no conversation is found
+    }
+
+    const conversationId = commonConversationIds[0];
+    const conversationSnapshot = await getDoc(
+      doc(conversationRef, conversationId)
+    );
+
+    if (!conversationSnapshot.exists()) {
+      return null; // Return null if conversation document does not exist
+    }
+
+    const conversation = conversationSnapshot.data();
+
+    return {
+      ...conversation,
+      conversationId: conversationId,
+    };
+  }
+
+  async getMessagesFromConversationWithUsers(currentUser, otherUser) {
     const messagesRef = collection(db, "messages");
+    const conversationWithUsers = await this.getConversationWithUsers(
+      currentUser,
+      otherUser
+    );
+    if (conversationWithUsers) {
+      const q = query(
+        messagesRef,
+        where("conversationId", "==", conversationWithUsers.conversationId)
+      );
+      const querySnapshot = await getDocs(q);
 
-    const docRef = await addDoc(messagesRef, messageData);
+      const messages = await Promise.all(
+        querySnapshot.docs.map((doc) => doc.data())
+      );
 
-    const addedDoc = await getDoc(docRef);
+      return messages;
+    } else {
+      return [];
+    }
+  }
 
-    return addedDoc.data();
+  async writeMessageToConversationId(messageData, conversationId) {
+    if (conversationId) {
+      const messagesRef = collection(db, "messages");
+
+      const docRef = await addDoc(messagesRef, messageData);
+
+      const addedDoc = await getDoc(docRef);
+
+      return addedDoc.data();
+    } else {
+      const conversationsRef = collection(db, "conversations");
+
+      const docRef = await addDoc(conversationsRef, {
+        members: [messageData.from, messageData.to],
+      });
+
+      const addedDoc = await getDoc(docRef);
+
+      const newConversationId = addedDoc.id;
+
+      const messagesRef = collection(db, "messages");
+
+      const docRefMessage = await addDoc(messagesRef, {
+        ...messageData,
+        conversationId: newConversationId,
+      });
+
+      const addedDocMessage = await getDoc(docRefMessage);
+
+      return addedDocMessage.data();
+    }
   }
 
   onGetConversationById(conversationId, onGet) {

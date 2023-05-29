@@ -14,15 +14,12 @@ import Button from "../Shared/Button/button";
 import RequestController from "../../utils/controllers/RequestController";
 import SearchBar from "../Shared/SearchBar/searchBar";
 import TrainingFilterModal from "../Shared/Modals/TrainingFilterModal/trainingFilterModal";
-
-import { useRecoilState } from "recoil";
-import { selectedTrainingState } from "../../atoms";
-import { useIsFocused } from "@react-navigation/native";
-
 import VerifiedIcon from "../../assets/images/profile/verifiedIcon.svg";
+import { selectedTrainingState } from "../../atoms";
 import { styles } from "./styles.search-view";
 import { useAuthState } from "react-firebase-hooks/auth";
-
+import { useIsFocused } from "@react-navigation/native";
+import { useRecoilState } from "recoil";
 
 const LOADING_MAX = 4;
 const SearchView = ({ navigation, route }) => {
@@ -44,6 +41,7 @@ const SearchView = ({ navigation, route }) => {
   const [userSearchSelected, setUserSearchSelected] = useState(true);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [trainingDifficulty, setTrainingDifficulty] = useState("all");
+  const [remountConversation, setRemountConversation] = useState(false);
 
   const handleBack = () => {
     navigation.goBack();
@@ -184,8 +182,11 @@ const SearchView = ({ navigation, route }) => {
 
   const handleUserCardPress = (userData) => {
     if (messageUsers) {
+      setRemountConversation(!remountConversation);
       navigation.navigate("Conversation", {
-        conversationUserId: "userData.ID",
+        otherUserName: userData.DisplayName,
+        otherProfilePicture: userData.PictureUrl,
+        remountConversation: remountConversation,
       });
     } else {
       navigation.navigate({

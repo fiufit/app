@@ -38,7 +38,7 @@ const Conversation = ({ navigation, route }) => {
   useEffect(() => {
     const messageController = new MessageController();
     messageController
-      .getMessagesFromConversationId(conversationId)
+      .getMessagesFromConversationWithUsers(userData.DisplayName, otherUserName)
       .then((data) => {
         addNewMessages(data);
       })
@@ -50,15 +50,19 @@ const Conversation = ({ navigation, route }) => {
   const handleSendMessage = (inputMessage) => {
     const messageController = new MessageController();
     messageController
-      .writeMessageToConversationId({
-        conversationId: conversationId,
-        from: userData.DisplayName,
-        message: inputMessage,
-        read: false,
-        timestamp: new Date().toLocaleString("en-US", {
-          timeZone: "America/Argentina/Buenos_Aires",
-        }),
-      })
+      .writeMessageToConversationId(
+        {
+          conversationId: conversationId,
+          from: userData.DisplayName,
+          to: otherUserName,
+          message: inputMessage,
+          read: false,
+          timestamp: new Date().toLocaleString("en-US", {
+            timeZone: "America/Argentina/Buenos_Aires",
+          }),
+        },
+        conversationId
+      )
       .then((newMessage) => {
         setMessages([
           ...messages,
@@ -90,7 +94,7 @@ const Conversation = ({ navigation, route }) => {
       <View style={styles.messageListContainer}>
         <View style={styles.messageList}>
           <FlatList
-            data={messages.reverse()}
+            data={messages}
             renderItem={({ item }) => (
               <Message
                 profileImage={item.image}
