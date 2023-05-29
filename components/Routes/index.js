@@ -16,9 +16,10 @@ import UploadTraining from "../Trainings/UploadTraining/uploadTraining";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { signOutFromApp } from "../../firebase";
 import { styles } from "./styles.routes";
-import { useRecoilState } from "recoil";
-import { userDataState } from "../../atoms";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {expoPushTokenState, userDataState} from "../../atoms";
 import Ratings from "../Ratings/ratings";
+import Input from "../Shared/Input/input";
 
 const Tab = createBottomTabNavigator();
 
@@ -60,10 +61,12 @@ const Routes = () => {
 };
 const InDevelopment = ({ navigation }) => {
   const [userData, setUserData] = useRecoilState(userDataState);
+  const expoPushToken = useRecoilValue(expoPushTokenState);
 
   return (
     <View style={styles.container}>
       <Text>In development</Text>
+      <Input value={expoPushToken} placeholder={expoPushToken} multiline/>
       <Button
         textColor={"#FFFFFF"}
         style={{ width: "40%" }}
