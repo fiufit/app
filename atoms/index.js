@@ -19,3 +19,8 @@ export const selectedTrainingState = atom({
     key: 'selectedTrainingState',
     default: {},
 });
+
+export const expoPushTokenState = atom({
+    key: 'expoPushTokenState',
+    default: '',
+});
