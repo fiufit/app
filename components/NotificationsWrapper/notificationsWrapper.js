@@ -2,6 +2,8 @@ import {useEffect, useRef, useState} from "react";
 import * as Notifications from "expo-notifications";
 import {Platform} from "react-native";
 import * as Device from "expo-device";
+import {useSetRecoilState} from "recoil";
+import {expoPushTokenState} from "../../atoms";
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -14,7 +16,7 @@ Notifications.setNotificationHandler({
 const NotificationsWrapper = ({ children }) => {
     const notificationListener = useRef();
     const responseListener = useRef();
-    const [expoPushToken, setExpoPushToken] = useState('');
+    const setExpoPushToken = useSetRecoilState(expoPushTokenState);
 
     useEffect(() => {
         registerForPushNotificationsAsync().then(token => setExpoPushToken(token));

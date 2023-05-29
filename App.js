@@ -47,11 +47,11 @@ const App = () => {
         style={{ width: "100%", height: "100%" }}
       >
         <Provider>
-          <NotificationsWrapper>
-            <AuthenticationWrapper>
+          <AuthenticationWrapper>
+            <NotificationsWrapper>
               <Routes />
-            </AuthenticationWrapper>
-          </NotificationsWrapper>
+            </NotificationsWrapper>
+          </AuthenticationWrapper>
         </Provider>
       </View>
     </RecoilRoot>
