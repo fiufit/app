@@ -106,9 +106,16 @@ class MessageController {
     }
   }
 
-  async writeMessageToConversationId(messageData, conversationId) {
-    if (conversationId) {
+  async writeMessageToConversationWithUsers(messageData) {
+    const conversationWithUsers = await this.getConversationWithUsers(
+      messageData.from,
+      messageData.to
+    );
+
+    if (conversationWithUsers) {
       const messagesRef = collection(db, "messages");
+
+      messageData.conversationId = conversationWithUsers.conversationId;
 
       const docRef = await addDoc(messagesRef, messageData);
 

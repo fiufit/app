@@ -50,19 +50,16 @@ const Conversation = ({ navigation, route }) => {
   const handleSendMessage = (inputMessage) => {
     const messageController = new MessageController();
     messageController
-      .writeMessageToConversationId(
-        {
-          conversationId: conversationId,
-          from: userData.DisplayName,
-          to: otherUserName,
-          message: inputMessage,
-          read: false,
-          timestamp: new Date().toLocaleString("en-US", {
-            timeZone: "America/Argentina/Buenos_Aires",
-          }),
-        },
-        conversationId
-      )
+      .writeMessageToConversationWithUsers({
+        conversationId: conversationId,
+        from: userData.DisplayName,
+        to: otherUserName,
+        message: inputMessage,
+        read: false,
+        timestamp: new Date().toLocaleString("en-US", {
+          timeZone: "America/Argentina/Buenos_Aires",
+        }),
+      })
       .then((newMessage) => {
         setMessages([
           ...messages,
