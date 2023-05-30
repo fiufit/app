@@ -5,9 +5,12 @@ import ChatPreview from "../ChatPreview/ChatPreview";
 import Input from "../Shared/Input/input";
 import MessageController from "../../utils/controllers/MessageController";
 import MessagingTopBar from "../MessagingTopBar/MessagingTopBar";
+import RequestController from "../../utils/controllers/RequestController";
 import SearchIcon from "../../assets/images/general/searchIcon.svg";
 import { WHITE } from "../../utils/colors";
+import { auth } from "../../firebase";
 import { styles } from "./styles.MessagingView";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilValue } from "recoil";
 import { userDataState } from "../../atoms";
 
@@ -16,32 +19,54 @@ const MessagingView = ({ navigation }) => {
   const [chatPreviews, setChatPreviews] = useState([]);
   const [remountConversation, setRemountConversation] = useState(false);
 
+  const [user] = useAuthState(auth);
+
   const userData = useRecoilValue(userDataState);
 
   useEffect(() => {
-    const messageController = new MessageController();
+    const fetchData = async () => {
+      try {
+        const messageController = new MessageController();
+        const data = await messageController.getConversationsFromUser(
+          userData.DisplayName
+        );
 
-    messageController
-      .getConversationsFromUser(userData.DisplayName)
-      .then((data) => {
-        const newChatPreviews = data.map((item) => {
-          const otherMemberName = item.members.find(
-            (member) => member !== userData.DisplayName
-          );
-          return {
-            name: otherMemberName,
-            imageSource: "https://randomuser.me/api/portraits/men/77.jpg", //TODO: Fetch image from Firebase.
-            lastMessage: item.lastMessage,
-            lastMessageTime: item.timestamp,
-            hasUnreadMessage: item.hasUnreadMessage,
-            conversationId: item.conversationId,
-          };
-        });
-        setChatPreviews([...chatPreviews, ...newChatPreviews]);
-      })
-      .catch((error) => {
+        const newChatPreviews = await Promise.all(
+          data.map(async (item) => {
+            const otherMemberName = item.members.find(
+              (member) => member !== userData.DisplayName
+            );
+
+            const controller = new RequestController(user);
+            const userDataFetched = await controller.fetch(
+              `users?name=${otherMemberName}`,
+              "GET"
+            );
+
+            const otherUser = userDataFetched.data.users[0];
+            const imageSource = otherUser.PictureUrl;
+
+            return {
+              name: otherMemberName,
+              imageSource: imageSource,
+              lastMessage: item.lastMessage,
+              lastMessageTime: item.timestamp,
+              hasUnreadMessage: item.hasUnreadMessage,
+              conversationId: item.conversationId,
+            };
+          })
+        );
+
+        setChatPreviews((prevChatPreviews) => [
+          ...prevChatPreviews,
+          ...newChatPreviews,
+        ]);
+      } catch (error) {
         console.log(error);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleNewMessage = () => {

@@ -23,7 +23,10 @@ const Conversation = ({ navigation, route }) => {
   const addNewMessages = (data) => {
     const newMessages = data.map((message) => {
       return {
-        image: otherUserProfilePicture,
+        image:
+          message.from === userData.DisplayName
+            ? userData.PictureUrl
+            : otherUserProfilePicture,
         message: message.message,
         isCurrentUser: message.from === userData.DisplayName,
         timestamp: message.timestamp,
