@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
         // height: 220,
         display: "flex",
         gap: 10,
+        marginBottom: 15
     },
     title: {
         fontFamily: "Lato_700Bold",

@@ -7,6 +7,7 @@ import FilterIcon from "../../assets/images/general/filterIcon.svg";
 import RecommendedTraining from "./RecommendedTraining/recommendedTraining";
 import FavouriteTrainings from "./FavouriteTrainings/favouriteTrainings";
 import SearchBar from "../Shared/SearchBar/searchBar";
+import TrainingAttempts from "./TrainingAttempts/trainingAttempts";
 
 const Trainings = ({ navigation }) => {
   const favouriteTrainings = [
@@ -254,6 +255,7 @@ const Trainings = ({ navigation }) => {
           recommended={recommendedTrainings}
           onTrainingPress={handleTrainingPress}
         />
+        <TrainingAttempts attempts={[]}/>
       </ScrollView>
     </View>
   );
