@@ -43,7 +43,6 @@ const UploadTraining = ({ navigation, route }) => {
   const [exercisesToUpload, setExercisesToUpload] = useState(
     trainingData?.Exercises ? parseExercises(trainingData?.Exercises) : []
   );
-  const [exercisesToDelete, setExercisesToDelete] = useState([]);
   const [showImageModal, setShowImageModal] = useState(false);
   const [image, setImage] = useState(trainingData?.PictureUrl ?? null);
   const [editOptions, setEditOptions] = useState({});
@@ -67,7 +66,6 @@ const UploadTraining = ({ navigation, route }) => {
     setDurationToUpload("");
     setTitleToUpload("");
     setExercisesToUpload([]);
-    setExercisesToDelete([]);
     setImage(null);
   };
   const handleAddExercise = () => {
@@ -100,12 +98,9 @@ const UploadTraining = ({ navigation, route }) => {
     );
   };
 
-  const handleExerciseDelete = (index, exercise) => {
+  const handleExerciseDelete = (index) => {
     const updatedExercises = exercisesToUpload.filter((_, i) => i !== index);
     setExercisesToUpload(updatedExercises);
-    if (edit) {
-      setExercisesToDelete([...exercisesToDelete, exercise]);
-    }
   };
 
   const handleEdit = async () => {
@@ -120,7 +115,6 @@ const UploadTraining = ({ navigation, route }) => {
       trainingData,
       updatedTrainingData,
       exercisesToUpload,
-      exercisesToDelete
     );
 
     if (error) {
@@ -324,8 +318,8 @@ const UploadTraining = ({ navigation, route }) => {
                     add
                     exercises={exercisesToUpload}
                     setExercises={setExercisesToUpload}
-                    onDelete={(index, exercise) =>
-                      handleExerciseDelete(index, exercise)
+                    onDelete={(index) =>
+                      handleExerciseDelete(index)
                     }
                     setEditOptions={setEditOptions}
                   />
