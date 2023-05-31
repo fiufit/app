@@ -175,12 +175,12 @@ class MessageController {
           querySnapshotMessages.docs.map((docMessage) => docMessage.data())
         );
 
-        let highestTimestamp = 0;
+        let highestTimestamp = new Date("2023-05-30T12:34:56.789Z");
         let lastMessage = "";
         let messageWasRead;
 
         for (const message of messages) {
-          const timestamp = parseInt(message.timestamp);
+          const timestamp = new Date(message.timestamp);
           if (timestamp > highestTimestamp) {
             highestTimestamp = timestamp;
             lastMessage = message.message;
@@ -192,7 +192,7 @@ class MessageController {
           ...data,
           lastMessage: lastMessage,
           conversationId: docConversation.id,
-          timestamp: highestTimestamp,
+          timestamp: highestTimestamp.toISOString(),
           read: messageWasRead,
         };
       }

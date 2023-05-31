@@ -59,9 +59,7 @@ const Conversation = ({ navigation, route }) => {
         to: otherUserName,
         message: inputMessage,
         read: false,
-        timestamp: new Date().toLocaleString("en-US", {
-          timeZone: "America/Argentina/Buenos_Aires",
-        }),
+        timestamp: new Date().toISOString(),
       })
       .then((newMessage) => {
         setMessages([
@@ -100,7 +98,9 @@ const Conversation = ({ navigation, route }) => {
                 profileImage={item.image}
                 message={item.message}
                 isCurrentUser={item.isCurrentUser}
-                timestamp={item.timestamp}
+                timestamp={new Date(item.timestamp).toLocaleString("en-US", {
+                  timeZone: "America/Argentina/Buenos_Aires",
+                })}
               />
             )}
           />

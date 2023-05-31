@@ -128,7 +128,11 @@ const MessagingView = ({ navigation }) => {
                 imageSource={chatPreview.imageSource}
                 name={chatPreview.name}
                 lastMessage={chatPreview.lastMessage}
-                lastMessageTime={chatPreview.lastMessageTime}
+                lastMessageTime={new Date(
+                  chatPreview.lastMessageTime
+                ).toLocaleString("en-US", {
+                  timeZone: "America/Argentina/Buenos_Aires",
+                })}
                 hasUnreadMessage={chatPreview.hasUnreadMessage}
               />
             </TouchableOpacity>
