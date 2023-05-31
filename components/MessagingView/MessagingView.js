@@ -51,10 +51,14 @@ const MessagingView = ({ navigation }) => {
               imageSource: imageSource,
               lastMessage: item.lastMessage,
               lastMessageTime: item.timestamp,
-              hasUnreadMessage: item.hasUnreadMessage,
+              hasUnreadMessage: !item.read,
               conversationId: item.conversationId,
             };
           })
+        );
+
+        newChatPreviews.sort(
+          (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
         );
 
         setChatPreviews((prevChatPreviews) => [
