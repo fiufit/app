@@ -47,7 +47,6 @@ const EditProfile = ({ navigation }) => {
   const [successModalIsVisible, setSuccessModalIsVisible] = useState(false);
   const [successDescription, setSuccessDescription] = useState("");
   const [showInterestsModal, setShowInterestsModal] = useState(false);
-  console.log(userData);
 
   const nameOptions = {
     displayName: {
