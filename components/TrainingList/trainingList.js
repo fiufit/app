@@ -4,10 +4,11 @@ import Back from "../Shared/Back/back";
 import TrainingCard from "../Shared/TrainingCard/trainingCard";
 import Button from "../Shared/Button/button";
 import { WHITE } from "../../utils/colors";
-import {useRecoilValue} from "recoil";
-import {createdTrainingsState} from "../../atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { createdTrainingsState, selectedTrainingState } from "../../atoms";
 
 const TrainingList = ({ navigation, route }) => {
+  const setSelectedTraining = useSetRecoilState(selectedTrainingState);
   const createdTrainings = useRecoilValue(createdTrainingsState);
   const { paramTrainings, created, title } = route.params;
   const trainings = created ? createdTrainings : paramTrainings;
@@ -16,10 +17,18 @@ const TrainingList = ({ navigation, route }) => {
   };
 
   const handleTrainingPress = (training, index) => {
-    navigation.navigate({
-      name: "Edit Training",
-      params: { edit: true, createdTrainingIndex: index},
-    });
+    if (created) {
+      navigation.navigate({
+        name: "Edit Training",
+        params: { edit: true, createdTrainingIndex: index },
+      });
+    } else {
+      setSelectedTraining(training);
+      navigation.navigate({
+        name: "Single Training",
+        params: { training, start: true },
+      });
+    }
   };
 
   return (
@@ -29,7 +38,7 @@ const TrainingList = ({ navigation, route }) => {
       <View
         style={{
           width: "100%",
-          height: "72%",
+          height: created ? "72%" : "80%",
           display: "flex",
           alignItems: "center",
         }}
