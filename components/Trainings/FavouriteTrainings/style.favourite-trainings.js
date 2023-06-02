@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import {MEDIUM_GREY, WHITE} from "../../../utils/colors";
+import {LIGHT_GREY, MEDIUM_GREY, WHITE} from "../../../utils/colors";
 
 export const styles = StyleSheet.create({
     container: {
@@ -11,6 +11,12 @@ export const styles = StyleSheet.create({
     title: {
         fontFamily: "Lato_700Bold",
         fontSize: 18,
+    },
+    loadingCardTitle: {
+        width: 200,
+        height: 18,
+        borderRadius: 6,
+        backgroundColor: LIGHT_GREY
     },
     textContainer: {
         display: "flex",
@@ -38,6 +44,16 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 10
     },
+    loadingTrainingCard: {
+        width: 200,
+        height: 86,
+        borderRadius: 9,
+        backgroundColor: LIGHT_GREY,
+        display: "flex",
+        alignItems: 'center',
+        flexDirection: 'row',
+        gap: 10
+    },
     cardColumn: {
         display: "flex",
         gap: 10,
@@ -48,6 +64,13 @@ export const styles = StyleSheet.create({
         aspectRatio: 1,
         borderRadius: 6,
         marginLeft: 8
+    },
+    loadingImage: {
+        width: 72,
+        aspectRatio: 1,
+        borderRadius: 6,
+        marginLeft: 8,
+        backgroundColor: LIGHT_GREY
     },
     infoContainer: {
         height: 72,
@@ -61,6 +84,11 @@ export const styles = StyleSheet.create({
         color: '#192126',
         width: 100
     },
+    loadingTitle: {
+        width: 100,
+        height: 15,
+        backgroundColor: LIGHT_GREY,
+    },
     trainingDetail: {
         backgroundColor: '#F1F1F1',
         paddingHorizontal: 6,
@@ -69,6 +97,15 @@ export const styles = StyleSheet.create({
         fontFamily: 'Lato_400Regular',
         fontSize: 12,
         color: '#192126'
+    },
+    trainingDetailLoading: {
+        backgroundColor: LIGHT_GREY,
+        paddingVertical: 2,
+        borderRadius: 3,
+        fontFamily: 'Lato_400Regular',
+        fontSize: 12,
+        color: '#192126',
+        width: 70,
     },
     detailsContainer: {
         display: 'flex',

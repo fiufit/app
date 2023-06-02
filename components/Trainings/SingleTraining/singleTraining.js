@@ -5,7 +5,7 @@ import trainingImage from "../../../assets/images/examples/woman.png";
 import FavouriteIcon from "../../../assets/images/general/favouriteIcon.svg";
 import StarIcon from "../../../assets/images/general/star.svg";
 import { React, useState } from "react";
-import { WHITE } from "../../../utils/colors";
+import {WHITE} from "../../../utils/colors";
 import Exercise from "./Exercise/exercise";
 import Button from "../../Shared/Button/button";
 import {parseExercises} from "../../../utils/trainings";
@@ -21,6 +21,7 @@ const SingleTraining = ({ navigation, route }) => {
     Exercises: trainingExercises,
     PictureUrl: pictureUrl,
     MeanScore: meanScore,
+    Tags: tags,
   } = selectedTraining;
   const start = route.params.start;
   const { isFavourite } = route.params;
@@ -68,8 +69,20 @@ const SingleTraining = ({ navigation, route }) => {
             <Text style={styles.detail}>{difficulty}</Text>
             <Text style={styles.detail}>{duration} min</Text>
           </View>
+          <View style={styles.tagsContainer}>
+            {tags.map((tag, index) => {
+              return (
+                    <Text
+                        key={index}
+                        style={styles.tag}
+                    >
+                      {tag.Name.charAt(0).toUpperCase() + tag.Name.slice(1)}
+                    </Text>
+              );
+            })}
+          </View>
           <Text style={styles.start}>{"Let's Start!"}</Text>
-          <View style={{ height: start ? "35%" : "45%", width: "100%" }}>
+          <View style={{ height: start ? "30%" : "45%", width: "100%" }}>
             <ScrollView
               style={styles.exercisesContainer}
               contentContainerStyle={{ gap: 20 }}
