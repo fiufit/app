@@ -25,6 +25,7 @@ const MessagingView = ({ navigation }) => {
 
   const fetchConversationsData = async () => {
     try {
+      setChatPreviews([]);
       const messageController = new MessageController();
       const data = await messageController.getConversationsFromUser(
         userData.DisplayName
@@ -59,10 +60,7 @@ const MessagingView = ({ navigation }) => {
         (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
       );
 
-      setChatPreviews((prevChatPreviews) => [
-        ...prevChatPreviews,
-        ...newChatPreviews,
-      ]);
+      setChatPreviews(newChatPreviews);
     } catch (error) {
       console.log(error);
     }
@@ -74,12 +72,6 @@ const MessagingView = ({ navigation }) => {
     messageController.onGetAllConversations(() => {
       fetchConversationsData();
     });
-
-    const uniqueChatPreviews = Array.from(
-      new Set(chatPreviews.map(JSON.stringify))
-    ).map(JSON.parse);
-
-    setChatPreviews(uniqueChatPreviews);
   }, []);
 
   const handleNewMessage = () => {
