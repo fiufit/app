@@ -35,9 +35,20 @@ const Conversation = ({ navigation, route }) => {
       };
     });
 
-    newMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    const uniqueNewMessages = newMessages.filter(
+      (newMessage) =>
+        !messages.some(
+          (message) =>
+            message.from === newMessage.from &&
+            message.timestamp === newMessage.timestamp
+        )
+    );
 
-    setMessages([...messages, ...newMessages]);
+    uniqueNewMessages.sort(
+      (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+    );
+
+    setMessages([...messages, ...uniqueNewMessages]);
   };
 
   const fetchMessages = () => {
