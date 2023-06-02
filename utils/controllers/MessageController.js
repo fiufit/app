@@ -6,6 +6,7 @@ import {
   getDocs,
   onSnapshot,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 
@@ -121,12 +122,27 @@ class MessageController {
 
       const addedDoc = await getDoc(docRef);
 
+      const conversationsRef = collection(db, "conversations");
+      const conversationDocRef = doc(
+        conversationsRef,
+        conversationWithUsers.conversationId
+      );
+
+      await updateDoc(conversationDocRef, {
+        lastMessage: messageData.message,
+        lastMessageTimestamp: messageData.timestamp,
+        lastMessageWasRead: messageData.read,
+      });
+
       return addedDoc.data();
     } else {
       const conversationsRef = collection(db, "conversations");
 
       const docRef = await addDoc(conversationsRef, {
         members: [messageData.from, messageData.to],
+        lastMessage: messageData.message,
+        lastMessageTimestamp: messageData.timestamp,
+        lastMessageWasRead: messageData.read,
       });
 
       const addedDoc = await getDoc(docRef);
@@ -146,11 +162,10 @@ class MessageController {
     }
   }
 
-  onGetConversationById(conversationId, onGet) {
-    return onSnapshot(doc(db, "conversations", conversationId), (doc) => {
-      const conversationData = doc.data();
-
-      onGet(conversationData);
+  onGetAllConversations(onGet) {
+    return onSnapshot(collection(db, "conversations"), (snapshot) => {
+      const conversationsData = snapshot.docs.map((doc) => doc.data());
+      onGet(conversationsData);
     });
   }
 
@@ -175,25 +190,9 @@ class MessageController {
           querySnapshotMessages.docs.map((docMessage) => docMessage.data())
         );
 
-        let highestTimestamp = new Date("2023-05-30T12:34:56.789Z");
-        let lastMessage = "";
-        let messageWasRead;
-
-        for (const message of messages) {
-          const timestamp = new Date(message.timestamp);
-          if (timestamp > highestTimestamp) {
-            highestTimestamp = timestamp;
-            lastMessage = message.message;
-            messageWasRead = message.read;
-          }
-        }
-
         return {
           ...data,
-          lastMessage: lastMessage,
           conversationId: docConversation.id,
-          timestamp: highestTimestamp.toISOString(),
-          read: messageWasRead,
         };
       }
     );

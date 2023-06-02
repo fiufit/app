@@ -23,54 +23,63 @@ const MessagingView = ({ navigation }) => {
 
   const userData = useRecoilValue(userDataState);
 
+  const fetchConversationsData = async () => {
+    try {
+      const messageController = new MessageController();
+      const data = await messageController.getConversationsFromUser(
+        userData.DisplayName
+      );
+
+      const newChatPreviews = await Promise.all(
+        data.map(async (item) => {
+          const otherMemberName = item.members.find(
+            (member) => member !== userData.DisplayName
+          );
+
+          const controller = new RequestController(user);
+          const userDataFetched = await controller.fetch(
+            `users?name=${otherMemberName}`,
+            "GET"
+          );
+
+          const otherUser = userDataFetched.data.users[0];
+          const imageSource = otherUser.PictureUrl;
+          return {
+            name: otherMemberName,
+            imageSource: imageSource,
+            lastMessage: item.lastMessage,
+            lastMessageTime: item.lastMessageTimestamp,
+            hasUnreadMessage: !item.lastMessageWasRead,
+            conversationId: item.conversationId,
+          };
+        })
+      );
+
+      newChatPreviews.sort(
+        (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
+      );
+
+      setChatPreviews((prevChatPreviews) => [
+        ...prevChatPreviews,
+        ...newChatPreviews,
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const messageController = new MessageController();
-        const data = await messageController.getConversationsFromUser(
-          userData.DisplayName
-        );
+    const messageController = new MessageController();
 
-        const newChatPreviews = await Promise.all(
-          data.map(async (item) => {
-            const otherMemberName = item.members.find(
-              (member) => member !== userData.DisplayName
-            );
+    messageController.onGetAllConversations(() => {
+      fetchConversationsData();
+    });
 
-            const controller = new RequestController(user);
-            const userDataFetched = await controller.fetch(
-              `users?name=${otherMemberName}`,
-              "GET"
-            );
+    const uniqueChatPreviews = Array.from(
+      new Set(chatPreviews.map(JSON.stringify))
+    ).map(JSON.parse);
 
-            const otherUser = userDataFetched.data.users[0];
-            const imageSource = otherUser.PictureUrl;
-
-            return {
-              name: otherMemberName,
-              imageSource: imageSource,
-              lastMessage: item.lastMessage,
-              lastMessageTime: item.timestamp,
-              hasUnreadMessage: !item.read,
-              conversationId: item.conversationId,
-            };
-          })
-        );
-
-        newChatPreviews.sort(
-          (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
-        );
-
-        setChatPreviews((prevChatPreviews) => [
-          ...prevChatPreviews,
-          ...newChatPreviews,
-        ]);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
+    setChatPreviews(uniqueChatPreviews);
   }, []);
 
   const handleNewMessage = () => {
