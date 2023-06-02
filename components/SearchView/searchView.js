@@ -185,7 +185,7 @@ const SearchView = ({ navigation, route }) => {
       setRemountConversation(!remountConversation);
       navigation.navigate("Conversation", {
         otherUserName: userData.DisplayName,
-        otherProfilePicture: userData.PictureUrl,
+        otherUserProfilePicture: userData.PictureUrl,
         remountConversation: remountConversation,
       });
     } else {
