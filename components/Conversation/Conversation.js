@@ -6,6 +6,7 @@ import Message from "../Message/Message";
 import MessageController from "../../utils/controllers/MessageController";
 import MessageInput from "../MessageInput/MessageInput";
 import { styles } from "./styles.Conversation";
+import { useIsFocused } from "@react-navigation/native";
 import { useRecoilValue } from "recoil";
 import { userDataState } from "../../atoms";
 
@@ -17,6 +18,7 @@ const Conversation = ({ navigation, route }) => {
     remountConversation,
   } = route.params;
   const [messages, setMessages] = useState([]);
+  const isFocused = useIsFocused();
 
   const userData = useRecoilValue(userDataState);
 
@@ -28,7 +30,7 @@ const Conversation = ({ navigation, route }) => {
             ? userData.PictureUrl
             : otherUserProfilePicture,
         message: message.message,
-        isCurrentUser: message.from === userData.DisplayName,
+        from: message.from,
         timestamp: message.timestamp,
       };
     });
@@ -57,6 +59,18 @@ const Conversation = ({ navigation, route }) => {
     });
   }, [remountConversation]);
 
+  useEffect(() => {
+    if (isFocused) {
+      if (messages.length > 0) {
+        const lastMessage = messages[messages.length - 1];
+        if (lastMessage.from != userData.DisplayName) {
+          const messageController = new MessageController();
+          messageController.readLastMessageFromConversation(conversationId);
+        }
+      }
+    }
+  }, [messages]);
+
   const handleSendMessage = (inputMessage) => {
     const messageController = new MessageController();
     messageController
@@ -74,7 +88,7 @@ const Conversation = ({ navigation, route }) => {
           {
             image: userData.PictureUrl,
             message: newMessage.message,
-            isCurrentUser: true,
+            from: userData.DisplayName,
             timestamp: newMessage.timestamp,
           },
         ]);
@@ -104,7 +118,7 @@ const Conversation = ({ navigation, route }) => {
               <Message
                 profileImage={item.image}
                 message={item.message}
-                isCurrentUser={item.isCurrentUser}
+                isCurrentUser={item.from == userData.DisplayName}
                 timestamp={new Date(item.timestamp).toLocaleString("en-US", {
                   timeZone: "America/Argentina/Buenos_Aires",
                 })}

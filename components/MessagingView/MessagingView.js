@@ -49,6 +49,7 @@ const MessagingView = ({ navigation }) => {
             name: otherMemberName,
             imageSource: imageSource,
             lastMessage: item.lastMessage,
+            lastMessageFrom: item.lastMessageFrom,
             lastMessageTime: item.lastMessageTimestamp,
             hasUnreadMessage: !item.lastMessageWasRead,
             conversationId: item.conversationId,
@@ -138,7 +139,10 @@ const MessagingView = ({ navigation }) => {
                 ).toLocaleString("en-US", {
                   timeZone: "America/Argentina/Buenos_Aires",
                 })}
-                hasUnreadMessage={chatPreview.hasUnreadMessage}
+                hasUnreadMessage={
+                  chatPreview.hasUnreadMessage &&
+                  chatPreview.lastMessageFrom != userData.DisplayName
+                }
               />
             </TouchableOpacity>
           ))}

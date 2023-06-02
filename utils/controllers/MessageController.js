@@ -132,6 +132,7 @@ class MessageController {
         lastMessage: messageData.message,
         lastMessageTimestamp: messageData.timestamp,
         lastMessageWasRead: messageData.read,
+        lastMessageFrom: messageData.from,
       });
 
       return addedDoc.data();
@@ -143,6 +144,7 @@ class MessageController {
         lastMessage: messageData.message,
         lastMessageTimestamp: messageData.timestamp,
         lastMessageWasRead: messageData.read,
+        lastMessageFrom: messageData.from,
       });
 
       const addedDoc = await getDoc(docRef);
@@ -173,6 +175,13 @@ class MessageController {
     return onSnapshot(collection(db, "messages"), (snapshot) => {
       const messagesData = snapshot.docs.map((doc) => doc.data());
       onGet(messagesData);
+    });
+  }
+
+  readLastMessageFromConversation(conversationId) {
+    const conversationRef = doc(db, "conversations", conversationId);
+    updateDoc(conversationRef, {
+      lastMessageWasRead: true,
     });
   }
 
