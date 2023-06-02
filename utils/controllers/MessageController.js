@@ -169,6 +169,13 @@ class MessageController {
     });
   }
 
+  onGetAllMessages(onGet) {
+    return onSnapshot(collection(db, "messages"), (snapshot) => {
+      const messagesData = snapshot.docs.map((doc) => doc.data());
+      onGet(messagesData);
+    });
+  }
+
   async getConversationsFromUser(userName) {
     const conversationsRef = collection(db, "conversations");
     const messagesRef = collection(db, "messages");

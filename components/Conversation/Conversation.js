@@ -38,7 +38,7 @@ const Conversation = ({ navigation, route }) => {
     setMessages([...messages, ...newMessages]);
   };
 
-  useEffect(() => {
+  const fetchMessages = () => {
     const messageController = new MessageController();
     messageController
       .getMessagesFromConversationWithUsers(userData.DisplayName, otherUserName)
@@ -48,6 +48,13 @@ const Conversation = ({ navigation, route }) => {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  useEffect(() => {
+    const messageController = new MessageController();
+    messageController.onGetAllMessages(() => {
+      fetchMessages();
+    });
   }, [remountConversation]);
 
   const handleSendMessage = (inputMessage) => {
