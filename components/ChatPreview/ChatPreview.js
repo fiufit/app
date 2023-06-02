@@ -8,6 +8,7 @@ const ChatPreview = ({
   lastMessage,
   lastMessageTime,
   hasUnreadMessage,
+  lastMessageSender,
 }) => {
   return (
     <View
@@ -19,11 +20,17 @@ const ChatPreview = ({
       <Image style={styles.profileImage} source={{ uri: imageSource }} />
       <View style={styles.messageTextContainer}>
         <Text style={styles.textName}>{name}</Text>
-        <Text
-          style={[styles.lastMessage, hasUnreadMessage && styles.unreadMessage]}
-        >
-          {lastMessage}
-        </Text>
+        <View style={styles.lastMessageContainer}>
+          <Text style={styles.lastMessageSender}>{lastMessageSender}: </Text>
+          <Text
+            style={[
+              styles.lastMessage,
+              hasUnreadMessage && styles.unreadMessage,
+            ]}
+          >
+            {lastMessage}
+          </Text>
+        </View>
       </View>
       <Text style={styles.lastMessageTime}>{lastMessageTime}</Text>
     </View>

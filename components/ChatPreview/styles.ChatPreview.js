@@ -35,6 +35,15 @@ export const styles = StyleSheet.create({
     fontFamily: "Poppins_500Medium",
     marginBottom: 4,
   },
+  lastMessageContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  lastMessageSender: {
+    fontSize: 14,
+    color: BLACK,
+    fontFamily: "Poppins_500Medium",
+  },
   lastMessage: {
     fontSize: 14,
     color: QUATERNARY_GREY,

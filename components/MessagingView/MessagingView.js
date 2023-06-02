@@ -143,6 +143,11 @@ const MessagingView = ({ navigation }) => {
                   chatPreview.hasUnreadMessage &&
                   chatPreview.lastMessageFrom != userData.DisplayName
                 }
+                lastMessageSender={
+                  chatPreview.lastMessageFrom == userData.DisplayName
+                    ? "You"
+                    : chatPreview.lastMessageFrom
+                }
               />
             </TouchableOpacity>
           ))}
