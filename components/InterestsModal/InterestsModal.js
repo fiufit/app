@@ -11,6 +11,7 @@ import Button from "../Shared/Button/button";
 import { LinearGradient } from "expo-linear-gradient";
 import { WHITE } from "../../utils/colors";
 import { styles } from "./styles.InterestsModal";
+import {interests} from "../../utils/trainings";
 
 const InterestsModal = ({
   modalIsVisible,
@@ -18,17 +19,7 @@ const InterestsModal = ({
   selectedInterests,
   setSelectedInterests,
 }) => {
-  const interests = [
-    // TODO: Fetch interests from Database.
-    "Strength",
-    "Speed",
-    "Endurance",
-    "Lose weight",
-    "Gain weight",
-    "Yoga",
-  ];
-
-  const MAX_INTERESTS = 3;
+  const MAX_INTERESTS = 6;
   var converter = require("number-to-words");
 
   const handleInterestPress = (interest) => {

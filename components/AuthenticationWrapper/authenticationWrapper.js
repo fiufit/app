@@ -31,8 +31,8 @@ const AuthenticationWrapper = ({ children }) => {
 
         setUserData({
           ...data,
-          followers: followersData.followers,
-          following: followingData.followed,
+          followers: followersData?.followers ?? [],
+          following: followingData?.followed ?? [],
         });
       }
       if (!user.emailVerified) {

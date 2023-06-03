@@ -19,6 +19,7 @@ import { styles } from "./styles.routes";
 import { useRecoilState } from "recoil";
 import { userDataState } from "../../atoms";
 import TrainingAttempt from "../TrainingAttempt/trainingAttempt";
+import Ratings from "../Ratings/ratings";
 
 const Tab = createBottomTabNavigator();
 
@@ -54,6 +55,7 @@ const Routes = () => {
         <Tab.Screen name="Profile" component={ProfileNavigation} />
         <Tab.Screen name="Profile Settings" component={EditProfile} />
         <Tab.Screen name="Training Attempt" component={TrainingAttempt} options={{ unmountOnBlur: true }}/>
+        <Tab.Screen name={"Ratings"} component={Ratings} options={{unmountOnBlur: true}}/>
       </Tab.Navigator>
     </NavigationContainer>
   );

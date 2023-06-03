@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   interestsModal: {
-    width: "87%",
+    width: "90%",
     height: "auto",
     borderRadius: 20,
     alignSelf: "center",

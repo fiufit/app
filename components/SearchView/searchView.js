@@ -6,7 +6,14 @@ import {
   WHITE,
 } from "../../utils/colors";
 import { DEFAULT_PROFILE_PICTURE, auth } from "../../firebase";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Keyboard,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useEffect, useState } from "react";
 
 import BackIcon from "../../assets/images/general/backIcon.svg";
@@ -14,13 +21,22 @@ import Button from "../Shared/Button/button";
 import RequestController from "../../utils/controllers/RequestController";
 import SearchBar from "../Shared/SearchBar/searchBar";
 import TrainingFilterModal from "../Shared/Modals/TrainingFilterModal/trainingFilterModal";
+
+import { useRecoilState } from "recoil";
+import { selectedTrainingState } from "../../atoms";
+import { useIsFocused } from "@react-navigation/native";
+
 import VerifiedIcon from "../../assets/images/profile/verifiedIcon.svg";
 import { styles } from "./styles.search-view";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 const LOADING_MAX = 4;
 const SearchView = ({ navigation, route }) => {
+  const isFocused = useIsFocused();
   const [user] = useAuthState(auth);
+  const [selectedTraining, setSelectedTraining] = useRecoilState(
+    selectedTrainingState
+  );
   const { searchForUsers, searchForTrainings, messageUsers } = route.params;
   const [userSearchData, setUserSearchData] = useState({});
   const [trainingSearchData, setTrainingsSearchData] = useState({
@@ -34,47 +50,54 @@ const SearchView = ({ navigation, route }) => {
   const [userSearchSelected, setUserSearchSelected] = useState(true);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [trainingDifficulty, setTrainingDifficulty] = useState("all");
+  const [trainingTags, setTrainingTags] = useState([]);
 
   const handleBack = () => {
     navigation.goBack();
   };
 
+  const fetchUsers = async () => {
+    if (searchForUsers && !userSearchData[searchValue]) {
+      const controller = new RequestController(user);
+      const { data } = await controller.fetch(
+        `users?name=${searchValue}`,
+        "GET"
+      );
+      return {
+        [searchValue]: data.users.filter(
+          (userData) => userData.ID !== user.uid
+        ),
+      };
+    }
+  };
+
+  const fetchTrainings = async (force = false) => {
+    if (
+      (searchForTrainings &&
+        !trainingSearchData[trainingDifficulty][searchValue]) ||
+      force
+    ) {
+      const controller = new RequestController(user);
+      let route =
+        trainingDifficulty === "all"
+          ? `trainings?name=${searchValue}`
+          : `trainings?name=${searchValue}&difficulty=${trainingDifficulty}`;
+
+      if (trainingTags.length) {
+        route = route.concat(`&tags=${trainingTags.join("&tags=")}`);
+      }
+
+      const { data } = await controller.fetch(route, "GET");
+
+      return {
+        [searchValue]: data.trainings.filter(
+          (trainingData) => trainingData.TrainerID !== user.uid
+        ),
+      };
+    }
+  };
+
   useEffect(() => {
-    const fetchUsers = async () => {
-      if (searchForUsers && !userSearchData[searchValue]) {
-        const controller = new RequestController(user);
-        const { data } = await controller.fetch(
-          `users?name=${searchValue}`,
-          "GET"
-        );
-        return {
-          [searchValue]: data.users.filter(
-            (userData) => userData.ID !== user.uid
-          ),
-        };
-      }
-    };
-
-    const fetchTrainings = async () => {
-      if (
-        searchForTrainings &&
-        !trainingSearchData[trainingDifficulty][searchValue]
-      ) {
-        const controller = new RequestController(user);
-        const route =
-          trainingDifficulty === "all"
-            ? `trainings?name=${searchValue}`
-            : `trainings?name=${searchValue}&difficulty=${trainingDifficulty}`;
-        const { data } = await controller.fetch(route, "GET");
-
-        return {
-          [searchValue]: data.trainings.filter(
-            (trainingData) => trainingData.TrainerID !== user.uid
-          ),
-        };
-      }
-    };
-
     if (userSearchSelected) {
       if (searchValue) {
         setLoading(true);
@@ -95,11 +118,10 @@ const SearchView = ({ navigation, route }) => {
         setLoading(false);
       }
     } else {
-      if (trainingDifficulty === "all") {
-        if (searchValue) {
-          setLoading(true);
-          const delayDebounceFunction = setTimeout(() => {
-            fetchTrainings()
+      if(trainingTags.length && !searchValue && trainingDifficulty === "all") {
+        setLoading(true);
+        const delayDebounceFunction = setTimeout(() => {
+          fetchTrainings(true)
               .then((searchResult) => {
                 setTrainingsSearchData({
                   ...trainingSearchData,
@@ -111,34 +133,87 @@ const SearchView = ({ navigation, route }) => {
                 console.log(e);
                 setLoading(false);
               });
-          }, 250);
-          return () => clearTimeout(delayDebounceFunction);
-        } else {
-          setLoading(false);
-        }
-      } else {
-        setLoading(true);
-        const delayDebounceFunction = setTimeout(() => {
-          fetchTrainings()
-            .then((searchResult) => {
-              setTrainingsSearchData({
-                ...trainingSearchData,
-                [trainingDifficulty]: {
-                  ...trainingSearchData[trainingDifficulty],
-                  ...searchResult,
-                },
-              });
-              setLoading(false);
-            })
-            .catch((e) => {
-              console.log(e);
-              setLoading(false);
-            });
         }, 250);
         return () => clearTimeout(delayDebounceFunction);
+      } else {
+        if (trainingDifficulty === "all") {
+          if (searchValue) {
+            setLoading(true);
+            const delayDebounceFunction = setTimeout(() => {
+              fetchTrainings(true)
+                  .then((searchResult) => {
+                    setTrainingsSearchData({
+                      ...trainingSearchData,
+                      all: { ...trainingSearchData.all, ...searchResult },
+                    });
+                    setLoading(false);
+                  })
+                  .catch((e) => {
+                    console.log(e);
+                    setLoading(false);
+                  });
+            }, 250);
+            return () => clearTimeout(delayDebounceFunction);
+          } else {
+            setTrainingsSearchData({
+              beginner: {},
+              intermediate: {},
+              expert: {},
+              all: {}
+            })
+            setLoading(false);
+          }
+        } else {
+          setLoading(true);
+          const delayDebounceFunction = setTimeout(() => {
+            fetchTrainings(true)
+                .then((searchResult) => {
+                  setTrainingsSearchData({
+                    ...trainingSearchData,
+                    [trainingDifficulty]: {
+                      ...trainingSearchData[trainingDifficulty],
+                      ...searchResult,
+                    },
+                  });
+                  setLoading(false);
+                })
+                .catch((e) => {
+                  console.log(e);
+                  setLoading(false);
+                });
+          }, 250);
+          return () => clearTimeout(delayDebounceFunction);
+        }
       }
     }
-  }, [searchValue, userSearchSelected, trainingDifficulty]);
+  }, [searchValue, userSearchSelected, trainingDifficulty, trainingTags]);
+
+  useEffect(() => {
+    if (isFocused && searchValue) {
+      setLoading(true);
+      setTrainingsSearchData({
+        beginner: {},
+        intermediate: {},
+        expert: {},
+        all: {},
+      });
+      fetchTrainings(true)
+        .then((searchResult) => {
+          setTrainingsSearchData({
+            ...trainingSearchData,
+            [trainingDifficulty]: {
+              ...trainingSearchData[trainingDifficulty],
+              ...searchResult,
+            },
+          });
+          setLoading(false);
+        })
+        .catch((e) => {
+          console.log(e);
+          setLoading(false);
+        });
+    }
+  }, [isFocused]);
 
   const onSearchChange = async (value) => {
     setSearchValue(value);
@@ -159,6 +234,7 @@ const SearchView = ({ navigation, route }) => {
   };
 
   const handleTrainingCardPress = (training) => {
+    setSelectedTraining(training);
     navigation.navigate({
       name: "Single Training",
       merge: true,
@@ -168,6 +244,7 @@ const SearchView = ({ navigation, route }) => {
 
   const handleFilterPress = () => {
     setShowFilterModal(true);
+    Keyboard.dismiss();
   };
 
   return (
@@ -295,7 +372,7 @@ const SearchView = ({ navigation, route }) => {
             ))}
 
           {!userSearchSelected &&
-            (trainingSearchData[trainingDifficulty][searchValue] ? (
+            (trainingSearchData[trainingDifficulty][searchValue] && !loading ? (
               trainingSearchData[trainingDifficulty][searchValue].map(
                 (item) => {
                   return (
@@ -351,6 +428,8 @@ const SearchView = ({ navigation, route }) => {
           onClose={() => setShowFilterModal(false)}
           trainingDifficulty={trainingDifficulty}
           setDifficulty={setTrainingDifficulty}
+          tags={trainingTags}
+          setTags={setTrainingTags}
         />
       )}
     </>
