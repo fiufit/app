@@ -20,6 +20,7 @@ import { useRecoilState } from "recoil";
 import { userDataState } from "../../atoms";
 import TrainingAttempt from "../TrainingAttempt/trainingAttempt";
 import Ratings from "../Ratings/ratings";
+import SessionList from "../SessionList/sessionList";
 
 const Tab = createBottomTabNavigator();
 
@@ -49,6 +50,7 @@ const Routes = () => {
           options={{ unmountOnBlur: true }}
         />
         <Tab.Screen name="Training List" component={TrainingList} />
+        <Tab.Screen name="Session List" component={SessionList} />
         <Tab.Screen name="Messages" component={MessagingView} />
         <Tab.Screen name="Conversation" component={Conversation} />
         <Tab.Screen name="Search View" component={SearchView} />
