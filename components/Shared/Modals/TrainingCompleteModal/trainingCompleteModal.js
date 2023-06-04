@@ -24,9 +24,7 @@ const TrainingCompleteModal = ({onClose, onSubmit, submitting}) => {
                 <Button
                     textColor={WHITE}
                     style={styles.button}
-                    onPress={() => {
-
-                    }}
+                    onPress={onSubmit}
                 >
                     {submitting ? "Marking as done..." : "Mark as done!"}
                 </Button>
