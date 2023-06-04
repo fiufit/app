@@ -1,16 +1,21 @@
 import { StyleSheet } from "react-native";
-import {DARK_BLUE, GREEN, MEDIUM_GREY, WHITE} from "../../../utils/colors";
+import {DARK_BLUE, GREEN, LIGHT_GREY, MEDIUM_GREY, WHITE} from "../../../utils/colors";
 
 export const styles = StyleSheet.create({
     container: {
         width: "90%",
-        // height: 220,
         display: "flex",
         gap: 10,
     },
     title: {
         fontFamily: "Lato_700Bold",
         fontSize: 18,
+    },
+    loadingTitle: {
+        width: 200,
+        height: 18,
+        borderRadius: 6,
+        backgroundColor: LIGHT_GREY
     },
     textContainer: {
         display: "flex",
@@ -68,7 +73,6 @@ export const styles = StyleSheet.create({
         fontSize: 13,
         color: '#192126',
         marginBottom: 5
-
     },
     progressBar: {
         position: "relative",
@@ -103,5 +107,30 @@ export const styles = StyleSheet.create({
         fontFamily: 'Poppins_400Regular',
         borderBottomLeftRadius: 6,
         borderBottomRightRadius: 6,
+        minWidth: 85,
+        textAlign: "center"
+    },
+    loadingAttemptCard: {
+        width: "100%",
+        height: 100,
+        borderRadius: 23,
+        backgroundColor: LIGHT_GREY,
+        display: "flex",
+        alignItems: 'center',
+        flexDirection: 'row',
+        gap: 15,
+        marginBottom: 15,
+        position: "relative"
+    },
+    noSessionsContainer: {
+        width: "100%",
+        height: 50,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    noSessionsText: {
+        fontFamily: "Lato_400Regular",
+        fontSize: 16,
     }
 });

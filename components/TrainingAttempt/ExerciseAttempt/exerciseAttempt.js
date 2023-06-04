@@ -11,18 +11,21 @@ const ExerciseAttempt = ({
   isTrainingActive,
   setExercises,
   exercises,
+  trainingCompleted
 }) => {
   const [done, setDone] = useState(exerciseData.done);
   const handleDone = () => {
-    setDone(!done);
-    setExercises(
-      exercises.map((exercise, index) => {
-        if (number - 1 === index) {
-          exercise.done = !exercise.done;
-        }
-        return exercise;
-      })
-    );
+    if(!trainingCompleted){
+        setDone(!done);
+        setExercises(
+            exercises.map((exercise, index) => {
+                if (number - 1 === index) {
+                    exercise.done = !exercise.done;
+                }
+                return exercise;
+            })
+        );
+    }
     //TODO post setting exercise done in db
   };
 
@@ -42,7 +45,7 @@ const ExerciseAttempt = ({
           {exerciseData.description}
         </Text>
       </View>
-      {isTrainingActive && (
+      {(isTrainingActive || trainingCompleted) && (
         <DoneIcon
           style={styles.done}
           opacity={done ? 1 : 0.1}

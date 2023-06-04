@@ -94,5 +94,10 @@ export const styles = StyleSheet.create({
         fontSize: 25,
         width: "100%",
         textAlign: "center"
+    },
+    completedText: {
+        fontFamily: 'Lato_400Regular',
+        color: WHITE,
+        fontSize: 25,
     }
 })

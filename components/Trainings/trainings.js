@@ -1,4 +1,4 @@
-import {ScrollView, View, Text, RefreshControl} from "react-native";
+import { ScrollView, View, Text, RefreshControl } from "react-native";
 import { styles } from "./style.trainings";
 import Button from "../Shared/Button/button";
 import { GREEN, WHITE } from "../../utils/colors";
@@ -8,16 +8,24 @@ import RecommendedTraining from "./RecommendedTraining/recommendedTraining";
 import FavouriteTrainings from "./FavouriteTrainings/favouriteTrainings";
 import SearchBar from "../Shared/SearchBar/searchBar";
 import TrainingAttempts from "./TrainingAttempts/trainingAttempts";
-import {useSetRecoilState} from "recoil";
-import {selectedTrainingState} from "../../atoms";
-import {useEffect, useState} from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import {
+  selectedSessionState,
+  selectedTrainingState,
+  trainingSessionsState,
+} from "../../atoms";
+import { useEffect, useState } from "react";
 import TrainingController from "../../utils/controllers/TrainingController";
-import {useAuthState} from "react-firebase-hooks/auth";
-import {auth} from "../../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase";
 
 const Trainings = ({ navigation }) => {
   const [user] = useAuthState(auth);
   const setSelectedTraining = useSetRecoilState(selectedTrainingState);
+  const setSelectedSession = useSetRecoilState(selectedSessionState);
+  const [trainingSessions, setTrainingSessions] = useRecoilState(
+    trainingSessionsState
+  );
   const [recommendedTrainings, setRecommendedTrainings] = useState([]);
   const [favouriteTrainings, setFavouriteTrainings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,39 +33,73 @@ const Trainings = ({ navigation }) => {
   const fetchRecommendedTrainings = async () => {
     const controller = new TrainingController(user);
     return await controller.getRecommendedTrainings();
-  }
+  };
+
+  const fetchTrainingSessions = async () => {
+    const controller = new TrainingController(user);
+    return await controller.getTrainingSessions();
+  };
+
+  const fetchUserTrainingsData = async () => {
+    const promises = [fetchRecommendedTrainings(), fetchTrainingSessions()];
+
+    const [recommendedTrainings, trainingSessions] = await Promise.all(
+      promises
+    );
+    return { recommendedTrainings, trainingSessions };
+  };
 
   const fetchData = () => {
     setLoading(true);
-    fetchRecommendedTrainings().then((trainings) => {
-      setRecommendedTrainings(trainings);
-      setLoading(false);
-    });
-  }
+
+    fetchUserTrainingsData().then(
+      ({ recommendedTrainings, trainingSessions }) => {
+        setRecommendedTrainings(recommendedTrainings);
+        setTrainingSessions(trainingSessions);
+        setLoading(false);
+      }
+    );
+  };
 
   useEffect(() => {
     fetchData();
-  }, [])
-
+  }, []);
 
   const handleTrainingPress = (training) => {
-    setSelectedTraining(training);
-    navigation.navigate({
-      name: "Single Training",
-      merge: true,
-      params: { training, start: true },
-    });
+    if (!loading) {
+      setSelectedTraining(training);
+      navigation.navigate({
+        name: "Single Training",
+        merge: true,
+        params: { training, start: true },
+      });
+    }
   };
 
   const handleSeeMore = () => {
     navigation.navigate({
       name: "Training List",
       merge: true,
-      params: { title: "Recommended Trainings", paramTrainings: recommendedTrainings, created: false },
+      params: {
+        title: "Recommended Trainings",
+        paramTrainings: recommendedTrainings,
+        created: false,
+      },
     });
-  }
+  };
   const handleAddTraining = () => {
     navigation.navigate({ name: "New Training", merge: true });
+  };
+
+  const handleSessionPress = (session, index) => {
+    if (!loading) {
+      setSelectedSession(session);
+      navigation.navigate({
+        name: "Training Attempt",
+        merge: true,
+        params: { session: session },
+      });
+    }
   };
 
   return (
@@ -109,7 +151,12 @@ const Trainings = ({ navigation }) => {
           onTrainingPress={handleTrainingPress}
           loading={loading}
         />
-        <TrainingAttempts attempts={[]}/>
+        <TrainingAttempts
+          navigation={navigation}
+          sessions={trainingSessions}
+          onSessionPress={handleSessionPress}
+          loading={loading}
+        />
       </ScrollView>
     </View>
   );
