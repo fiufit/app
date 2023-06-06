@@ -84,32 +84,12 @@ class MessageController {
     };
   }
 
-  async getMessagesFromConversationWithUsers(currentUser, otherUser) {
+  onGetMessagesFromConversationWithUsers(conversationWithUsers, onGet) {
     const messagesRef = collection(db, "messages");
-    const conversationWithUsers = await this.getConversationWithUsers(
-      currentUser,
-      otherUser
+    const q = query(
+      messagesRef,
+      where("conversationId", "==", conversationWithUsers.conversationId)
     );
-    if (conversationWithUsers) {
-      const q = query(
-        messagesRef,
-        where("conversationId", "==", conversationWithUsers.conversationId)
-      );
-      const querySnapshot = await getDocs(q);
-
-      const messages = await Promise.all(
-        querySnapshot.docs.map((doc) => doc.data())
-      );
-
-      return messages;
-    } else {
-      return [];
-    }
-  }
-
-  onGetMessagesFromConversationWithUsers(conversationId, onGet) {
-    const messagesRef = collection(db, "messages");
-    const q = query(messagesRef, where("conversationId", "==", conversationId));
 
     return onSnapshot(q, (snapshot) => {
       const conversationsData = snapshot.docs.map((doc) => doc.data());

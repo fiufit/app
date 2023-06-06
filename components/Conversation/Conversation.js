@@ -53,20 +53,29 @@ const Conversation = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    const messageController = new MessageController();
-    if (conversationId) {
-      const unSubscribe =
-        messageController.onGetMessagesFromConversationWithUsers(
-          conversationId,
-          (data) => {
-            addNewMessages(data);
-          }
+    const fetchData = async () => {
+      const messageController = new MessageController();
+      const conversationWithUsers =
+        await messageController.getConversationWithUsers(
+          userData.ID,
+          otherUserId
         );
+      if (conversationWithUsers) {
+        const unSubscribe =
+          messageController.onGetMessagesFromConversationWithUsers(
+            conversationWithUsers,
+            (data) => {
+              addNewMessages(data);
+            }
+          );
 
-      return () => {
-        unSubscribe();
-      };
-    }
+        return () => {
+          unSubscribe();
+        };
+      }
+    };
+
+    fetchData();
   }, [conversationId]);
 
   useEffect(() => {
