@@ -71,7 +71,7 @@ const Trainings = ({ navigation }) => {
       navigation.navigate({
         name: "Single Training",
         merge: true,
-        params: { training, start: true },
+        params: { training, start: true, userTraining: false },
       });
     }
   };

@@ -2,8 +2,12 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles.started-trainings-section";
 import TrainingCard from "../../Shared/TrainingCard/trainingCard";
 import NoTrainingsMessage from "../NoTrainingsMessage/noTrainingsMessage";
+import {useSetRecoilState} from "recoil";
+import {selectedSessionState} from "../../../atoms";
 
 const StartedTrainingsSection = ({ navigation, startedTrainings, loading }) => {
+    const setSelectedSession = useSetRecoilState(selectedSessionState);
+
     const handleSeeAll = () => {
         if(!loading){
             navigation.navigate({
@@ -31,6 +35,14 @@ const StartedTrainingsSection = ({ navigation, startedTrainings, loading }) => {
                     imageSource={{ uri: startedTrainings[0].TrainingPlan.PictureUrl }}
                     duration={startedTrainings[0].TrainingPlan.Duration}
                     difficulty={startedTrainings[0].TrainingPlan.Difficulty}
+                    onPress={() => {
+                        setSelectedSession(startedTrainings[0]);
+                        navigation.navigate({
+                            name: "Training Attempt",
+                            merge: true,
+                            params: { session: startedTrainings[0] },
+                        });
+                    }}
                 />
             ) : (
                 <NoTrainingsMessage

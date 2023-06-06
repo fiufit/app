@@ -22,11 +22,11 @@ const TrainingAttempt = ({ navigation, route }) => {
   );
   const [selectedSession, setSelectedSession] =
     useRecoilState(selectedSessionState);
+  const pictureUrl = route.params.session.TrainingPlan.PictureUrl;
   const {
     Name: title,
     Duration: duration,
     Difficulty: difficulty,
-    PictureUrl: pictureUrl,
   } = selectedSession.TrainingPlan;
   const {
     Done: done,
@@ -123,7 +123,6 @@ const TrainingAttempt = ({ navigation, route }) => {
           }),
         })
         .then((response) => {
-          console.log(response);
           setSelectedSession(response);
           setCompleted(response.Done);
           setTrainingSessions(
@@ -148,8 +147,12 @@ const TrainingAttempt = ({ navigation, route }) => {
         <Back onPress={() => navigation.goBack()} />
         <View style={styles.imageContainer}>
           <View style={styles.playAndInfoContainer}>
-            {completed ? (
-              <Text style={styles.completedText}>Training Completed!</Text>
+            {completed ? (<View style={{display: "flex", alignItems: "center"}}>
+                  <Text style={styles.completedText}>Training Completed!</Text>
+                  <Text style={styles.completedText}>
+                      {formatTime(seconds)} and {stepCount} steps
+                  </Text>
+                </View>
             ) : (
               <>
                 <Text style={styles.trainingTime}>{formatTime(seconds)}</Text>
