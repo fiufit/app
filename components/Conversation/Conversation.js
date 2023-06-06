@@ -12,7 +12,7 @@ import { userDataState } from "../../atoms";
 
 const Conversation = ({ navigation, route }) => {
   const {
-    conversationId: initialConversationId,
+    conversationId,
     otherUserName,
     otherUserId,
     otherUserProfilePicture,
@@ -21,7 +21,6 @@ const Conversation = ({ navigation, route }) => {
   const isFocused = useIsFocused();
 
   const userData = useRecoilValue(userDataState);
-  const [conversationId, setConversationId] = useState(initialConversationId);
 
   const addNewMessages = (data) => {
     const newMessages = data.map((message) => {
@@ -76,7 +75,7 @@ const Conversation = ({ navigation, route }) => {
     };
 
     fetchData();
-  }, [conversationId]);
+  }, []);
 
   useEffect(() => {
     if (isFocused) {
@@ -93,9 +92,8 @@ const Conversation = ({ navigation, route }) => {
   const handleSendMessage = async (inputMessage) => {
     const messageController = new MessageController();
 
-    const { message: newMessage, conversationId: newConversationId } =
+    const newMessage =
       await messageController.writeMessageToConversationWithUsers({
-        conversationId: conversationId,
         from: userData.ID,
         to: otherUserId,
         message: inputMessage,
@@ -112,8 +110,6 @@ const Conversation = ({ navigation, route }) => {
         timestamp: newMessage.timestamp,
       },
     ]);
-
-    setConversationId(newConversationId);
   };
 
   const handleGoBack = () => {

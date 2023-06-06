@@ -98,66 +98,59 @@ class MessageController {
   }
 
   async writeMessageToConversationWithUsers(messageData) {
-    if (messageData.conversationId) {
+    const conversationWithUsers = await this.getConversationWithUsers(
+      messageData.from,
+      messageData.to
+    );
+
+    if (conversationWithUsers) {
       const messagesRef = collection(db, "messages");
+
+      messageData.conversationId = conversationWithUsers.conversationId;
+
       const docRef = await addDoc(messagesRef, messageData);
 
-      const conversationRef = doc(
-        db,
-        "conversations",
-        messageData.conversationId
+      const addedDoc = await getDoc(docRef);
+
+      const conversationsRef = collection(db, "conversations");
+      const conversationDocRef = doc(
+        conversationsRef,
+        conversationWithUsers.conversationId
       );
 
-      await updateDoc(conversationRef, {
+      await updateDoc(conversationDocRef, {
         lastMessage: messageData.message,
         lastMessageTimestamp: messageData.timestamp,
         lastMessageWasRead: messageData.read,
         lastMessageFrom: messageData.from,
       });
 
-      const message = {
-        ...messageData,
-        id: docRef.id,
-      };
-
-      return { message, conversationId: messageData.conversationId };
+      return addedDoc.data();
     } else {
       const conversationsRef = collection(db, "conversations");
 
-      let newConversationId;
+      const docRef = await addDoc(conversationsRef, {
+        members: [messageData.from, messageData.to],
+        lastMessage: messageData.message,
+        lastMessageTimestamp: messageData.timestamp,
+        lastMessageWasRead: messageData.read,
+        lastMessageFrom: messageData.from,
+      });
 
-      try {
-        const docRef = await addDoc(conversationsRef, {
-          members: [messageData.from, messageData.to],
-          lastMessage: messageData.message,
-          lastMessageTimestamp: messageData.timestamp,
-          lastMessageWasRead: messageData.read,
-          lastMessageFrom: messageData.from,
-        });
+      const addedDoc = await getDoc(docRef);
 
-        newConversationId = docRef.id;
-      } catch (error) {
-        newConversationId = error.message.split("/").at(-1);
-        console.log("ERROR", newConversationId);
-      }
+      const newConversationId = addedDoc.id;
 
       const messagesRef = collection(db, "messages");
 
-      try {
-        await addDoc(messagesRef, {
-          ...messageData,
-          conversationId: newConversationId,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-
-      const message = {
+      const docRefMessage = await addDoc(messagesRef, {
         ...messageData,
-        id: newConversationId,
-      };
+        conversationId: newConversationId,
+      });
 
-      return { message, conversationId: newConversationId };
+      const addedDocMessage = await getDoc(docRefMessage);
+
+      return addedDocMessage.data();
     }
   }
 
