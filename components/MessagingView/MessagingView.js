@@ -1,3 +1,4 @@
+import { auth } from "../../firebase";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { useEffect, useState } from "react";
 
@@ -8,7 +9,6 @@ import MessagingTopBar from "../MessagingTopBar/MessagingTopBar";
 import RequestController from "../../utils/controllers/RequestController";
 import SearchIcon from "../../assets/images/general/searchIcon.svg";
 import { WHITE } from "../../utils/colors";
-import {auth, DEFAULT_PROFILE_PICTURE} from "../../firebase";
 import { styles } from "./styles.MessagingView";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilValue } from "recoil";
@@ -26,41 +26,45 @@ const MessagingView = ({ navigation }) => {
   useEffect(() => {
     const messageController = new MessageController();
 
-    const unSubscribe = messageController.onGetConversationsFromUser(userData.DisplayName, async (data) => {
+    const unSubscribe = messageController.onGetConversationsFromUser(
+      userData.ID,
+      async (data) => {
         const newChatPreviews = await Promise.all(
-            data.map(async (item) => {
+          data.map(async (item) => {
+            const otherMemberId = item.members.find(
+              (member) => member !== userData.ID
+            );
 
-                const otherMemberName = item.members.find(
-                    (member) => member !== userData.DisplayName
-                );
+            const controller = new RequestController(user);
 
-                const controller = new RequestController(user);
+            const userDataFetched = await controller.fetch(
+              `users/${otherMemberId}`,
+              "GET"
+            );
 
-                const userDataFetched = await controller.fetch(
-                    `users?name=${otherMemberName}`,
-                    "GET"
-                );
+            const otherUser = userDataFetched.data;
+            const imageSource = otherUser?.PictureUrl;
+            const otherMemberName = otherUser.DisplayName;
 
-                const otherUser = userDataFetched.data.users[0];
-                const imageSource = otherUser?.PictureUrl ?? DEFAULT_PROFILE_PICTURE;
-
-                return {
-                    name: otherMemberName ?? "No name",
-                    imageSource: imageSource,
-                    lastMessage: item.lastMessage,
-                    lastMessageFrom: item.lastMessageFrom,
-                    lastMessageTime: item.lastMessageTimestamp,
-                    hasUnreadMessage: !item.lastMessageWasRead,
-                    conversationId: item.conversationId,
-                };
-            })
+            return {
+              otherMemberName: otherMemberName,
+              otherMemberId: otherMemberId,
+              imageSource: imageSource,
+              lastMessage: item.lastMessage,
+              lastMessageFrom: item.lastMessageFrom,
+              lastMessageTime: item.lastMessageTimestamp,
+              hasUnreadMessage: !item.lastMessageWasRead,
+              conversationId: item.conversationId,
+            };
+          })
         );
         newChatPreviews.sort(
-            (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
+          (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
         );
 
         setChatPreviews(newChatPreviews);
-    });
+      }
+    );
 
     return () => unSubscribe();
   }, []);
@@ -79,11 +83,13 @@ const MessagingView = ({ navigation }) => {
   const handleConversationPress = (
     conversationId,
     otherUserName,
+    otherMemberId,
     otherUserProfilePicture
   ) => {
     navigation.navigate("Conversation", {
       conversationId: conversationId,
       otherUserName: otherUserName,
+      otherUserId: otherMemberId,
       otherUserProfilePicture: otherUserProfilePicture,
       remountConversation: remountConversation,
     });
@@ -106,13 +112,16 @@ const MessagingView = ({ navigation }) => {
       </View>
       <ScrollView style={styles.chatPreviewList}>
         {chatPreviews
-          .filter((chatPreview) => chatPreview.name.startsWith(searchedUser))
+          .filter((chatPreview) =>
+            chatPreview.otherMemberName.startsWith(searchedUser)
+          )
           .map((chatPreview, chatPreviewIndex) => (
             <TouchableOpacity
               onPress={() =>
                 handleConversationPress(
                   chatPreview.conversationId,
-                  chatPreview.name,
+                  chatPreview.otherMemberName,
+                  chatPreview.otherMemberId,
                   chatPreview.imageSource
                 )
               }
@@ -121,7 +130,7 @@ const MessagingView = ({ navigation }) => {
             >
               <ChatPreview
                 imageSource={chatPreview.imageSource}
-                name={chatPreview.name}
+                name={chatPreview.otherMemberName}
                 lastMessage={chatPreview.lastMessage}
                 lastMessageTime={new Date(
                   chatPreview.lastMessageTime
@@ -130,12 +139,12 @@ const MessagingView = ({ navigation }) => {
                 })}
                 hasUnreadMessage={
                   chatPreview.hasUnreadMessage &&
-                  chatPreview.lastMessageFrom != userData.DisplayName
+                  chatPreview.lastMessageFrom != userData.ID
                 }
                 lastMessageSender={
-                  chatPreview.lastMessageFrom == userData.DisplayName
+                  chatPreview.lastMessageFrom == userData.ID
                     ? "You"
-                    : chatPreview.lastMessageFrom
+                    : chatPreview.otherMemberName
                 }
               />
             </TouchableOpacity>

@@ -115,16 +115,18 @@ class MessageController {
       const conversationsData = snapshot.docs.map((doc) => doc.data());
       onGet(conversationsData);
     });
-
   }
 
   async writeMessageToConversationWithUsers(messageData) {
     if (messageData.conversationId) {
-      console.log("LA CONVERSACION YA EXISTE");
       const messagesRef = collection(db, "messages");
       const docRef = await addDoc(messagesRef, messageData);
 
-      const conversationRef = doc(db, "conversations", messageData.conversationId);
+      const conversationRef = doc(
+        db,
+        "conversations",
+        messageData.conversationId
+      );
 
       await updateDoc(conversationRef, {
         lastMessage: messageData.message,
@@ -136,12 +138,10 @@ class MessageController {
       const message = {
         ...messageData,
         id: docRef.id,
-      }
+      };
 
-      return {message, conversationId: messageData.conversationId};
+      return { message, conversationId: messageData.conversationId };
     } else {
-      console.log("LA CONVERSACION NO EXISTE");
-
       const conversationsRef = collection(db, "conversations");
 
       let newConversationId;
@@ -156,11 +156,10 @@ class MessageController {
         });
 
         newConversationId = docRef.id;
-      } catch (error){
-        newConversationId = error.message.split('/').at(-1);
+      } catch (error) {
+        newConversationId = error.message.split("/").at(-1);
         console.log("ERROR", newConversationId);
       }
-
 
       const messagesRef = collection(db, "messages");
 
@@ -173,13 +172,12 @@ class MessageController {
         console.log(error);
       }
 
-
       const message = {
         ...messageData,
         id: newConversationId,
-      }
+      };
 
-      return {message, conversationId: newConversationId};
+      return { message, conversationId: newConversationId };
     }
   }
 
@@ -204,12 +202,12 @@ class MessageController {
     });
   }
 
-  async getConversationsFromUser(userName) {
+  async getConversationsFromUser(userId) {
     const conversationsRef = collection(db, "conversations");
     const messagesRef = collection(db, "messages");
     const q = query(
       conversationsRef,
-      where("members", "array-contains", userName)
+      where("members", "array-contains", userId)
     );
     const querySnapshot = await getDocs(q);
 
@@ -236,19 +234,19 @@ class MessageController {
     return conversations;
   }
 
-   onGetConversationsFromUser(userName, onGet) {
+  onGetConversationsFromUser(userId, onGet) {
     const conversationsRef = collection(db, "conversations");
     const q = query(
-        conversationsRef,
-        where("members", "array-contains", userName)
+      conversationsRef,
+      where("members", "array-contains", userId)
     );
 
     return onSnapshot(q, async (snapshot) => {
       const conversationsData = snapshot.docs.map((doc) => {
-        return{
+        return {
           ...doc.data(),
           conversationId: doc.id,
-        }
+        };
       });
       onGet(conversationsData);
     });

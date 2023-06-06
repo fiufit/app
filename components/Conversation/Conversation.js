@@ -14,6 +14,7 @@ const Conversation = ({ navigation, route }) => {
   const {
     conversationId: initialConversationId,
     otherUserName,
+    otherUserId,
     otherUserProfilePicture,
   } = route.params;
   const [messages, setMessages] = useState([]);
@@ -22,12 +23,11 @@ const Conversation = ({ navigation, route }) => {
   const userData = useRecoilValue(userDataState);
   const [conversationId, setConversationId] = useState(initialConversationId);
 
-
   const addNewMessages = (data) => {
     const newMessages = data.map((message) => {
       return {
         image:
-          message.from === userData.DisplayName
+          message.from === userData.ID
             ? userData.PictureUrl
             : otherUserProfilePicture,
         message: message.message,
@@ -54,10 +54,14 @@ const Conversation = ({ navigation, route }) => {
 
   useEffect(() => {
     const messageController = new MessageController();
-    if(conversationId){
-      const unSubscribe = messageController.onGetMessagesFromConversationWithUsers(conversationId, (data) => {
-        addNewMessages(data);
-      })
+    if (conversationId) {
+      const unSubscribe =
+        messageController.onGetMessagesFromConversationWithUsers(
+          conversationId,
+          (data) => {
+            addNewMessages(data);
+          }
+        );
 
       return () => {
         unSubscribe();
@@ -69,7 +73,7 @@ const Conversation = ({ navigation, route }) => {
     if (isFocused) {
       if (messages.length > 0) {
         const lastMessage = messages[messages.length - 1];
-        if (lastMessage.from != userData.DisplayName) {
+        if (lastMessage.from != userData.ID) {
           const messageController = new MessageController();
           messageController.readLastMessageFromConversation(conversationId);
         }
@@ -80,26 +84,27 @@ const Conversation = ({ navigation, route }) => {
   const handleSendMessage = async (inputMessage) => {
     const messageController = new MessageController();
 
-    const {message: newMessage, conversationId: newConversationId} = await messageController.writeMessageToConversationWithUsers({
-      conversationId: conversationId,
-      from: userData.DisplayName,
-      to: otherUserName,
-      message: inputMessage,
-      read: false,
-      timestamp: new Date().toISOString(),
-    })
+    const { message: newMessage, conversationId: newConversationId } =
+      await messageController.writeMessageToConversationWithUsers({
+        conversationId: conversationId,
+        from: userData.ID,
+        to: otherUserId,
+        message: inputMessage,
+        read: false,
+        timestamp: new Date().toISOString(),
+      });
 
     setMessages([
       ...messages,
       {
         image: userData.PictureUrl,
         message: newMessage.message,
-        from: userData.DisplayName,
+        from: userData.ID,
         timestamp: newMessage.timestamp,
       },
     ]);
 
-    setConversationId(newConversationId)
+    setConversationId(newConversationId);
   };
 
   const handleGoBack = () => {
@@ -125,7 +130,7 @@ const Conversation = ({ navigation, route }) => {
               <Message
                 profileImage={item.image}
                 message={item.message}
-                isCurrentUser={item.from == userData.DisplayName}
+                isCurrentUser={item.from == userData.ID}
                 timestamp={new Date(item.timestamp).toLocaleString("en-US", {
                   timeZone: "America/Argentina/Buenos_Aires",
                 })}

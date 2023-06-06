@@ -41,7 +41,6 @@ const SearchView = ({ navigation, route }) => {
   const [userSearchSelected, setUserSearchSelected] = useState(true);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [trainingDifficulty, setTrainingDifficulty] = useState("all");
-  const [remountConversation, setRemountConversation] = useState(false);
 
   const handleBack = () => {
     navigation.goBack();
@@ -182,11 +181,10 @@ const SearchView = ({ navigation, route }) => {
 
   const handleUserCardPress = (userData) => {
     if (messageUsers) {
-      setRemountConversation(!remountConversation);
       navigation.navigate("Conversation", {
         otherUserName: userData.DisplayName,
+        otherUserId: userData.ID,
         otherUserProfilePicture: userData.PictureUrl,
-        remountConversation: remountConversation,
       });
     } else {
       navigation.navigate({
