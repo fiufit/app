@@ -8,7 +8,7 @@ import MessagingTopBar from "../MessagingTopBar/MessagingTopBar";
 import RequestController from "../../utils/controllers/RequestController";
 import SearchIcon from "../../assets/images/general/searchIcon.svg";
 import { WHITE } from "../../utils/colors";
-import { auth } from "../../firebase";
+import {auth, DEFAULT_PROFILE_PICTURE} from "../../firebase";
 import { styles } from "./styles.MessagingView";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilValue } from "recoil";
@@ -23,56 +23,46 @@ const MessagingView = ({ navigation }) => {
 
   const userData = useRecoilValue(userDataState);
 
-  const fetchConversationsData = async () => {
-    try {
-      setChatPreviews([]);
-      const messageController = new MessageController();
-      const data = await messageController.getConversationsFromUser(
-        userData.DisplayName
-      );
-
-      const newChatPreviews = await Promise.all(
-        data.map(async (item) => {
-          const otherMemberName = item.members.find(
-            (member) => member !== userData.DisplayName
-          );
-
-          const controller = new RequestController(user);
-          const userDataFetched = await controller.fetch(
-            `users?name=${otherMemberName}`,
-            "GET"
-          );
-
-          const otherUser = userDataFetched.data.users[0];
-          const imageSource = otherUser.PictureUrl;
-          return {
-            name: otherMemberName,
-            imageSource: imageSource,
-            lastMessage: item.lastMessage,
-            lastMessageFrom: item.lastMessageFrom,
-            lastMessageTime: item.lastMessageTimestamp,
-            hasUnreadMessage: !item.lastMessageWasRead,
-            conversationId: item.conversationId,
-          };
-        })
-      );
-
-      newChatPreviews.sort(
-        (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
-      );
-
-      setChatPreviews(newChatPreviews);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     const messageController = new MessageController();
 
-    messageController.onGetAllConversations(() => {
-      fetchConversationsData();
+    const unSubscribe = messageController.onGetConversationsFromUser(userData.DisplayName, async (data) => {
+        const newChatPreviews = await Promise.all(
+            data.map(async (item) => {
+
+                const otherMemberName = item.members.find(
+                    (member) => member !== userData.DisplayName
+                );
+
+                const controller = new RequestController(user);
+
+                const userDataFetched = await controller.fetch(
+                    `users?name=${otherMemberName}`,
+                    "GET"
+                );
+
+                const otherUser = userDataFetched.data.users[0];
+                const imageSource = otherUser?.PictureUrl ?? DEFAULT_PROFILE_PICTURE;
+
+                return {
+                    name: otherMemberName ?? "No name",
+                    imageSource: imageSource,
+                    lastMessage: item.lastMessage,
+                    lastMessageFrom: item.lastMessageFrom,
+                    lastMessageTime: item.lastMessageTimestamp,
+                    hasUnreadMessage: !item.lastMessageWasRead,
+                    conversationId: item.conversationId,
+                };
+            })
+        );
+        newChatPreviews.sort(
+            (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
+        );
+
+        setChatPreviews(newChatPreviews);
     });
+
+    return () => unSubscribe();
   }, []);
 
   const handleNewMessage = () => {
@@ -91,7 +81,6 @@ const MessagingView = ({ navigation }) => {
     otherUserName,
     otherUserProfilePicture
   ) => {
-    setRemountConversation(!remountConversation);
     navigation.navigate("Conversation", {
       conversationId: conversationId,
       otherUserName: otherUserName,

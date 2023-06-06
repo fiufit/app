@@ -12,15 +12,16 @@ import { userDataState } from "../../atoms";
 
 const Conversation = ({ navigation, route }) => {
   const {
-    conversationId,
+    conversationId: initialConversationId,
     otherUserName,
     otherUserProfilePicture,
-    remountConversation,
   } = route.params;
   const [messages, setMessages] = useState([]);
   const isFocused = useIsFocused();
 
   const userData = useRecoilValue(userDataState);
+  const [conversationId, setConversationId] = useState(initialConversationId);
+
 
   const addNewMessages = (data) => {
     const newMessages = data.map((message) => {
@@ -51,24 +52,18 @@ const Conversation = ({ navigation, route }) => {
     setMessages([...messages, ...uniqueNewMessages]);
   };
 
-  const fetchMessages = () => {
-    const messageController = new MessageController();
-    messageController
-      .getMessagesFromConversationWithUsers(userData.DisplayName, otherUserName)
-      .then((data) => {
-        addNewMessages(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   useEffect(() => {
     const messageController = new MessageController();
-    messageController.onGetAllMessages(() => {
-      fetchMessages();
-    });
-  }, [remountConversation]);
+    if(conversationId){
+      const unSubscribe = messageController.onGetMessagesFromConversationWithUsers(conversationId, (data) => {
+        addNewMessages(data);
+      })
+
+      return () => {
+        unSubscribe();
+      };
+    }
+  }, [conversationId]);
 
   useEffect(() => {
     if (isFocused) {
@@ -82,28 +77,29 @@ const Conversation = ({ navigation, route }) => {
     }
   }, [messages]);
 
-  const handleSendMessage = (inputMessage) => {
+  const handleSendMessage = async (inputMessage) => {
     const messageController = new MessageController();
-    messageController
-      .writeMessageToConversationWithUsers({
-        conversationId: conversationId,
+
+    const {message: newMessage, conversationId: newConversationId} = await messageController.writeMessageToConversationWithUsers({
+      conversationId: conversationId,
+      from: userData.DisplayName,
+      to: otherUserName,
+      message: inputMessage,
+      read: false,
+      timestamp: new Date().toISOString(),
+    })
+
+    setMessages([
+      ...messages,
+      {
+        image: userData.PictureUrl,
+        message: newMessage.message,
         from: userData.DisplayName,
-        to: otherUserName,
-        message: inputMessage,
-        read: false,
-        timestamp: new Date().toISOString(),
-      })
-      .then((newMessage) => {
-        setMessages([
-          ...messages,
-          {
-            image: userData.PictureUrl,
-            message: newMessage.message,
-            from: userData.DisplayName,
-            timestamp: newMessage.timestamp,
-          },
-        ]);
-      });
+        timestamp: newMessage.timestamp,
+      },
+    ]);
+
+    setConversationId(newConversationId)
   };
 
   const handleGoBack = () => {

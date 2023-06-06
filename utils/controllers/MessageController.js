@@ -107,60 +107,79 @@ class MessageController {
     }
   }
 
+  onGetMessagesFromConversationWithUsers(conversationId, onGet) {
+    const messagesRef = collection(db, "messages");
+    const q = query(messagesRef, where("conversationId", "==", conversationId));
+
+    return onSnapshot(q, (snapshot) => {
+      const conversationsData = snapshot.docs.map((doc) => doc.data());
+      onGet(conversationsData);
+    });
+
+  }
+
   async writeMessageToConversationWithUsers(messageData) {
-    const conversationWithUsers = await this.getConversationWithUsers(
-      messageData.from,
-      messageData.to
-    );
-
-    if (conversationWithUsers) {
+    if (messageData.conversationId) {
+      console.log("LA CONVERSACION YA EXISTE");
       const messagesRef = collection(db, "messages");
-
-      messageData.conversationId = conversationWithUsers.conversationId;
-
       const docRef = await addDoc(messagesRef, messageData);
 
-      const addedDoc = await getDoc(docRef);
+      const conversationRef = doc(db, "conversations", messageData.conversationId);
 
-      const conversationsRef = collection(db, "conversations");
-      const conversationDocRef = doc(
-        conversationsRef,
-        conversationWithUsers.conversationId
-      );
-
-      await updateDoc(conversationDocRef, {
+      await updateDoc(conversationRef, {
         lastMessage: messageData.message,
         lastMessageTimestamp: messageData.timestamp,
         lastMessageWasRead: messageData.read,
         lastMessageFrom: messageData.from,
       });
 
-      return addedDoc.data();
+      const message = {
+        ...messageData,
+        id: docRef.id,
+      }
+
+      return {message, conversationId: messageData.conversationId};
     } else {
+      console.log("LA CONVERSACION NO EXISTE");
+
       const conversationsRef = collection(db, "conversations");
 
-      const docRef = await addDoc(conversationsRef, {
-        members: [messageData.from, messageData.to],
-        lastMessage: messageData.message,
-        lastMessageTimestamp: messageData.timestamp,
-        lastMessageWasRead: messageData.read,
-        lastMessageFrom: messageData.from,
-      });
+      let newConversationId;
 
-      const addedDoc = await getDoc(docRef);
+      try {
+        const docRef = await addDoc(conversationsRef, {
+          members: [messageData.from, messageData.to],
+          lastMessage: messageData.message,
+          lastMessageTimestamp: messageData.timestamp,
+          lastMessageWasRead: messageData.read,
+          lastMessageFrom: messageData.from,
+        });
 
-      const newConversationId = addedDoc.id;
+        newConversationId = docRef.id;
+      } catch (error){
+        newConversationId = error.message.split('/').at(-1);
+        console.log("ERROR", newConversationId);
+      }
+
 
       const messagesRef = collection(db, "messages");
 
-      const docRefMessage = await addDoc(messagesRef, {
+      try {
+        await addDoc(messagesRef, {
+          ...messageData,
+          conversationId: newConversationId,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+
+
+      const message = {
         ...messageData,
-        conversationId: newConversationId,
-      });
+        id: newConversationId,
+      }
 
-      const addedDocMessage = await getDoc(docRefMessage);
-
-      return addedDocMessage.data();
+      return {message, conversationId: newConversationId};
     }
   }
 
@@ -215,6 +234,24 @@ class MessageController {
 
     const conversations = await Promise.all(conversationsPromises);
     return conversations;
+  }
+
+   onGetConversationsFromUser(userName, onGet) {
+    const conversationsRef = collection(db, "conversations");
+    const q = query(
+        conversationsRef,
+        where("members", "array-contains", userName)
+    );
+
+    return onSnapshot(q, async (snapshot) => {
+      const conversationsData = snapshot.docs.map((doc) => {
+        return{
+          ...doc.data(),
+          conversationId: doc.id,
+        }
+      });
+      onGet(conversationsData);
+    });
   }
 }
 
