@@ -108,5 +108,24 @@ export const styles = StyleSheet.create({
         fontSize: 15,
         color: WHITE,
         fontFamily: 'Lato_400Regular',
+    },
+    tagsContainer: {
+        display: "flex",
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 6,
+        marginBottom: 10,
+        width: "70%"
+    },
+    tag: {
+        backgroundColor: DARK_BLUE,
+        color: WHITE,
+        paddingHorizontal: 6,
+        paddingVertical: 2,
+        borderRadius: 3,
+        fontFamily: 'Lato_400Regular',
+        fontSize: 12,
+        height: 18,
+        minWidth: 20,
     }
 })

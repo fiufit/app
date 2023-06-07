@@ -13,3 +13,12 @@ export const difficulties = ["Beginner", "Intermediate", "Expert"];
 export const getDifficultyIndex = (difficulty) => {
     return difficulties.indexOf(difficulty);
 };
+
+export const interests = [
+    "Strength",
+    "Speed",
+    "Endurance",
+    "Sports",
+    "Lose weight",
+    "Gain weight",
+];

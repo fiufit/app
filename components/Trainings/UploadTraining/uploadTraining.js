@@ -25,6 +25,7 @@ import { createdTrainingsState } from "../../../atoms";
 import {
   difficulties,
   getDifficultyIndex,
+  interests,
   parseExercises,
 } from "../../../utils/trainings";
 import ErrorModal from "../../Shared/Modals/ErrorModal/ErrorModal";
@@ -43,7 +44,6 @@ const UploadTraining = ({ navigation, route }) => {
   const [exercisesToUpload, setExercisesToUpload] = useState(
     trainingData?.Exercises ? parseExercises(trainingData?.Exercises) : []
   );
-  const [exercisesToDelete, setExercisesToDelete] = useState([]);
   const [showImageModal, setShowImageModal] = useState(false);
   const [image, setImage] = useState(trainingData?.PictureUrl ?? null);
   const [editOptions, setEditOptions] = useState({});
@@ -61,13 +61,14 @@ const UploadTraining = ({ navigation, route }) => {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const [showErrorModal, setShowErrorModal] = useState(false);
+  const [tags, setTags] = useState(edit ? trainingData?.Tags.map(tag => tag.Name) : []);
 
   const resetStates = () => {
     setDifficultyToUploadIndex(0);
     setDurationToUpload("");
     setTitleToUpload("");
     setExercisesToUpload([]);
-    setExercisesToDelete([]);
+    setTags([]);
     setImage(null);
   };
   const handleAddExercise = () => {
@@ -100,12 +101,9 @@ const UploadTraining = ({ navigation, route }) => {
     );
   };
 
-  const handleExerciseDelete = (index, exercise) => {
+  const handleExerciseDelete = (index) => {
     const updatedExercises = exercisesToUpload.filter((_, i) => i !== index);
     setExercisesToUpload(updatedExercises);
-    if (edit) {
-      setExercisesToDelete([...exercisesToDelete, exercise]);
-    }
   };
 
   const handleEdit = async () => {
@@ -114,13 +112,13 @@ const UploadTraining = ({ navigation, route }) => {
       name: titleToUpload,
       difficulty: difficulties[difficultyToUploadIndex],
       duration: durationToUpload,
+      tags: tags.map((tag) => tag.toLowerCase()),
       pictureUrl: image,
     };
     const { training, error } = await controller.editTraining(
       trainingData,
       updatedTrainingData,
       exercisesToUpload,
-      exercisesToDelete
     );
 
     if (error) {
@@ -156,6 +154,7 @@ const UploadTraining = ({ navigation, route }) => {
         difficulty: difficulties[difficultyToUploadIndex],
         duration: Number(durationToUpload),
         exercises: exercisesToUpload,
+        tags: tags.map((tag) => tag.toLowerCase()),
       },
       image
     );
@@ -213,6 +212,14 @@ const UploadTraining = ({ navigation, route }) => {
         await handleCreate();
       }
       setUploading(false);
+    }
+  };
+
+  const handleTagPress = (tag) => {
+    if (tags.includes(tag.toLowerCase())) {
+      setTags(tags.filter((t) => t.toLowerCase() !== tag.toLowerCase()));
+    } else {
+      setTags([...tags, tag.toLowerCase()]);
     }
   };
 
@@ -301,6 +308,26 @@ const UploadTraining = ({ navigation, route }) => {
                 : "Estimated Duration"}
             </Text>
           </View>
+          <View style={styles.tagsContainer}>
+            {interests.map((interest, index) => {
+              return (
+                <TouchableOpacity key={index} onPress={() => handleTagPress(interest) }>
+                  <Text
+                    style={{
+                      ...styles.tag,
+                      opacity: tags.includes(interest.toLowerCase()) ? 1 : 0.35,
+                      backgroundColor: tags.includes(interest.toLowerCase())
+                        ? DARK_BLUE
+                        : "#F1F1F1",
+                      color: tags.includes(interest.toLowerCase()) ? WHITE : "#192126",
+                    }}
+                  >
+                    {interest}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
           <Text
             style={{
               ...styles.start,
@@ -309,7 +336,7 @@ const UploadTraining = ({ navigation, route }) => {
           >
             {exercisesError ? exercisesError : "Exercises"}
           </Text>
-          <View style={{ height: "35%", width: "100%" }}>
+          <View style={{ height: "30%", width: "100%" }}>
             <ScrollView
               style={styles.exercisesContainer}
               contentContainerStyle={{ gap: 20 }}
@@ -324,8 +351,8 @@ const UploadTraining = ({ navigation, route }) => {
                     add
                     exercises={exercisesToUpload}
                     setExercises={setExercisesToUpload}
-                    onDelete={(index, exercise) =>
-                      handleExerciseDelete(index, exercise)
+                    onDelete={(index) =>
+                      handleExerciseDelete(index)
                     }
                     setEditOptions={setEditOptions}
                   />

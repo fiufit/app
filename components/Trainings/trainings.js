@@ -1,4 +1,4 @@
-import { ScrollView, View, Text } from "react-native";
+import {ScrollView, View, Text, RefreshControl} from "react-native";
 import { styles } from "./style.trainings";
 import Button from "../Shared/Button/button";
 import { GREEN, WHITE } from "../../utils/colors";
@@ -9,211 +9,52 @@ import FavouriteTrainings from "./FavouriteTrainings/favouriteTrainings";
 import SearchBar from "../Shared/SearchBar/searchBar";
 import {useSetRecoilState} from "recoil";
 import {selectedTrainingState} from "../../atoms";
+import {useEffect, useState} from "react";
+import TrainingController from "../../utils/controllers/TrainingController";
+import {useAuthState} from "react-firebase-hooks/auth";
+import {auth} from "../../firebase";
 
 const Trainings = ({ navigation }) => {
+  const [user] = useAuthState(auth);
   const setSelectedTraining = useSetRecoilState(selectedTrainingState);
+  const [recommendedTrainings, setRecommendedTrainings] = useState([]);
+  const [favouriteTrainings, setFavouriteTrainings] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  const fetchRecommendedTrainings = async () => {
+    const controller = new TrainingController(user);
+    return await controller.getRecommendedTrainings();
+  }
 
-  const favouriteTrainings = [
-    {
-      Name: "Belly fat burner",
-      Duration: "10",
-      Difficulty: "Begineer",
-      ID: 1,
-      Exercises: [
-        {
-          Title: "Exercise",
-          done: true,
-          Description:
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-          Title: "Exercise",
-          done: true,
-          Description:
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-          Title: "Exercise",
-          done: false,
-          Description:
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-          Title: "Exercise",
-          done: false,
-          Description:
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-          Title: "Exercise",
-          done: false,
-          Description:
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-      ],
-    },
+  const fetchData = () => {
+    setLoading(true);
+    fetchRecommendedTrainings().then((trainings) => {
+      setRecommendedTrainings(trainings);
+      setLoading(false);
+    });
+  }
 
-    {
-      Name: "Belly fat burner",
-      Duration: "10",
-      Difficulty: "Begineer",
-      ID: 2,
-      Exercises: [
-        {
-          Title: "Exercise",
-          done: true,
-          Description:
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-          Title: "Exercise",
-          done: true,
-          Description:
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-          Title: "Exercise",
-          done: false,
-          Description:
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-          Title: "Exercise",
-          done: false,
-          Description:
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-          Title: "Exercise",
-          done: false,
-          Description:
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-      ],
-    },
-    {
-      Name: "Belly fat burner",
-      Duration: "10",
-      Difficulty: "Begineer",
-      ID: 3,
-      Exercises: [
-        {
-          Title: "Exercise",
-          done: true,
-          Description:
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-          Title: "Exercise",
-          done: true,
-          Description:
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-          Title: "Exercise",
-          done: false,
-          Description:
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-          Title: "Exercise",
-          done: false,
-          Description:
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-          Title: "Exercise",
-          done: false,
-          Description:
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-      ],
-    },
-    {
-      Name: "Belly fat burner",
-      Duration: "10",
-      Difficulty: "Begineer",
-      ID: 4,
-      Exercises: [
-        {
-          Title: "Exercise",
-          done: true,
-          Description:
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-          Title: "Exercise",
-          done: true,
-          Description:
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-          Title: "Exercise",
-          done: false,
-          Description:
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-          Title: "Exercise",
-          done: false,
-          Description:
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-        {
-          Title: "Exercise",
-          done: false,
-          Description:
-              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-        },
-      ],
-    },
-  ];
-
-  const recommendedTrainings = [
-    {
-      title: "Recommended",
-      duration: "10",
-      difficulty: "Begineer",
-      id: 1,
-    },
-    {
-      title: "Recommended",
-      duration: "10",
-      difficulty: "Begineer",
-      id: 2,
-    },
-    {
-      title: "Recommended",
-      duration: "10",
-      difficulty: "Begineer",
-      id: 3,
-    },
-    {
-      title: "Recommended",
-      duration: "10",
-      difficulty: "Begineer",
-      id: 4,
-    },
-    {
-      title: "Recommended",
-      duration: "10",
-      difficulty: "Begineer",
-      id: 5,
-    },
-  ];
+  useEffect(() => {
+    fetchData();
+  }, [])
 
 
   const handleTrainingPress = (training) => {
-    // Commented for now until the trainings are not hardcoded
-    // setSelectedTraining(training);
-    // navigation.navigate({
-    //   name: "Single Training",
-    //   merge: true,
-    //   params: { training, start: true },
-    // });
+    setSelectedTraining(training);
+    navigation.navigate({
+      name: "Single Training",
+      merge: true,
+      params: { training, start: true },
+    });
   };
 
+  const handleSeeMore = () => {
+    navigation.navigate({
+      name: "Training List",
+      merge: true,
+      params: { title: "Recommended Trainings", paramTrainings: recommendedTrainings, created: false },
+    });
+  }
   const handleAddTraining = () => {
     navigation.navigate({ name: "New Training", merge: true });
   };
@@ -252,15 +93,20 @@ const Trainings = ({ navigation }) => {
           justifyContent: "center",
           alignItems: "center",
         }}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={fetchData} />
+        }
       >
         <RecommendedTraining
-          training={favouriteTrainings[1]}
-          onTrainingPress={handleTrainingPress}
+          training={recommendedTrainings[0] ?? null}
+          onTrainingPress={handleSeeMore}
+          loading={loading}
         />
         <FavouriteTrainings
           favourite={favouriteTrainings}
-          recommended={recommendedTrainings}
+          recommended={recommendedTrainings.slice(1, 5)}
           onTrainingPress={handleTrainingPress}
+          loading={loading}
         />
       </ScrollView>
     </View>
