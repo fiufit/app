@@ -22,4 +22,11 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     justifyContent: "center",
   },
+  messagesLoader: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  messagesLoaderContainer: {
+    backgroundColor: WHITE,
+  },
 });

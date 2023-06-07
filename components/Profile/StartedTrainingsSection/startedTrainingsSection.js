@@ -2,14 +2,19 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles.started-trainings-section";
 import TrainingCard from "../../Shared/TrainingCard/trainingCard";
 import NoTrainingsMessage from "../NoTrainingsMessage/noTrainingsMessage";
+import {useSetRecoilState} from "recoil";
+import {selectedSessionState} from "../../../atoms";
 
 const StartedTrainingsSection = ({ navigation, startedTrainings, loading }) => {
+    const setSelectedSession = useSetRecoilState(selectedSessionState);
+
     const handleSeeAll = () => {
-        navigation.navigate({
-            name: "Training List",
-            merge: true,
-            params: { trainings: startedTrainings, title: "Started Trainings"},
-        });
+        if(!loading){
+            navigation.navigate({
+                name: "Session List",
+                merge: true,
+            });
+        }
     };
 
     return (
@@ -26,10 +31,18 @@ const StartedTrainingsSection = ({ navigation, startedTrainings, loading }) => {
                 <TrainingCard />
             ) : startedTrainings.length ? (
                 <TrainingCard
-                    title={startedTrainings[0].Name}
-                    imageSource={{ uri: startedTrainings[0].PictureUrl }}
-                    duration={startedTrainings[0].Duration}
-                    difficulty={startedTrainings[0].difficulty}
+                    title={startedTrainings[0].TrainingPlan.Name}
+                    imageSource={{ uri: startedTrainings[0].TrainingPlan.PictureUrl }}
+                    duration={startedTrainings[0].TrainingPlan.Duration}
+                    difficulty={startedTrainings[0].TrainingPlan.Difficulty}
+                    onPress={() => {
+                        setSelectedSession(startedTrainings[0]);
+                        navigation.navigate({
+                            name: "Training Attempt",
+                            merge: true,
+                            params: { session: startedTrainings[0] },
+                        });
+                    }}
                 />
             ) : (
                 <NoTrainingsMessage

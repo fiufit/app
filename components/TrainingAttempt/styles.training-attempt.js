@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import {DARK_BLUE, SECONDARY_GREY, WHITE} from "../../../utils/colors";
+import {SECONDARY_GREY, WHITE} from "../../utils/colors";
 
 export const styles = StyleSheet.create({
     container: {
@@ -11,20 +11,8 @@ export const styles = StyleSheet.create({
     imageContainer: {
         width: "100%",
         height: "45%",
-        backgroundColor: SECONDARY_GREY
-    },
-    addImageContainer: {
-        width: "100%",
-        height: "100%",
-        display: 'flex',
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 15
-    },
-    addImageText: {
-        fontSize: 23,
-        color: "#464646",
-        fontFamily: 'Poppins_500Medium'
+        backgroundColor: SECONDARY_GREY,
+        position: "relative"
     },
     image: {
         width: "100%",
@@ -75,57 +63,41 @@ export const styles = StyleSheet.create({
         display: 'flex',
         gap: 10,
     },
-    startButton: {
-        height: "100%",
-        borderRadius: 10,
-        width: '80%',
-    },
-    buttonContainer: {
+    playAndInfoContainer: {
         position: "absolute",
         width: "100%",
-        height: 40,
-        bottom: 40,
-        display: 'flex',
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    ratingContainer: {
-        position: "absolute",
-        top: 50,
-        right: "5%",
-        width: 60,
-        height: 25,
-        borderRadius: 5,
-        backgroundColor: DARK_BLUE,
+        height: "100%",
         zIndex: 100,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: "row",
-        gap: 5
-    },
-    rating: {
-        fontSize: 15,
-        color: WHITE,
-        fontFamily: 'Lato_400Regular',
-    },
-    tagsContainer: {
         display: "flex",
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 6,
-        marginBottom: 10,
-        width: "70%"
+        backgroundColor: "rgba(0,0,0,0.69)",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+        gap: 10
     },
-    tag: {
-        backgroundColor: DARK_BLUE,
-        color: WHITE,
-        paddingHorizontal: 6,
-        paddingVertical: 2,
-        borderRadius: 3,
+    trainingTime: {
         fontFamily: 'Lato_400Regular',
-        fontSize: 12,
-        height: 18,
-        minWidth: 20,
+        color: WHITE,
+        fontSize: 25,
+        width: "20%"
+    },
+    trainingSteps: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "20%",
+        textAlign: "center"
+    },
+    trainingStepsText: {
+        fontFamily: 'Lato_400Regular',
+        color: WHITE,
+        fontSize: 25,
+        width: "100%",
+        textAlign: "center"
+    },
+    completedText: {
+        fontFamily: 'Lato_400Regular',
+        color: WHITE,
+        fontSize: 25,
     }
 })

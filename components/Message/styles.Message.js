@@ -8,13 +8,13 @@ import {
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  messageContainer: {
+  containerCurrentUser: {
     flexDirection: "row",
     alignItems: "center",
     paddingTop: 10,
     paddingBottom: 10,
   },
-  containerCurrentUser: {
+  messageContainer: {
     flexDirection: "row-reverse",
     alignItems: "center",
     paddingTop: 10,
@@ -27,14 +27,14 @@ export const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   messageBubble: {
-    backgroundColor: AZURE,
+    backgroundColor: QUATERNARY_GREEN,
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 15,
     maxWidth: "80%",
   },
   bubbleCurrentUser: {
-    backgroundColor: QUATERNARY_GREEN,
+    backgroundColor: AZURE,
   },
   message: {
     fontSize: 16,

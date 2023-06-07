@@ -1,5 +1,10 @@
 import { DARK_BLUE, WHITE } from "../../../utils/colors";
-import {DEFAULT_PROFILE_PICTURE, auth, uploadImage, signOutFromApp} from "../../../firebase";
+import {
+  DEFAULT_PROFILE_PICTURE,
+  auth,
+  uploadImage,
+  signOutFromApp,
+} from "../../../firebase";
 import { Image, Text, TouchableHighlight, View } from "react-native";
 
 import Back from "../../Shared/Back/back";
@@ -20,6 +25,7 @@ import { useRecoilState } from "recoil";
 import { useState } from "react";
 import { userDataState } from "../../../atoms";
 import LogoutIcon from "../../../assets/images/general/logoutIcon.svg";
+import InterestsModal from "../../InterestsModal/InterestsModal";
 
 const EditProfile = ({ navigation }) => {
   const [userData, setUserData] = useRecoilState(userDataState);
@@ -33,13 +39,14 @@ const EditProfile = ({ navigation }) => {
   const [displayName, setDisplayName] = useState(userData.DisplayName);
   const [nickName, setNickName] = useState(userData.Nickname);
   const [mainLocation, setMainLocation] = useState(userData.MainLocation);
-  const [interests, setInterests] = useState(userData.Interests);
+  const [interests, setInterests] = useState(userData.Interests.map((i) => i.Name.charAt(0).toUpperCase() + i.Name.slice(1)));
   const [loading, setLoading] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [errorModalIsVisible, setErrorModalIsVisible] = useState(false);
   const [errorDescription, setErrorDescription] = useState("");
   const [successModalIsVisible, setSuccessModalIsVisible] = useState(false);
   const [successDescription, setSuccessDescription] = useState("");
+  const [showInterestsModal, setShowInterestsModal] = useState(false);
 
   const nameOptions = {
     displayName: {
@@ -111,9 +118,10 @@ const EditProfile = ({ navigation }) => {
       onPress: () => setShowPicker(true),
     },
     {
-      displayValue: `${interests ?? "Example interests"}`,
+      displayValue: `${interests.length > 0 ? interests.join(", ") : "Add your interests"}`,
       icon: <TextInput.Icon icon="shape" />,
-      onPress: () => {},
+      multiline: true,
+      onPress: () => {setShowInterestsModal(true)},
     },
   ];
 
@@ -136,6 +144,7 @@ const EditProfile = ({ navigation }) => {
       height,
       weight,
       main_location: mainLocation,
+      interests: interests.map((interest) => interest.toLowerCase()),
     });
 
     if (error) {
@@ -145,7 +154,11 @@ const EditProfile = ({ navigation }) => {
         "There has been an error while updating your profile. Please try again later!"
       );
     } else {
-      setUserData({ ...data, followers: userData.followers, following: userData.following });
+      setUserData({
+        ...data,
+        followers: userData.followers,
+        following: userData.following,
+      });
       setSuccessModalIsVisible(true);
       setSuccessDescription("Your profile has been updated successfully!");
     }
@@ -173,13 +186,13 @@ const EditProfile = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <LogoutIcon
-          position={"absolute"}
-          right={20}
-          top={50}
-          opacity={1}
-          width={30}
-          height={25}
-          onPress={() => signOutFromApp(() => setUserData({}))}
+        position={"absolute"}
+        right={20}
+        top={50}
+        opacity={1}
+        width={30}
+        height={25}
+        onPress={() => signOutFromApp(() => setUserData({}))}
       />
       <Back
         onPress={() => navigation.navigate({ name: "Profile", merge: true })}
@@ -270,7 +283,12 @@ const EditProfile = ({ navigation }) => {
         />
       )}
       {loading && <LoadingModal text={"Updating your profile"} />}
-
+      <InterestsModal
+          modalIsVisible={showInterestsModal}
+          setModalIsVisible={setShowInterestsModal}
+          selectedInterests={interests}
+          setSelectedInterests={setInterests}
+      ></InterestsModal>
       <ErrorModal
         modalIsVisible={errorModalIsVisible}
         setModalIsVisible={setErrorModalIsVisible}

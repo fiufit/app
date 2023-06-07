@@ -22,6 +22,7 @@ import { useRecoilState } from "recoil";
 import {
   createdTrainingsState,
   startedTrainingsState,
+  trainingSessionsState,
   userDataState,
 } from "../../atoms";
 import StartedTrainingsSection from "./StartedTrainingsSection/startedTrainingsSection";
@@ -35,7 +36,7 @@ const Profile = ({ navigation }) => {
     createdTrainingsState
   );
   const [startedTrainings, setStartedTrainings] = useRecoilState(
-    startedTrainingsState
+    trainingSessionsState
   );
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -44,6 +45,17 @@ const Profile = ({ navigation }) => {
     const controller = new TrainingController(user);
     return await controller.getTrainings();
   };
+
+  const fetchStartedTrainings = async () => {
+    const controller = new TrainingController(user);
+    return await controller.getTrainingSessions();
+  };
+
+  const fetchUserTrainings = async () => {
+    const createdTrainings = await fetchCreatedTrainings();
+    const startedTrainings = await fetchStartedTrainings();
+    return { createdTrainings, startedTrainings };
+  }
 
   const fetchFollowers = async () => {
     const controller = new ProfileController(user);
@@ -59,9 +71,15 @@ const Profile = ({ navigation }) => {
 
   const refreshData = async () => {
     setRefreshing(true);
-    const promises = [fetchCreatedTrainings(), fetchFollowers(), fetchFollowing()];
-    const [trainings, followers, following] = await Promise.all(promises);
-    setCreatedTrainings(trainings);
+    const promises = [
+      fetchUserTrainings(),
+      fetchFollowers(),
+      fetchFollowing(),
+    ];
+    const [{ createdTrainings, startedTrainings }, followers, following] =
+      await Promise.all(promises);
+    setCreatedTrainings(createdTrainings);
+    setStartedTrainings(startedTrainings);
     setUserData({ ...userData, followers, following });
     setRefreshing(false);
   };
@@ -69,7 +87,9 @@ const Profile = ({ navigation }) => {
   const fetchData = async () => {
     setLoading(true);
     const trainings = await fetchCreatedTrainings();
+    const startedTrainings = await fetchStartedTrainings();
     setCreatedTrainings(trainings);
+    setStartedTrainings(startedTrainings);
     setLoading(false);
   };
 
@@ -78,50 +98,48 @@ const Profile = ({ navigation }) => {
     fetchData();
   }, []);
 
-
   return (
-
-      <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.menuButton}
-          onPress={() =>
-            navigation.navigate({ name: "Profile Settings", merge: true })
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.menuButton}
+        onPress={() =>
+          navigation.navigate({ name: "Profile Settings", merge: true })
+        }
+      >
+        <MenuIcon color={DARK_BLUE} />
+      </TouchableOpacity>
+      <DataSection navigation={navigation} />
+      <ProfileSwitcher
+        setAthleteProfileSelected={setAthleteProfileSelected}
+        athleteProfileSelected={athleteProfileSelected}
+      />
+      <View style={{ height: "90%", width: "100%" }}>
+        <ScrollView
+          contentContainerStyle={{ alignItems: "center", flexGrow: 1 }}
+          style={styles.scrollView}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
           }
         >
-          <MenuIcon color={DARK_BLUE} />
-        </TouchableOpacity>
-        <DataSection navigation={navigation}/>
-        <ProfileSwitcher
-          setAthleteProfileSelected={setAthleteProfileSelected}
-          athleteProfileSelected={athleteProfileSelected}
-        />
-        <View style={{ height: "90%", width: "100%" }}>
-          <ScrollView
-            contentContainerStyle={{ alignItems: "center", flexGrow: 1 }}
-            style={styles.scrollView}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={refreshData} />
-            }
-          >
-            {athleteProfileSelected && (
-              <StartedTrainingsSection
-                navigation={navigation}
-                startedTrainings={startedTrainings}
-                loading={loading || refreshing}
-              />
-            )}
-            {!athleteProfileSelected && (
-              <CreatedTrainingsSection
-                navigation={navigation}
-                createdTrainings={createdTrainings}
-                loading={loading || refreshing}
-              />
-            )}
-            {athleteProfileSelected && <GoalsSection />}
-            <WalletSection />
-          </ScrollView>
-        </View>
+          {athleteProfileSelected && (
+            <StartedTrainingsSection
+              navigation={navigation}
+              startedTrainings={startedTrainings}
+              loading={loading || refreshing}
+            />
+          )}
+          {!athleteProfileSelected && (
+            <CreatedTrainingsSection
+              navigation={navigation}
+              createdTrainings={createdTrainings}
+              loading={loading || refreshing}
+            />
+          )}
+          {athleteProfileSelected && <GoalsSection />}
+          <WalletSection />
+        </ScrollView>
       </View>
+    </View>
   );
 };
 

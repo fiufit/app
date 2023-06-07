@@ -19,4 +19,7 @@ export const styles = StyleSheet.create({
   usersSearchBar: {
     marginBottom: 15,
   },
+  conversationLoader: {
+    marginBottom: 15,
+  },
 });

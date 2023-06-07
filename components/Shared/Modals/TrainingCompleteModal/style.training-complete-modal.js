@@ -8,6 +8,12 @@ export const styles = StyleSheet.create({
         color: "black",
         textAlign: "center",
     },
+    subtitle: {
+        fontFamily: "Poppins_400Regular",
+        fontSize: 16,
+        color: "black",
+        textAlign: "center",
+    },
     modalContainer: {
         zIndex: 10,
         backgroundColor: "rgba(0,0,0,0.34)",
@@ -19,28 +25,20 @@ export const styles = StyleSheet.create({
         alignItems: "center"
     },
     modal: {
-        position: "relative",
         width: "90%",
-        height: 400,
+        height: 220,
         padding: "10%",
         backgroundColor: WHITE,
         borderRadius: 15,
         display: "flex",
-        justifyContent: "space-evenly",
-        alignItems: "center"
-    },
-    buttonsContainer: {
-        display: "flex",
-        flexDirection: "row",
-        width: "100%",
+        justifyContent: "center",
         alignItems: "center",
-        justifyContent: "space-evenly",
-        flexWrap: "wrap",
-        rowGap: 10
+        gap: 10
     },
     button: {
-        width: "45%",
-        padding: 4,
-        borderRadius: 15
-    }
+        width: "100%",
+        height: 40,
+        borderRadius: 15,
+        marginTop: 20
+    },
 });
