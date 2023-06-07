@@ -1,5 +1,10 @@
-import { auth } from "../../firebase";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { QUINARY_GREY, WHITE } from "../../utils/colors";
 import { useEffect, useState } from "react";
 
 import ChatPreview from "../ChatPreview/ChatPreview";
@@ -8,7 +13,7 @@ import MessageController from "../../utils/controllers/MessageController";
 import MessagingTopBar from "../MessagingTopBar/MessagingTopBar";
 import RequestController from "../../utils/controllers/RequestController";
 import SearchIcon from "../../assets/images/general/searchIcon.svg";
-import { WHITE } from "../../utils/colors";
+import { auth } from "../../firebase";
 import { styles } from "./styles.MessagingView";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilValue } from "recoil";
@@ -17,7 +22,7 @@ import { userDataState } from "../../atoms";
 const MessagingView = ({ navigation }) => {
   const [searchedUser, setSearchedUser] = useState("");
   const [chatPreviews, setChatPreviews] = useState([]);
-  const [remountConversation, setRemountConversation] = useState(false);
+  const [isLoadingConversations, setIsLoadingConversations] = useState(false);
 
   const [user] = useAuthState(auth);
 
@@ -29,6 +34,7 @@ const MessagingView = ({ navigation }) => {
     const unSubscribe = messageController.onGetConversationsFromUser(
       userData.ID,
       async (data) => {
+        setIsLoadingConversations(true);
         const newChatPreviews = await Promise.all(
           data.map(async (item) => {
             const otherMemberId = item.members.find(
@@ -58,6 +64,7 @@ const MessagingView = ({ navigation }) => {
             };
           })
         );
+        setIsLoadingConversations(false);
         newChatPreviews.sort(
           (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
         );
@@ -91,7 +98,6 @@ const MessagingView = ({ navigation }) => {
       otherUserName: otherUserName,
       otherUserId: otherMemberId,
       otherUserProfilePicture: otherUserProfilePicture,
-      remountConversation: remountConversation,
     });
   };
 
@@ -110,6 +116,15 @@ const MessagingView = ({ navigation }) => {
           left={<SearchIcon />}
         ></Input>
       </View>
+      {isLoadingConversations && (
+        <View>
+          <ActivityIndicator
+            size="large"
+            color={QUINARY_GREY}
+            style={styles.conversationLoader}
+          />
+        </View>
+      )}
       <ScrollView style={styles.chatPreviewList}>
         {chatPreviews
           .filter((chatPreview) =>
