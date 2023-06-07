@@ -1,15 +1,79 @@
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { QUINARY_GREY, WHITE } from "../../utils/colors";
+import { useEffect, useState } from "react";
 
 import ChatPreview from "../ChatPreview/ChatPreview";
 import Input from "../Shared/Input/input";
+import MessageController from "../../utils/controllers/MessageController";
 import MessagingTopBar from "../MessagingTopBar/MessagingTopBar";
+import RequestController from "../../utils/controllers/RequestController";
 import SearchIcon from "../../assets/images/general/searchIcon.svg";
-import { WHITE } from "../../utils/colors";
+import { auth } from "../../firebase";
 import { styles } from "./styles.MessagingView";
-import { useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useRecoilValue } from "recoil";
+import { userDataState } from "../../atoms";
 
 const MessagingView = ({ navigation }) => {
   const [searchedUser, setSearchedUser] = useState("");
+  const [chatPreviews, setChatPreviews] = useState([]);
+  const [isLoadingConversations, setIsLoadingConversations] = useState(true);
+
+  const [user] = useAuthState(auth);
+
+  const userData = useRecoilValue(userDataState);
+
+  useEffect(() => {
+    const messageController = new MessageController();
+
+    const unSubscribe = messageController.onGetConversationsFromUser(
+      userData.ID,
+      async (data) => {
+        const newChatPreviews = await Promise.all(
+          data.map(async (item) => {
+            const otherMemberId = item.members.find(
+              (member) => member !== userData.ID
+            );
+
+            const controller = new RequestController(user);
+
+            const userDataFetched = await controller.fetch(
+              `users/${otherMemberId}`,
+              "GET"
+            );
+
+            const otherUser = userDataFetched.data;
+            const imageSource = otherUser?.PictureUrl;
+            const otherMemberName = otherUser.DisplayName;
+
+            return {
+              otherMemberName: otherMemberName,
+              otherMemberId: otherMemberId,
+              imageSource: imageSource,
+              lastMessage: item.lastMessage,
+              lastMessageFrom: item.lastMessageFrom,
+              lastMessageTime: item.lastMessageTimestamp,
+              hasUnreadMessage: !item.lastMessageWasRead,
+              conversationId: item.conversationId,
+            };
+          })
+        );
+        setIsLoadingConversations(false);
+        newChatPreviews.sort(
+          (a, b) => new Date(b.lastMessageTime) - new Date(a.lastMessageTime)
+        );
+
+        setChatPreviews(newChatPreviews);
+      }
+    );
+
+    return () => unSubscribe();
+  }, []);
 
   const handleNewMessage = () => {
     navigation.navigate({
@@ -22,108 +86,19 @@ const MessagingView = ({ navigation }) => {
     });
   };
 
-  const handleConversationPress = (conversationId) => {
-    navigation.navigate("Conversation", { conversationId: conversationId });
+  const handleConversationPress = (
+    conversationId,
+    otherUserName,
+    otherMemberId,
+    otherUserProfilePicture
+  ) => {
+    navigation.navigate("Conversation", {
+      conversationId: conversationId,
+      otherUserName: otherUserName,
+      otherUserId: otherMemberId,
+      otherUserProfilePicture: otherUserProfilePicture,
+    });
   };
-
-  const chatPreviews = [
-    {
-      name: "Alejandro",
-      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
-      lastMessage: "Hey, how is it going?",
-      lastMessageTime: "10:30 AM",
-      hasUnreadMessage: true,
-      conversationId: 1,
-    },
-    {
-      name: "Alejo",
-      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
-      lastMessage: "Hey, how is it going?",
-      lastMessageTime: "10:30 AM",
-      hasUnreadMessage: false,
-      conversationId: 2,
-    },
-    {
-      name: "Barbara",
-      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
-      lastMessage: "Hey, how is it going?",
-      lastMessageTime: "10:30 AM",
-      hasUnreadMessage: false,
-      conversationId: 3,
-    },
-    {
-      name: "Carlos",
-      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
-      lastMessage: "Hey, how is it going?",
-      lastMessageTime: "10:30 AM",
-      hasUnreadMessage: false,
-      conversationId: 1,
-    },
-    {
-      name: "Carla",
-      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
-      lastMessage: "Hey, how is it going?",
-      lastMessageTime: "10:30 AM",
-      hasUnreadMessage: false,
-      conversationId: 2,
-    },
-    {
-      name: "Cecilia",
-      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
-      lastMessage: "Hey, how is it going?",
-      lastMessageTime: "10:30 AM",
-      hasUnreadMessage: false,
-      conversationId: 3,
-    },
-    {
-      name: "Dario",
-      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
-      lastMessage: "Hey, how is it going?",
-      lastMessageTime: "10:30 AM",
-      hasUnreadMessage: false,
-      conversationId: 1,
-    },
-    {
-      name: "Pedro",
-      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
-      lastMessage: "Hey, how is it going?",
-      lastMessageTime: "10:30 AM",
-      hasUnreadMessage: true,
-      conversationId: 2,
-    },
-    {
-      name: "Pablo",
-      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
-      lastMessage: "Hey, how is it going?",
-      lastMessageTime: "10:30 AM",
-      hasUnreadMessage: false,
-      conversationId: 3,
-    },
-    {
-      name: "Cristian",
-      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
-      lastMessage: "Hey, how is it going?",
-      lastMessageTime: "10:30 AM",
-      hasUnreadMessage: false,
-      conversationId: 1,
-    },
-    {
-      name: "Pepe",
-      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
-      lastMessage: "Hey, how is it going?",
-      lastMessageTime: "10:30 AM",
-      hasUnreadMessage: false,
-      conversationId: 2,
-    },
-    {
-      name: "Jorge",
-      imageSource: "https://randomuser.me/api/portraits/men/75.jpg",
-      lastMessage: "Hey, how is it going?",
-      lastMessageTime: "10:30 AM",
-      hasUnreadMessage: false,
-      conversationId: 3,
-    },
-  ];
 
   return (
     <View style={styles.messagingViewContainer}>
@@ -140,23 +115,51 @@ const MessagingView = ({ navigation }) => {
           left={<SearchIcon />}
         ></Input>
       </View>
+      {isLoadingConversations && (
+        <View>
+          <ActivityIndicator
+            size="large"
+            color={QUINARY_GREY}
+            style={styles.conversationLoader}
+          />
+        </View>
+      )}
       <ScrollView style={styles.chatPreviewList}>
         {chatPreviews
-          .filter((chatPreview) => chatPreview.name.startsWith(searchedUser))
+          .filter((chatPreview) =>
+            chatPreview.otherMemberName.startsWith(searchedUser)
+          )
           .map((chatPreview, chatPreviewIndex) => (
             <TouchableOpacity
               onPress={() =>
-                handleConversationPress(chatPreview.conversationId)
+                handleConversationPress(
+                  chatPreview.conversationId,
+                  chatPreview.otherMemberName,
+                  chatPreview.otherMemberId,
+                  chatPreview.imageSource
+                )
               }
               style={styles.chatPreviewContainer}
               key={chatPreviewIndex}
             >
               <ChatPreview
                 imageSource={chatPreview.imageSource}
-                name={chatPreview.name}
+                name={chatPreview.otherMemberName}
                 lastMessage={chatPreview.lastMessage}
-                lastMessageTime={chatPreview.lastMessageTime}
-                hasUnreadMessage={chatPreview.hasUnreadMessage}
+                lastMessageTime={new Date(
+                  chatPreview.lastMessageTime
+                ).toLocaleString("en-US", {
+                  timeZone: "America/Argentina/Buenos_Aires",
+                })}
+                hasUnreadMessage={
+                  chatPreview.hasUnreadMessage &&
+                  chatPreview.lastMessageFrom != userData.ID
+                }
+                lastMessageSender={
+                  chatPreview.lastMessageFrom == userData.ID
+                    ? "You"
+                    : chatPreview.otherMemberName
+                }
               />
             </TouchableOpacity>
           ))}

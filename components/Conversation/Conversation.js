@@ -1,130 +1,127 @@
-import { FlatList, KeyboardAvoidingView, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  KeyboardAvoidingView,
+  View,
+} from "react-native";
+import { useEffect, useState } from "react";
 
 import ConversationHeader from "../ConversationHeader/ConversationHeader";
 import Message from "../Message/Message";
+import MessageController from "../../utils/controllers/MessageController";
 import MessageInput from "../MessageInput/MessageInput";
+import { QUINARY_GREY } from "../../utils/colors";
 import { styles } from "./styles.Conversation";
+import { useIsFocused } from "@react-navigation/native";
+import { useRecoilValue } from "recoil";
+import { userDataState } from "../../atoms";
 
 const Conversation = ({ navigation, route }) => {
-  const { conversationId, conversationUserId } = route.params;
+  const {
+    conversationId,
+    otherUserName,
+    otherUserId,
+    otherUserProfilePicture,
+  } = route.params;
+  const [messages, setMessages] = useState([]);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(true);
+  const isFocused = useIsFocused();
 
-  const handleSendMessage = (inputMessage) => {
-    //TODO: Send message to Backend.
-    //Besides sending the message to the backend, the attribute hasUnreadMessage from this conversation should be set to true.
-    console.log(inputMessage);
+  const userData = useRecoilValue(userDataState);
+
+  const addNewMessages = (data) => {
+    const newMessages = data.map((message) => {
+      return {
+        image:
+          message.from === userData.ID
+            ? userData.PictureUrl
+            : otherUserProfilePicture,
+        message: message.message,
+        from: message.from,
+        timestamp: message.timestamp,
+      };
+    });
+
+    setMessages(
+      newMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+    );
+  };
+
+  useEffect(() => {
+    const messageController = new MessageController();
+    const unSubscribe =
+      messageController.onGetMessagesFromConversationWithUsers(
+        userData.ID,
+        otherUserId,
+        (data) => {
+          addNewMessages(data);
+          setIsLoadingMessages(false);
+        }
+      );
+
+    return () => {
+      unSubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isFocused) {
+      if (messages.length > 0) {
+        const lastMessage = messages[0];
+        if (lastMessage.from !== userData.ID) {
+          const messageController = new MessageController();
+          messageController.readLastMessageFromConversation(conversationId);
+        }
+      }
+    }
+  }, [messages, isFocused]);
+
+  const handleSendMessage = async (inputMessage) => {
+    const messageController = new MessageController();
+    await messageController.writeMessageToConversationWithUsers({
+      from: userData.ID,
+      to: otherUserId,
+      message: inputMessage,
+      read: false,
+      timestamp: new Date().toISOString(),
+    });
   };
 
   const handleGoBack = () => {
-    //Before going back, the attribute hasUnreadMessage from the conversation should be set to false.
     navigation.goBack();
   };
-
-  const messages = [
-    {
-      id: 1,
-      image: "https://randomuser.me/api/portraits/women/65.jpg",
-      message: "Hello, how are you?",
-      isCurrentUser: false,
-      timestamp: "12:34 PM, May 12, 2023",
-    },
-    {
-      id: 2,
-      image: "https://randomuser.me/api/portraits/men/75.jpg",
-      message: "I'm doing great, thanks! How about you? ",
-      isCurrentUser: true,
-      timestamp: "12:36 PM, May 12, 2023",
-    },
-    {
-      id: 3,
-      image: "https://randomuser.me/api/portraits/women/65.jpg",
-      message: "Hello, how are you?",
-      isCurrentUser: false,
-      timestamp: "12:34 PM, May 12, 2023",
-    },
-    {
-      id: 4,
-      image: "https://randomuser.me/api/portraits/men/75.jpg",
-      message: "I'm doing great, thanks! How about you? ",
-      isCurrentUser: true,
-      timestamp: "12:36 PM, May 12, 2023",
-    },
-    {
-      id: 5,
-      image: "https://randomuser.me/api/portraits/women/65.jpg",
-      message: "Hello, how are you?",
-      isCurrentUser: false,
-      timestamp: "12:34 PM, May 12, 2023",
-    },
-    {
-      id: 6,
-      image: "https://randomuser.me/api/portraits/men/75.jpg",
-      message: "I'm doing great, thanks! How about you? ",
-      isCurrentUser: true,
-      timestamp: "12:36 PM, May 12, 2023",
-    },
-    {
-      id: 7,
-      image: "https://randomuser.me/api/portraits/women/65.jpg",
-      message: "Hello, how are you?",
-      isCurrentUser: false,
-      timestamp: "12:34 PM, May 12, 2023",
-    },
-    {
-      id: 8,
-      image: "https://randomuser.me/api/portraits/men/75.jpg",
-      message: "I'm doing great, thanks! How about you? ",
-      isCurrentUser: true,
-      timestamp: "12:36 PM, May 12, 2023",
-    },
-    {
-      id: 9,
-      image: "https://randomuser.me/api/portraits/women/65.jpg",
-      message: "Hello, how are you?",
-      isCurrentUser: false,
-      timestamp: "12:34 PM, May 12, 2023",
-    },
-    {
-      id: 10,
-      image: "https://randomuser.me/api/portraits/men/75.jpg",
-      message: "I'm doing great, thanks! How about you? ",
-      isCurrentUser: true,
-      timestamp: "12:36 PM, May 12, 2023",
-    },
-    {
-      id: 11,
-      image: "https://randomuser.me/api/portraits/women/65.jpg",
-      message: "Hello, how are you?",
-      isCurrentUser: false,
-      timestamp: "12:34 PM, May 12, 2023",
-    },
-    {
-      id: 12,
-      image: "https://randomuser.me/api/portraits/men/75.jpg",
-      message: "I'm doing great, thanks! How about you? ",
-      isCurrentUser: true,
-      timestamp: "12:36 PM, May 12, 2023",
-    },
-  ];
 
   return (
     <KeyboardAvoidingView style={styles.conversationContainer}>
       <View style={styles.conversationHeaderContainer}>
         <ConversationHeader
           onGoBack={handleGoBack}
-          name={"Fetched Name"}
-          profileImage={"https://randomuser.me/api/portraits/men/75.jpg"}
+          name={otherUserName}
+          profileImage={otherUserProfilePicture}
         />
       </View>
+      {isLoadingMessages && (
+        <View style={styles.messagesLoaderContainer}>
+          <ActivityIndicator
+            size="large"
+            color={QUINARY_GREY}
+            style={styles.messagesLoader}
+          />
+        </View>
+      )}
       <View style={styles.messageListContainer}>
         <View style={styles.messageList}>
           <FlatList
+            inverted
             data={messages}
             renderItem={({ item }) => (
               <Message
                 profileImage={item.image}
                 message={item.message}
-                isCurrentUser={item.isCurrentUser}
-                timestamp={item.timestamp}
+                isCurrentUser={item.from === userData.ID}
+                timestamp={new Date(item.timestamp).toLocaleString("en-US", {
+                  timeZone: "America/Argentina/Buenos_Aires",
+                })}
               />
             )}
           />

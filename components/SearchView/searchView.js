@@ -21,14 +21,12 @@ import Button from "../Shared/Button/button";
 import RequestController from "../../utils/controllers/RequestController";
 import SearchBar from "../Shared/SearchBar/searchBar";
 import TrainingFilterModal from "../Shared/Modals/TrainingFilterModal/trainingFilterModal";
-
-import { useRecoilState } from "recoil";
-import { selectedTrainingState } from "../../atoms";
-import { useIsFocused } from "@react-navigation/native";
-
 import VerifiedIcon from "../../assets/images/profile/verifiedIcon.svg";
+import { selectedTrainingState } from "../../atoms";
 import { styles } from "./styles.search-view";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useIsFocused } from "@react-navigation/native";
+import { useRecoilState } from "recoil";
 
 const LOADING_MAX = 4;
 const SearchView = ({ navigation, route }) => {
@@ -118,21 +116,21 @@ const SearchView = ({ navigation, route }) => {
         setLoading(false);
       }
     } else {
-      if(trainingTags.length && !searchValue && trainingDifficulty === "all") {
+      if (trainingTags.length && !searchValue && trainingDifficulty === "all") {
         setLoading(true);
         const delayDebounceFunction = setTimeout(() => {
           fetchTrainings(true)
-              .then((searchResult) => {
-                setTrainingsSearchData({
-                  ...trainingSearchData,
-                  all: { ...trainingSearchData.all, ...searchResult },
-                });
-                setLoading(false);
-              })
-              .catch((e) => {
-                console.log(e);
-                setLoading(false);
+            .then((searchResult) => {
+              setTrainingsSearchData({
+                ...trainingSearchData,
+                all: { ...trainingSearchData.all, ...searchResult },
               });
+              setLoading(false);
+            })
+            .catch((e) => {
+              console.log(e);
+              setLoading(false);
+            });
         }, 250);
         return () => clearTimeout(delayDebounceFunction);
       } else {
@@ -141,39 +139,10 @@ const SearchView = ({ navigation, route }) => {
             setLoading(true);
             const delayDebounceFunction = setTimeout(() => {
               fetchTrainings(true)
-                  .then((searchResult) => {
-                    setTrainingsSearchData({
-                      ...trainingSearchData,
-                      all: { ...trainingSearchData.all, ...searchResult },
-                    });
-                    setLoading(false);
-                  })
-                  .catch((e) => {
-                    console.log(e);
-                    setLoading(false);
-                  });
-            }, 250);
-            return () => clearTimeout(delayDebounceFunction);
-          } else {
-            setTrainingsSearchData({
-              beginner: {},
-              intermediate: {},
-              expert: {},
-              all: {}
-            })
-            setLoading(false);
-          }
-        } else {
-          setLoading(true);
-          const delayDebounceFunction = setTimeout(() => {
-            fetchTrainings(true)
                 .then((searchResult) => {
                   setTrainingsSearchData({
                     ...trainingSearchData,
-                    [trainingDifficulty]: {
-                      ...trainingSearchData[trainingDifficulty],
-                      ...searchResult,
-                    },
+                    all: { ...trainingSearchData.all, ...searchResult },
                   });
                   setLoading(false);
                 })
@@ -181,6 +150,35 @@ const SearchView = ({ navigation, route }) => {
                   console.log(e);
                   setLoading(false);
                 });
+            }, 250);
+            return () => clearTimeout(delayDebounceFunction);
+          } else {
+            setTrainingsSearchData({
+              beginner: {},
+              intermediate: {},
+              expert: {},
+              all: {},
+            });
+            setLoading(false);
+          }
+        } else {
+          setLoading(true);
+          const delayDebounceFunction = setTimeout(() => {
+            fetchTrainings(true)
+              .then((searchResult) => {
+                setTrainingsSearchData({
+                  ...trainingSearchData,
+                  [trainingDifficulty]: {
+                    ...trainingSearchData[trainingDifficulty],
+                    ...searchResult,
+                  },
+                });
+                setLoading(false);
+              })
+              .catch((e) => {
+                console.log(e);
+                setLoading(false);
+              });
           }, 250);
           return () => clearTimeout(delayDebounceFunction);
         }
@@ -222,7 +220,9 @@ const SearchView = ({ navigation, route }) => {
   const handleUserCardPress = (userData) => {
     if (messageUsers) {
       navigation.navigate("Conversation", {
-        conversationUserId: "userData.ID",
+        otherUserName: userData.DisplayName,
+        otherUserId: userData.ID,
+        otherUserProfilePicture: userData.PictureUrl,
       });
     } else {
       navigation.navigate({
