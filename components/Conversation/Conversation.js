@@ -31,7 +31,9 @@ const Conversation = ({ navigation, route }) => {
   const userData = useRecoilValue(userDataState);
 
   const addNewMessages = (data) => {
-    setConversationId(data[0].conversationId);
+    if(data.length){
+      setConversationId(data[0].conversationId);
+    }
     const newMessages = data.map((message) => {
       return {
         image:
