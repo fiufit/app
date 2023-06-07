@@ -129,13 +129,17 @@ class MessageController {
     } else {
       const conversationsRef = collection(db, "conversations");
 
-      const docRef = await addDoc(conversationsRef, {
-        members: [messageData.from, messageData.to],
-        lastMessage: messageData.message,
-        lastMessageTimestamp: messageData.timestamp,
-        lastMessageWasRead: messageData.read,
-        lastMessageFrom: messageData.from,
-      });
+      let docRef;
+
+      try {
+        docRef = await addDoc(conversationsRef, {
+          members: [messageData.from, messageData.to],
+          lastMessage: messageData.message,
+          lastMessageTimestamp: messageData.timestamp,
+          lastMessageWasRead: messageData.read,
+          lastMessageFrom: messageData.from,
+        });
+      } catch (error) {}
 
       const addedDoc = await getDoc(docRef);
 
@@ -143,10 +147,14 @@ class MessageController {
 
       const messagesRef = collection(db, "messages");
 
-      const docRefMessage = await addDoc(messagesRef, {
-        ...messageData,
-        conversationId: newConversationId,
-      });
+      let docRefMessage;
+
+      try {
+        docRefMessage = await addDoc(messagesRef, {
+          ...messageData,
+          conversationId: newConversationId,
+        });
+      } catch (error) {}
 
       const addedDocMessage = await getDoc(docRefMessage);
 
