@@ -39,56 +39,26 @@ class MessageController {
   async getConversationWithUsers(currentUser, otherUser) {
     const conversationRef = collection(db, "conversations");
 
-    const currentUserQuery = query(
-      conversationRef,
-      where("members", "array-contains", currentUser)
+    const q = query(
+        conversationRef,
+        where("members", "in", [[currentUser, otherUser], [otherUser, currentUser]])
     );
+    const querySnapshot = await getDocs(q);
+    let conversation = null;
+    querySnapshot.forEach((doc) => {
+        conversation = doc.data();
+        conversation.conversationId = doc.id;
+    });
 
-    const otherUserQuery = query(
-      conversationRef,
-      where("members", "array-contains", otherUser)
-    );
-
-    const [currentUserConversations, otherUserConversations] =
-      await Promise.all([getDocs(currentUserQuery), getDocs(otherUserQuery)]);
-
-    const currentUserConversationIds = currentUserConversations.docs.map(
-      (doc) => doc.id
-    );
-    const otherUserConversationIds = otherUserConversations.docs.map(
-      (doc) => doc.id
-    );
-
-    const commonConversationIds = currentUserConversationIds.filter(
-      (conversationId) => otherUserConversationIds.includes(conversationId)
-    );
-
-    if (commonConversationIds.length === 0) {
-      return null; // Return null if no conversation is found
-    }
-
-    const conversationId = commonConversationIds[0];
-    const conversationSnapshot = await getDoc(
-      doc(conversationRef, conversationId)
-    );
-
-    if (!conversationSnapshot.exists()) {
-      return null; // Return null if conversation document does not exist
-    }
-
-    const conversation = conversationSnapshot.data();
-
-    return {
-      ...conversation,
-      conversationId: conversationId,
-    };
+    return conversation;
   }
 
-  onGetMessagesFromConversationWithUsers(conversationWithUsers, onGet) {
+  onGetMessagesFromConversationWithUsers(aUserId, anotherUserId, onGet) {
     const messagesRef = collection(db, "messages");
     const q = query(
       messagesRef,
-      where("conversationId", "==", conversationWithUsers.conversationId)
+      where("from", "in", [aUserId, anotherUserId]),
+      where("to", "in", [aUserId, anotherUserId])
     );
 
     return onSnapshot(q, (snapshot) => {

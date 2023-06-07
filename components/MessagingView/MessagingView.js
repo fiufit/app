@@ -22,7 +22,7 @@ import { userDataState } from "../../atoms";
 const MessagingView = ({ navigation }) => {
   const [searchedUser, setSearchedUser] = useState("");
   const [chatPreviews, setChatPreviews] = useState([]);
-  const [isLoadingConversations, setIsLoadingConversations] = useState(false);
+  const [isLoadingConversations, setIsLoadingConversations] = useState(true);
 
   const [user] = useAuthState(auth);
 
@@ -34,7 +34,6 @@ const MessagingView = ({ navigation }) => {
     const unSubscribe = messageController.onGetConversationsFromUser(
       userData.ID,
       async (data) => {
-        setIsLoadingConversations(true);
         const newChatPreviews = await Promise.all(
           data.map(async (item) => {
             const otherMemberId = item.members.find(

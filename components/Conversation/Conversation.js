@@ -24,7 +24,7 @@ const Conversation = ({ navigation, route }) => {
     otherUserProfilePicture,
   } = route.params;
   const [messages, setMessages] = useState([]);
-  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(true);
   const isFocused = useIsFocused();
 
   const userData = useRecoilValue(userDataState);
@@ -42,83 +42,49 @@ const Conversation = ({ navigation, route }) => {
       };
     });
 
-    const uniqueNewMessages = newMessages.filter(
-      (newMessage) =>
-        !messages.some(
-          (message) =>
-            message.from === newMessage.from &&
-            message.timestamp === newMessage.timestamp
-        )
+    setMessages(
+      newMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
     );
-
-    uniqueNewMessages.sort(
-      (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
-    );
-
-    setMessages([...messages, ...uniqueNewMessages]);
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const messageController = new MessageController();
-      setIsLoadingMessages(true);
-      const conversationWithUsers =
-        await messageController.getConversationWithUsers(
-          userData.ID,
-          otherUserId
-        );
-      setIsLoadingMessages(false);
-      if (conversationWithUsers) {
-        const unSubscribe =
-          messageController.onGetMessagesFromConversationWithUsers(
-            conversationWithUsers,
-            (data) => {
-              addNewMessages(data);
-            }
-          );
+    const messageController = new MessageController();
+    const unSubscribe =
+      messageController.onGetMessagesFromConversationWithUsers(
+        userData.ID,
+        otherUserId,
+        (data) => {
+          addNewMessages(data);
+          setIsLoadingMessages(false);
+        }
+      );
 
-        return () => {
-          unSubscribe();
-        };
-      }
+    return () => {
+      unSubscribe();
     };
-
-    fetchData();
   }, []);
 
   useEffect(() => {
     if (isFocused) {
       if (messages.length > 0) {
-        const lastMessage = messages[messages.length - 1];
-        if (lastMessage.from != userData.ID) {
+        const lastMessage = messages[0];
+        if (lastMessage.from !== userData.ID) {
           const messageController = new MessageController();
           messageController.readLastMessageFromConversation(conversationId);
         }
       }
     }
-  }, [messages]);
+  }, [messages, isFocused]);
 
   const handleSendMessage = async (inputMessage) => {
     const messageController = new MessageController();
-
-    const newMessage =
-      await messageController.writeMessageToConversationWithUsers({
-        from: userData.ID,
-        to: otherUserId,
-        message: inputMessage,
-        read: false,
-        timestamp: new Date().toISOString(),
-      });
-
-    setMessages([
-      ...messages,
-      {
-        image: userData.PictureUrl,
-        message: newMessage.message,
-        from: userData.ID,
-        timestamp: newMessage.timestamp,
-      },
-    ]);
+    await messageController.writeMessageToConversationWithUsers({
+      from: userData.ID,
+      to: otherUserId,
+      message: inputMessage,
+      read: false,
+      timestamp: new Date().toISOString(),
+    });
   };
 
   const handleGoBack = () => {
@@ -146,12 +112,13 @@ const Conversation = ({ navigation, route }) => {
       <View style={styles.messageListContainer}>
         <View style={styles.messageList}>
           <FlatList
+            inverted
             data={messages}
             renderItem={({ item }) => (
               <Message
                 profileImage={item.image}
                 message={item.message}
-                isCurrentUser={item.from == userData.ID}
+                isCurrentUser={item.from === userData.ID}
                 timestamp={new Date(item.timestamp).toLocaleString("en-US", {
                   timeZone: "America/Argentina/Buenos_Aires",
                 })}
