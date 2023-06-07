@@ -1,10 +1,16 @@
-import { FlatList, KeyboardAvoidingView, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  KeyboardAvoidingView,
+  View,
+} from "react-native";
 import { useEffect, useState } from "react";
 
 import ConversationHeader from "../ConversationHeader/ConversationHeader";
 import Message from "../Message/Message";
 import MessageController from "../../utils/controllers/MessageController";
 import MessageInput from "../MessageInput/MessageInput";
+import { QUINARY_GREY } from "../../utils/colors";
 import { styles } from "./styles.Conversation";
 import { useIsFocused } from "@react-navigation/native";
 import { useRecoilValue } from "recoil";
@@ -18,6 +24,7 @@ const Conversation = ({ navigation, route }) => {
     otherUserProfilePicture,
   } = route.params;
   const [messages, setMessages] = useState([]);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const isFocused = useIsFocused();
 
   const userData = useRecoilValue(userDataState);
@@ -54,11 +61,13 @@ const Conversation = ({ navigation, route }) => {
   useEffect(() => {
     const fetchData = async () => {
       const messageController = new MessageController();
+      setIsLoadingMessages(true);
       const conversationWithUsers =
         await messageController.getConversationWithUsers(
           userData.ID,
           otherUserId
         );
+      setIsLoadingMessages(false);
       if (conversationWithUsers) {
         const unSubscribe =
           messageController.onGetMessagesFromConversationWithUsers(
@@ -113,8 +122,6 @@ const Conversation = ({ navigation, route }) => {
   };
 
   const handleGoBack = () => {
-    //Before going back, the attribute hasUnreadMessage from the conversation should be set to false.
-    setMessages([]);
     navigation.goBack();
   };
 
@@ -127,6 +134,15 @@ const Conversation = ({ navigation, route }) => {
           profileImage={otherUserProfilePicture}
         />
       </View>
+      {isLoadingMessages && (
+        <View style={styles.messagesLoaderContainer}>
+          <ActivityIndicator
+            size="large"
+            color={QUINARY_GREY}
+            style={styles.messagesLoader}
+          />
+        </View>
+      )}
       <View style={styles.messageListContainer}>
         <View style={styles.messageList}>
           <FlatList
