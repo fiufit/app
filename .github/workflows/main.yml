@@ -1,8 +1,6 @@
 name: Deploy to Expo using eas update
 on:
   push:
-    branches:
-      - main
 jobs:
   deploy:
     runs-on: ubuntu-latest

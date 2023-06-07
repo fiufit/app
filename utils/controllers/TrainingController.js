@@ -114,7 +114,37 @@ class TrainingController {
       "GET"
     );
 
-    return data.trainings.filter((training) => training.TrainerID !== this.user.uid);
+    return data.trainings.filter(
+      (training) => training.TrainerID !== this.user.uid
+    );
+  }
+
+  async getTrainingSessions() {
+    const { data } = await this.requestController.fetch(
+      `training_sessions`,
+      "GET"
+    );
+
+    return data.training_sessions;
+  }
+
+  async startTrainingSession(trainingId) {
+    const { data } = await this.requestController.fetch(
+      `training_sessions?training_id=${trainingId}`,
+      "POST"
+    );
+
+    return data.training_session;
+  }
+
+  async updateTrainingSession(trainingSessionId, trainingSessionData) {
+    const { data } = await this.requestController.fetch(
+      `training_sessions/${trainingSessionId}`,
+      "PUT",
+      trainingSessionData
+    );
+
+    return data.training_session;
   }
 }
 

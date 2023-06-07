@@ -18,15 +18,16 @@ const TrainingList = ({ navigation, route }) => {
 
   const handleTrainingPress = (training, index) => {
     if (created) {
+      setSelectedTraining(training);
       navigation.navigate({
-        name: "Edit Training",
-        params: { edit: true, createdTrainingIndex: index },
+        name: "Single Training",
+        params: { start: true, userTraining: true, createdTrainingIndex: index },
       });
     } else {
       setSelectedTraining(training);
       navigation.navigate({
         name: "Single Training",
-        params: { training, start: true },
+        params: { training, start: true, userTraining: false },
       });
     }
   };

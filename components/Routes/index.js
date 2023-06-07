@@ -18,7 +18,9 @@ import { signOutFromApp } from "../../firebase";
 import { styles } from "./styles.routes";
 import { useRecoilState } from "recoil";
 import { userDataState } from "../../atoms";
+import TrainingAttempt from "../TrainingAttempt/trainingAttempt";
 import Ratings from "../Ratings/ratings";
+import SessionList from "../SessionList/sessionList";
 
 const Tab = createBottomTabNavigator();
 
@@ -48,12 +50,14 @@ const Routes = () => {
           options={{ unmountOnBlur: true }}
         />
         <Tab.Screen name="Training List" component={TrainingList} />
+        <Tab.Screen name="Session List" component={SessionList} />
         <Tab.Screen name="Messages" component={MessagingView} />
         <Tab.Screen name="Conversation" component={Conversation} options={{ unmountOnBlur: true }}/>
         <Tab.Screen name="Search View" component={SearchView} />
         <Tab.Screen name="Profile" component={ProfileNavigation} />
+        <Tab.Screen name="Profile Settings" component={EditProfile} />
+        <Tab.Screen name="Training Attempt" component={TrainingAttempt} options={{ unmountOnBlur: true }}/>
         <Tab.Screen name={"Ratings"} component={Ratings} options={{unmountOnBlur: true}}/>
-        <Tab.Screen name={"Profile Settings"} component={EditProfile} />
       </Tab.Navigator>
     </NavigationContainer>
   );

@@ -2,8 +2,12 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles.trainings-section";
 import TrainingCard from "../../Shared/TrainingCard/trainingCard";
 import NoTrainingsMessage from "../NoTrainingsMessage/noTrainingsMessage";
+import {selectedTrainingState} from "../../../atoms";
+import {useSetRecoilState} from "recoil";
 
 const CreatedTrainingsSection = ({ navigation, createdTrainings, loading }) => {
+  const setSelectedTraining = useSetRecoilState(selectedTrainingState);
+
   const handleSeeAll = () => {
     navigation.navigate({
       name: "Training List",
@@ -13,9 +17,10 @@ const CreatedTrainingsSection = ({ navigation, createdTrainings, loading }) => {
   };
 
   const handleTrainingPress = () => {
+    setSelectedTraining(createdTrainings[0])
     navigation.navigate({
-      name: "Edit Training",
-      params: { edit: true, createdTrainingIndex: 0},
+      name: "Single Training",
+      params: { createdTrainingIndex: 0, start: true, userTraining: true},
     });
   }
 

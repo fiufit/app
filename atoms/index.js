@@ -10,12 +10,17 @@ export const createdTrainingsState = atom({
     default: [],
 });
 
-export const startedTrainingsState = atom({
-    key: 'startedTrainingsState',
+export const selectedTrainingState = atom({
+    key: 'selectedTrainingState',
+    default: {},
+});
+
+export const trainingSessionsState = atom({
+    key: 'trainingSessionsState',
     default: [],
 });
 
-export const selectedTrainingState = atom({
-    key: 'selectedTrainingState',
+export const selectedSessionState = atom({
+    key: 'selectedSessionState',
     default: {},
 });
