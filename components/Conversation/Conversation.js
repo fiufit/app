@@ -28,8 +28,8 @@ const Conversation = ({ navigation, route }) => {
   const [messages, setMessages] = useState([]);
   const [isLoadingMessages, setIsLoadingMessages] = useState(true);
   const isFocused = useIsFocused();
-
   const userData = useRecoilValue(userDataState);
+  const [listener, setListener] = useState({unsubscribe: null})
 
   const addNewMessages = (data) => {
     if (data.length) {
@@ -53,6 +53,10 @@ const Conversation = ({ navigation, route }) => {
   };
 
   useEffect(() => {
+    if(listener.unsubscribe){
+        listener.unsubscribe();
+    }
+
     const messageController = new MessageController();
     const unSubscribe =
       messageController.onGetMessagesFromConversationWithUsers(
@@ -63,11 +67,14 @@ const Conversation = ({ navigation, route }) => {
           setIsLoadingMessages(false);
         }
       );
+    setListener({unsubscribe: unSubscribe});
 
     return () => {
-      unSubscribe();
+        if(listener.unsubscribe){
+            unSubscribe();
+        }
     };
-  }, []);
+  }, [route]);
 
   useEffect(() => {
     if (isFocused && conversationId) {
