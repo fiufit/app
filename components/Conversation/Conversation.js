@@ -16,6 +16,8 @@ import { useIsFocused } from "@react-navigation/native";
 import { useRecoilValue } from "recoil";
 import { userDataState } from "../../atoms";
 import NotificationController from "../../utils/controllers/NotificationController";
+import {useAuthState} from "react-firebase-hooks/auth";
+import {auth} from "../../firebase";
 
 const Conversation = ({ navigation, route }) => {
   const {
@@ -24,6 +26,7 @@ const Conversation = ({ navigation, route }) => {
     otherUserId,
     otherUserProfilePicture,
   } = route.params;
+  const [user] = useAuthState(auth)
   const [conversationId, setConversationId] = useState(initialConversationId);
   const [messages, setMessages] = useState([]);
   const [isLoadingMessages, setIsLoadingMessages] = useState(true);
@@ -90,7 +93,7 @@ const Conversation = ({ navigation, route }) => {
 
   const handleSendMessage = async (inputMessage) => {
     const messageController = new MessageController();
-    const notificationController = new NotificationController();
+    const notificationController = new NotificationController(user);
     const newMessage =
       await messageController.writeMessageToConversationWithUsers({
         from: userData.ID,
