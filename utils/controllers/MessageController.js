@@ -11,7 +11,6 @@ import {
 } from "firebase/firestore";
 
 import { db } from "../../firebase";
-import NotificationController from "./NotificationController";
 
 class MessageController {
 
