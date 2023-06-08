@@ -48,9 +48,7 @@ const App = () => {
       >
         <Provider>
           <AuthenticationWrapper>
-            {/*<NotificationsWrapper>*/}
-              <Routes />
-            {/*</NotificationsWrapper>*/}
+            <Routes />
           </AuthenticationWrapper>
         </Provider>
       </View>
