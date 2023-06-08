@@ -11,9 +11,9 @@ import {
 } from "firebase/firestore";
 
 import { db } from "../../firebase";
+import NotificationController from "./NotificationController";
 
 class MessageController {
-  constructor() {}
 
   async getConversationById(conversationId) {
     const docRef = doc(db, "conversations", conversationId);
@@ -78,9 +78,9 @@ class MessageController {
 
       messageData.conversationId = conversationWithUsers.conversationId;
 
-      const docRef = await addDoc(messagesRef, messageData);
+      await addDoc(messagesRef, messageData);
 
-      const addedDoc = await getDoc(docRef);
+      // const addedDoc = await getDoc(docRef);
 
       const conversationsRef = collection(db, "conversations");
       const conversationDocRef = doc(
@@ -95,7 +95,7 @@ class MessageController {
         lastMessageFrom: messageData.from,
       });
 
-      return addedDoc.data();
+      return messageData;
     } else {
       const conversationsRef = collection(db, "conversations");
 
@@ -117,18 +117,21 @@ class MessageController {
 
       const messagesRef = collection(db, "messages");
 
-      let docRefMessage;
 
       try {
-        docRefMessage = await addDoc(messagesRef, {
+        await addDoc(messagesRef, {
           ...messageData,
           conversationId: newConversationId,
         });
       } catch (error) {}
 
-      const addedDocMessage = await getDoc(docRefMessage);
+      // const addedDocMessage = await getDoc(docRefMessage);
 
-      return addedDocMessage.data();
+      // return addedDocMessage.data();
+      return {
+        ...messageData,
+        conversationId: newConversationId,
+      }
     }
   }
 

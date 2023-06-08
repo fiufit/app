@@ -3,7 +3,6 @@ import {
   DEFAULT_PROFILE_PICTURE,
   auth,
   uploadImage,
-  signOutFromApp,
 } from "../../../firebase";
 import { Image, Text, TouchableHighlight, View } from "react-native";
 
@@ -21,11 +20,11 @@ import SuccessModal from "../../Shared/Modals/SuccessModal/SuccessModal";
 import { TextInput } from "react-native-paper";
 import { styles } from "./styles.editProfile";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useRecoilState } from "recoil";
+import {useRecoilState} from "recoil";
 import { useState } from "react";
-import { userDataState } from "../../../atoms";
-import LogoutIcon from "../../../assets/images/general/logoutIcon.svg";
+import {userDataState} from "../../../atoms";
 import InterestsModal from "../../InterestsModal/InterestsModal";
+import LogOutButton from "../../Shared/LogOutButton/logOutButton";
 
 const EditProfile = ({ navigation }) => {
   const [userData, setUserData] = useRecoilState(userDataState);
@@ -185,15 +184,7 @@ const EditProfile = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <LogoutIcon
-        position={"absolute"}
-        right={20}
-        top={50}
-        opacity={1}
-        width={30}
-        height={25}
-        onPress={() => signOutFromApp(() => setUserData({}))}
-      />
+      <LogOutButton/>
       <Back
         onPress={() => navigation.navigate({ name: "Profile", merge: true })}
       />

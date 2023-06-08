@@ -15,6 +15,7 @@ import { styles } from "./styles.Conversation";
 import { useIsFocused } from "@react-navigation/native";
 import { useRecoilValue } from "recoil";
 import { userDataState } from "../../atoms";
+import NotificationController from "../../utils/controllers/NotificationController";
 
 const Conversation = ({ navigation, route }) => {
   const {
@@ -31,7 +32,7 @@ const Conversation = ({ navigation, route }) => {
   const userData = useRecoilValue(userDataState);
 
   const addNewMessages = (data) => {
-    if(data.length){
+    if (data.length) {
       setConversationId(data[0].conversationId);
     }
     const newMessages = data.map((message) => {
@@ -82,13 +83,34 @@ const Conversation = ({ navigation, route }) => {
 
   const handleSendMessage = async (inputMessage) => {
     const messageController = new MessageController();
-    await messageController.writeMessageToConversationWithUsers({
-      from: userData.ID,
-      to: otherUserId,
-      message: inputMessage,
-      read: false,
-      timestamp: new Date().toISOString(),
-    });
+    const notificationController = new NotificationController();
+    const newMessage =
+      await messageController.writeMessageToConversationWithUsers({
+        from: userData.ID,
+        to: otherUserId,
+        message: inputMessage,
+        read: false,
+        timestamp: new Date().toISOString(),
+      });
+    notificationController
+      .sendPushNotification(
+        otherUserId,
+        `New message from ${userData.DisplayName}`,
+        "",
+        inputMessage,
+        {
+          redirectTo: "Conversation",
+          params: {
+            conversationId: newMessage.conversationId,
+            otherUserName: userData.DisplayName,
+            otherUserId: userData.ID,
+            otherUserProfilePicture: userData.PictureUrl,
+          },
+        }
+      )
+      .then((data) => {
+        console.log("NOTIFICATION SENT", data);
+      });
   };
 
   const handleGoBack = () => {
