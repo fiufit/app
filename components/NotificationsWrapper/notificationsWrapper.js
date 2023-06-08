@@ -54,7 +54,9 @@ const NotificationsWrapper = ({ children }) => {
         console.log("NOTIFICATION RESPONSE", response);
         const { redirectTo, params } =
           response.notification.request.content.data;
-          navigation.navigate(redirectTo, params);
+          if(redirectTo){
+            navigation.navigate(redirectTo, params);
+          }
       });
 
     return () => {
