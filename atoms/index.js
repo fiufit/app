@@ -15,6 +15,16 @@ export const selectedTrainingState = atom({
     default: {},
 });
 
+export const expoPushTokenState = atom({
+    key: 'expoPushTokenState',
+    default: '',
+});
+
+export const notificationSubscriptionIdState = atom({
+    key: 'notificationSubscriptionIdState',
+    default: '',
+});
+
 export const trainingSessionsState = atom({
     key: 'trainingSessionsState',
     default: [],

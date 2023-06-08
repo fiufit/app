@@ -317,10 +317,10 @@ const SearchView = ({ navigation, route }) => {
         >
           {userSearchSelected &&
             (userSearchData[searchValue] ? (
-              userSearchData[searchValue].map((item) => {
+              userSearchData[searchValue].map((item, index) => {
                 return (
                   <TouchableOpacity
-                    style={styles.searchCard}
+                    style={{...styles.searchCard, marginBottom: index === userSearchData[searchValue].length - 1 ? 100 : 10}}
                     key={item.ID}
                     onPress={() => handleUserCardPress(item)}
                   >
@@ -374,10 +374,10 @@ const SearchView = ({ navigation, route }) => {
           {!userSearchSelected &&
             (trainingSearchData[trainingDifficulty][searchValue] && !loading ? (
               trainingSearchData[trainingDifficulty][searchValue].map(
-                (item) => {
+                (item, index) => {
                   return (
                     <TouchableOpacity
-                      style={styles.searchCard}
+                      style={{...styles.searchCard, marginBottom: index === trainingSearchData[trainingDifficulty][searchValue].length - 1 ? 100 : 10}}
                       key={item.ID}
                       onPress={() => handleTrainingCardPress(item)}
                     >

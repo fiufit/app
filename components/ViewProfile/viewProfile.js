@@ -10,9 +10,9 @@ import { auth } from "../../firebase";
 import ProfileController from "../../utils/controllers/ProfileController";
 import Button from "../Shared/Button/button";
 import { DARK_BLUE, LIGHT_GREY, MEDIUM_GREY, WHITE } from "../../utils/colors";
-import {useRecoilState, useSetRecoilState} from "recoil";
-import {selectedTrainingState, userDataState} from "../../atoms";
-import {useIsFocused} from "@react-navigation/native";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { selectedTrainingState, userDataState } from "../../atoms";
+import { useIsFocused } from "@react-navigation/native";
 
 const ViewProfile = ({ navigation, route }) => {
   const isFocused = useIsFocused();
@@ -75,6 +75,14 @@ const ViewProfile = ({ navigation, route }) => {
     console.log("UNFOLLOW", data);
   };
 
+  const handleMessage = () => {
+    navigation.navigate("Conversation", {
+      otherUserName: otherUserData.DisplayName,
+      otherUserId: otherUserData.ID,
+      otherUserProfilePicture: otherUserData.PictureUrl,
+    });
+  };
+
   const fetchUserCreatedTrainings = async () => {
     const controller = new TrainingController(user);
 
@@ -110,7 +118,7 @@ const ViewProfile = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    if(isFocused){
+    if (isFocused) {
       setTrainingsLoading(true);
       setFollowsLoading(true);
       fetchUserCreatedTrainings().then((trainings) => {
@@ -123,9 +131,7 @@ const ViewProfile = ({ navigation, route }) => {
         setFollowsLoading(false);
       });
     }
-
   }, [otherUserData, isFocused]);
-
 
   return (
     <View style={styles.container}>
@@ -157,6 +163,7 @@ const ViewProfile = ({ navigation, route }) => {
             style={styles.button}
             textColor={MEDIUM_GREY}
             buttonColor={LIGHT_GREY}
+            onPress={handleMessage}
           >
             {"Message"}
           </Button>
