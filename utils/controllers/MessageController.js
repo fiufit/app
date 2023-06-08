@@ -79,8 +79,6 @@ class MessageController {
 
       await addDoc(messagesRef, messageData);
 
-      // const addedDoc = await getDoc(docRef);
-
       const conversationsRef = collection(db, "conversations");
       const conversationDocRef = doc(
         conversationsRef,
@@ -124,9 +122,6 @@ class MessageController {
         });
       } catch (error) {}
 
-      // const addedDocMessage = await getDoc(docRefMessage);
-
-      // return addedDocMessage.data();
       return {
         ...messageData,
         conversationId: newConversationId,
