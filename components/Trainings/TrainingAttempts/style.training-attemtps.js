@@ -128,6 +128,7 @@ export const styles = StyleSheet.create({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        marginBottom: 100
     },
     noSessionsText: {
         fontFamily: "Lato_400Regular",

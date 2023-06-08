@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         gap: 20,
-        paddingTop: 70,
+        paddingTop: 50,
         backgroundColor: GREY,
     },
     inputAndButtonContainer: {
