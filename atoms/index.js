@@ -34,3 +34,11 @@ export const selectedSessionState = atom({
     key: 'selectedSessionState',
     default: {},
 });
+
+export const locationState = atom({
+    key: 'locationState',
+    default: {
+        latitude: 0,
+        longitude: 0,
+    },
+});

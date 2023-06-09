@@ -18,7 +18,7 @@ import Routes from "./components/Routes";
 import { View } from "react-native";
 import { useCallback } from "react";
 import { useFonts } from "expo-font";
-import NotificationsWrapper from "./components/NotificationsWrapper/notificationsWrapper";
+import LocationWrapper from "./components/LocationWrapper/locationWrapper";
 
 SplashScreen.preventAutoHideAsync();
 const App = () => {
@@ -47,9 +47,11 @@ const App = () => {
         style={{ width: "100%", height: "100%" }}
       >
         <Provider>
-          <AuthenticationWrapper>
-            <Routes />
-          </AuthenticationWrapper>
+          <LocationWrapper>
+            <AuthenticationWrapper>
+              <Routes />
+            </AuthenticationWrapper>
+          </LocationWrapper>
         </Provider>
       </View>
     </RecoilRoot>

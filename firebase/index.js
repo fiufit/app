@@ -11,6 +11,7 @@ import { getFirestore } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getReactNativePersistence } from "firebase/auth/react-native";
 import { initializeApp } from "firebase/app";
+import RequestController from "../utils/controllers/RequestController";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDbXF3gPXW-uggq-Fhsu_ANVgE-1mCYLcI", //TODO: Put this in an env file
@@ -35,7 +36,7 @@ export const DEFAULT_PROFILE_PICTURE =
   "https://firebasestorage.googleapis.com/v0/b/fiufit.appspot.com/o/profile_pictures%2Fdefault.png?alt=media&token=8242ac98-c07e-4217-8f07-3fddc5a727bc";
 export const singIn = async (email, password) => {
   try {
-    await signInWithEmailAndPassword(auth, email, password);
+    return await signInWithEmailAndPassword(auth, email, password);
   } catch (e) {
     throw new Error(e.message);
   }
