@@ -19,26 +19,32 @@ const LocationModal = ({onClose, onFinish, onError}) => {
     useEffect(() => {
         if(submitting){
             (async () => {
-                let { status } = await Location.requestForegroundPermissionsAsync();
-                if (status !== "granted") {
-                    return;
-                }
+                try {
+                    let { status } = await Location.requestForegroundPermissionsAsync();
+                    if (status !== "granted") {
+                        onError()
+                        return;
+                    }
 
-                let location = await Location.getCurrentPositionAsync({});
-                setLocation({
-                    latitude: location.coords.latitude,
-                    longitude: location.coords.longitude,
-                });
-                const controller = new ProfileController(user);
-                const { data, error } = await controller.updateProfile({
-                    latitude: location.coords.latitude,
-                    longitude: location.coords.longitude,
-                });
+                    let location = await Location.getCurrentPositionAsync({});
+                    setLocation({
+                        latitude: location.coords.latitude,
+                        longitude: location.coords.longitude,
+                    });
+                    const controller = new ProfileController(user);
+                    const { data, error } = await controller.updateProfile({
+                        latitude: location.coords.latitude,
+                        longitude: location.coords.longitude,
+                    });
 
-                if(error){
-                    onError()
-                } else {
-                    onFinish(data)
+                    if(error){
+                        onError()
+                    } else {
+                        onFinish(data)
+                    }
+                } catch (e){
+                    console.log("Error getting location", e);
+                    onError();
                 }
             })();
         }

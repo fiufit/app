@@ -146,7 +146,6 @@ const EditProfile = ({ navigation }) => {
       birth_date: dateOfBirth,
       height,
       weight,
-      main_location: mainLocation,
       interests: interests.map((interest) => interest.toLowerCase()),
     });
 

@@ -64,8 +64,8 @@ const RegisterSecondStepView = ({ user }) => {
       if (Number.isInteger(numericHeight) && Number.isInteger(numericWeight)) {
         try {
           setLoading(true);
-          // await user.reload();
-          // await user.getIdToken(true);
+          await user.reload();
+          await user.getIdToken(true);
           const controller = new AuthenticationController(user);
           const { data } = await controller.finishRegister({
             nickname: nickName,
