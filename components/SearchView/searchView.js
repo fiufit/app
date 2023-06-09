@@ -17,6 +17,8 @@ import {
 import { useEffect, useState } from "react";
 
 import BackIcon from "../../assets/images/general/backIcon.svg";
+import NearIcon from "../../assets/images/general/nearIcon.svg";
+import NotNearIcon from "../../assets/images/general/notNearIcon.svg";
 import Button from "../Shared/Button/button";
 import RequestController from "../../utils/controllers/RequestController";
 import SearchBar from "../Shared/SearchBar/searchBar";
@@ -29,7 +31,9 @@ import { useIsFocused } from "@react-navigation/native";
 import { useRecoilState } from "recoil";
 
 const LOADING_MAX = 4;
+const NEAR_DISTANCE = 20;
 const SearchView = ({ navigation, route }) => {
+  // TODO: if there's time refactor this!!!!!
   const isFocused = useIsFocused();
   const [user] = useAuthState(auth);
   const [selectedTraining, setSelectedTraining] = useRecoilState(
@@ -37,6 +41,7 @@ const SearchView = ({ navigation, route }) => {
   );
   const { searchForUsers, searchForTrainings, messageUsers } = route.params;
   const [userSearchData, setUserSearchData] = useState({});
+  const [nearUsers, setNearUsers] = useState([]);
   const [trainingSearchData, setTrainingsSearchData] = useState({
     beginner: {},
     intermediate: {},
@@ -49,23 +54,29 @@ const SearchView = ({ navigation, route }) => {
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [trainingDifficulty, setTrainingDifficulty] = useState("all");
   const [trainingTags, setTrainingTags] = useState([]);
+  const [searchNearUser, setSearchNearUser] = useState(false);
 
   const handleBack = () => {
     navigation.goBack();
   };
 
   const fetchUsers = async () => {
-    if (searchForUsers && !userSearchData[searchValue]) {
+    if (searchForUsers && (!userSearchData[searchValue] || searchNearUser)) {
       const controller = new RequestController(user);
       const { data } = await controller.fetch(
-        `users?name=${searchValue}`,
+        searchNearUser
+          ? `users/closest?distance=${NEAR_DISTANCE}`
+          : `users?name=${searchValue}`,
         "GET"
       );
-      return {
-        [searchValue]: data.users.filter(
-          (userData) => userData.ID !== user.uid
-        ),
-      };
+
+      return searchNearUser
+        ? data.users.filter((userData) => userData.ID !== user.uid)
+        : {
+            [searchValue]: data.users.filter(
+              (userData) => userData.ID !== user.uid
+            ),
+          };
     }
   };
 
@@ -97,7 +108,7 @@ const SearchView = ({ navigation, route }) => {
 
   useEffect(() => {
     if (userSearchSelected) {
-      if (searchValue) {
+      if (searchValue && !searchNearUser) {
         setLoading(true);
         const delayDebounceFunction = setTimeout(() => {
           fetchUsers()
@@ -113,6 +124,22 @@ const SearchView = ({ navigation, route }) => {
 
         return () => clearTimeout(delayDebounceFunction);
       } else {
+        if (searchNearUser && !nearUsers.length) {
+          setLoading(true);
+          const delayDebounceFunction = setTimeout(() => {
+            fetchUsers()
+              .then((searchResult) => {
+                setNearUsers(searchResult);
+                setLoading(false);
+              })
+              .catch((e) => {
+                console.log(e);
+                setLoading(false);
+              });
+          }, 250);
+
+          return () => clearTimeout(delayDebounceFunction);
+        }
         setLoading(false);
       }
     } else {
@@ -184,7 +211,13 @@ const SearchView = ({ navigation, route }) => {
         }
       }
     }
-  }, [searchValue, userSearchSelected, trainingDifficulty, trainingTags]);
+  }, [
+    searchValue,
+    userSearchSelected,
+    trainingDifficulty,
+    trainingTags,
+    searchNearUser,
+  ]);
 
   useEffect(() => {
     if (isFocused && searchValue) {
@@ -243,9 +276,14 @@ const SearchView = ({ navigation, route }) => {
   };
 
   const handleFilterPress = () => {
-    setShowFilterModal(true);
-    Keyboard.dismiss();
+    if (userSearchSelected) {
+      setSearchNearUser(!searchNearUser);
+    } else {
+      setShowFilterModal(true);
+      Keyboard.dismiss();
+    }
   };
+
 
   return (
     <>
@@ -255,7 +293,16 @@ const SearchView = ({ navigation, route }) => {
             <BackIcon color={"#000000"} height={20} width={20} />
           </TouchableOpacity>
           <SearchBar
-            filter={!userSearchSelected}
+            filter
+            filterIcon={
+              userSearchSelected ? (
+                !searchNearUser ? (
+                  <NearIcon onPress={handleFilterPress} />
+                ) : (
+                  <NotNearIcon onPress={handleFilterPress} />
+                )
+              ) : null
+            }
             searchForUsers={searchForUsers}
             searchForTrainings={searchForTrainings}
             width={"75%"}
@@ -316,11 +363,28 @@ const SearchView = ({ navigation, route }) => {
           keyboardShouldPersistTaps={"handled"}
         >
           {userSearchSelected &&
-            (userSearchData[searchValue] ? (
-              userSearchData[searchValue].map((item, index) => {
+            (userSearchData[searchValue] ||
+            (searchNearUser && nearUsers.length) ? (
+              (searchNearUser
+                ? nearUsers.filter((user) =>
+                    user.DisplayName.toLowerCase().startsWith(searchValue.toLowerCase())
+                    || user.Nickname.toLowerCase().startsWith(searchValue.toLowerCase())
+                  )
+                : userSearchData[searchValue]
+              ).map((item, index) => {
                 return (
                   <TouchableOpacity
-                    style={{...styles.searchCard, marginBottom: index === userSearchData[searchValue].length - 1 ? 100 : 10}}
+                    style={{
+                      ...styles.searchCard,
+                      marginBottom:
+                        index ===
+                        (searchNearUser
+                          ? nearUsers.length
+                          : userSearchData[searchValue].length) -
+                          1
+                          ? 100
+                          : 10,
+                    }}
                     key={item.ID}
                     onPress={() => handleUserCardPress(item)}
                   >
@@ -348,7 +412,7 @@ const SearchView = ({ navigation, route }) => {
                           />
                         )}
                       </View>
-                      <Text style={styles.name}>{item.DisplayName}</Text>
+                      <Text style={styles.name}>{item.DisplayName} {searchNearUser ? '| Near you' : ''}</Text>
                     </View>
                   </TouchableOpacity>
                 );
@@ -377,7 +441,16 @@ const SearchView = ({ navigation, route }) => {
                 (item, index) => {
                   return (
                     <TouchableOpacity
-                      style={{...styles.searchCard, marginBottom: index === trainingSearchData[trainingDifficulty][searchValue].length - 1 ? 100 : 10}}
+                      style={{
+                        ...styles.searchCard,
+                        marginBottom:
+                          index ===
+                          trainingSearchData[trainingDifficulty][searchValue]
+                            .length -
+                            1
+                            ? 100
+                            : 10,
+                      }}
                       key={item.ID}
                       onPress={() => handleTrainingCardPress(item)}
                     >
