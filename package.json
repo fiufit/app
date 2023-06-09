@@ -39,7 +39,7 @@
     "numeral": "^2.0.6",
     "react": "18.2.0",
     "react-firebase-hooks": "^5.1.1",
-    "react-native": "0.71.7",
+    "react-native": "0.71.8",
     "react-native-paper": "^5.5.2",
     "react-native-svg": "13.4.0",
     "react-native-svg-transformer": "^1.0.0",
