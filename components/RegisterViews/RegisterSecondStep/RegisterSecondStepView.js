@@ -12,11 +12,11 @@ import InterestsModal from "../../InterestsModal/InterestsModal";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
 import LogoutIcon from "../../../assets/images/general/logoutIcon.svg";
 import { WHITE } from "../../../utils/colors";
-import { signOutFromApp } from "../../../firebase";
+import {signOutFromApp} from "../../../firebase";
 import { styles } from "./styles.RegisterSecondStepView";
-import { useRecoilState } from "recoil";
+import {useRecoilState, useRecoilValue} from "recoil";
 import { useState } from "react";
-import { userDataState } from "../../../atoms";
+import {locationState, userDataState} from "../../../atoms";
 
 const RegisterSecondStepView = ({ user }) => {
   const [expandedList, setExpandedList] = useState(false);
@@ -28,17 +28,17 @@ const RegisterSecondStepView = ({ user }) => {
   const [displayName, setDisplayName] = useState("");
   const [nickName, setNickName] = useState("");
   const [height, setHeight] = useState("");
-  const [mainLocation, setMainLocation] = useState("");
   const [userData, setUserData] = useRecoilState(userDataState);
   const [loading, setLoading] = useState(false);
   const [errorModalIsVisible, setErrorModalIsVisible] = useState(false);
   const [errorDescription, setErrorDescription] = useState("");
   const [interestsModalIsVisible, setInterestsModalIsVisible] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState([]);
+  const location = useRecoilValue(locationState);
 
   const onChange = ({ type }, selectedDate) => {
     setShowPicker(false);
-    if (type == "set") {
+    if (type === "set") {
       const currentDate = selectedDate;
       setDateOfBirth(currentDate);
       setDateOfBirthInserted(true);
@@ -53,8 +53,7 @@ const RegisterSecondStepView = ({ user }) => {
       dateOfBirth &&
       height &&
       weight &&
-      mainLocation &&
-      selectedInterests
+      selectedInterests.length
     );
   };
 
@@ -75,11 +74,13 @@ const RegisterSecondStepView = ({ user }) => {
             birth_date: dateOfBirth,
             height: numericHeight,
             weight: numericWeight,
-            main_location: mainLocation,
-            interests: selectedInterests,
+            latitude: location.latitude,
+            longitude: location.longitude,
+            interests: selectedInterests.map((interest) => interest.toLowerCase()),
+            method: user.providerData[0].providerId === 'password' ? 'mail' : 'federated_entity'
           });
           console.log(data);
-          setUserData(data.user);
+          setUserData({...data.user, followers: [], following: []});
           setLoading(false);
         } catch (e) {
           setErrorModalIsVisible(true);
@@ -219,48 +220,6 @@ const RegisterSecondStepView = ({ user }) => {
           left={<TextInput.Icon icon="human-male-height" />}
           backgroundColor={WHITE}
           inputMode={"numeric"}
-        />
-        <Input
-          value={mainLocation}
-          placeholder="Main Location"
-          onChangeText={(mainLocation) => setMainLocation(mainLocation)}
-          width={"80%"}
-          height={55}
-          fontSize={12}
-          left={<TextInput.Icon icon="map-marker" />}
-          backgroundColor={WHITE}
-        />
-        <Input
-          value={weight}
-          placeholder="Weight (kg)"
-          onChangeText={(weight) => setWeight(weight)}
-          width={"80%"}
-          height={55}
-          fontSize={12}
-          left={<TextInput.Icon icon="weight" />}
-          backgroundColor={"#FFFFFF"}
-          inputMode={"numeric"}
-        />
-        <Input
-          value={height}
-          placeholder="Height (cm)"
-          onChangeText={(height) => setHeight(height)}
-          width={"80%"}
-          height={55}
-          fontSize={12}
-          left={<TextInput.Icon icon="human-male-height" />}
-          backgroundColor={"#FFFFFF"}
-          inputMode={"numeric"}
-        />
-        <Input
-          value={mainLocation}
-          placeholder="Main Location"
-          onChangeText={(mainLocation) => setMainLocation(mainLocation)}
-          width={"80%"}
-          height={55}
-          fontSize={12}
-          left={<TextInput.Icon icon="map-marker" />}
-          backgroundColor={"#FFFFFF"}
         />
         <Pressable onPress={() => setInterestsModalIsVisible(true)}>
           <Input

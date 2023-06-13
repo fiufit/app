@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import {SECONDARY_GREY, WHITE} from "../../../utils/colors";
+import {DARK_BLUE, SECONDARY_GREY, WHITE} from "../../../utils/colors";
 
 export const styles = StyleSheet.create({
     container: {
@@ -88,5 +88,44 @@ export const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: "center",
         alignItems: "center"
+    },
+    ratingContainer: {
+        position: "absolute",
+        top: 50,
+        right: "5%",
+        width: 60,
+        height: 25,
+        borderRadius: 5,
+        backgroundColor: DARK_BLUE,
+        zIndex: 100,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: "row",
+        gap: 5
+    },
+    rating: {
+        fontSize: 15,
+        color: WHITE,
+        fontFamily: 'Lato_400Regular',
+    },
+    tagsContainer: {
+        display: "flex",
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 6,
+        marginBottom: 10,
+        width: "70%"
+    },
+    tag: {
+        backgroundColor: DARK_BLUE,
+        color: WHITE,
+        paddingHorizontal: 6,
+        paddingVertical: 2,
+        borderRadius: 3,
+        fontFamily: 'Lato_400Regular',
+        fontSize: 12,
+        height: 18,
+        minWidth: 20,
     }
 })

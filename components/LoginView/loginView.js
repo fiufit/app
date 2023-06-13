@@ -23,6 +23,7 @@ import LoginIcon from "../../assets/images/general/loginIcon.svg";
 import MailIcon from "../../assets/images/general/mailIcon.svg";
 import { WHITE } from "../../utils/colors";
 import { styles } from "./styles.loginView";
+import RequestController from "../../utils/controllers/RequestController";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -52,7 +53,14 @@ const LoginView = ({ navigation }) => {
 
   async function handleLogIn() {
     try {
-      await singIn(email, password);
+      const credential = await singIn(email, password);
+      if (credential.user) {
+        const controller = new RequestController(credential.user);
+        controller
+          .fetch("users/login?method=mail", "POST")
+          .then((data) => console.log("LOGIN NOTIFY", data));
+      }
+      setLoading(false);
     } catch (error) {
       //TODO: Set a different error description based on the error.
       setErrorModalIsVisible(true);
@@ -74,9 +82,16 @@ const LoginView = ({ navigation }) => {
   useEffect(() => {
     console.log(response);
     if (response?.type === "success") {
-      console.log(response.authentication.accessToken);
-      signInWithGoogle(response.authentication.accessToken).then((_) =>
-        setLoading(false)
+      signInWithGoogle(response.authentication.accessToken).then(
+        (credential) => {
+          if (credential.user) {
+            const controller = new RequestController(credential.user);
+            controller
+              .fetch("users/login?method=federated_entity", "POST")
+              .then((data) => console.log("LOGIN NOTIFY", data));
+          }
+          setLoading(false);
+        }
       );
     } else {
       setLoading(false);
@@ -175,8 +190,8 @@ const LoginView = ({ navigation }) => {
           errorTitle="Oooops!"
           errorDescription={errorDescription}
         ></ErrorModal>
-        {loading && <LoadingModal />}
       </ScrollView>
+      {loading && <LoadingModal />}
     </Background>
   );
 };

@@ -1,4 +1,4 @@
-import { getImageUrl, uploadImage } from "../../firebase";
+import { uploadImage } from "../../firebase";
 import RequestController from "./RequestController";
 
 class TrainingController {
@@ -40,46 +40,8 @@ class TrainingController {
     }
   }
 
-  needsTrainingDataEdit(originalTrainingData, updatedTrainingData) {
-    return !(
-      originalTrainingData.Name === updatedTrainingData.name &&
-      originalTrainingData.Difficulty === updatedTrainingData.difficulty &&
-      originalTrainingData.Duration === updatedTrainingData.duration
-    );
-  }
-
   needsPictureUpdate(originalTrainingData, updatedTrainingData) {
     return originalTrainingData.PictureUrl !== updatedTrainingData.pictureUrl;
-  }
-
-  async updateTrainingIfNeeded(originalTrainingData, updatedTrainingData) {
-    try {
-      if (
-        this.needsTrainingDataEdit(originalTrainingData, updatedTrainingData)
-      ) {
-        const trainingUpdateData = await this.requestController.fetch(
-          `trainings/${originalTrainingData.ID}`,
-          "PATCH",
-          {
-            name: updatedTrainingData.name,
-            duration: Number(updatedTrainingData.duration),
-            difficulty: updatedTrainingData.difficulty,
-          }
-        );
-
-        if (trainingUpdateData.error) {
-          console.log(trainingUpdateData.error);
-          throw `There was an error updating ${originalTrainingData.Name} training`;
-        }
-
-        return trainingUpdateData.data;
-      } else {
-        return originalTrainingData;
-      }
-    } catch (e) {
-      console.log(e);
-      throw `There was an error updating ${originalTrainingData.Name} training`;
-    }
   }
 
   async updateTrainingPictureIfNeeded(
@@ -101,92 +63,41 @@ class TrainingController {
     }
   }
 
-  async deleteExercises(exercisesToDelete) {
-    for (const exercise of exercisesToDelete) {
-      const deletedData = await this.requestController.fetch(
-        `trainings/${exercise.exerciseOldData.TrainingPlanID}/exercises/${exercise.exerciseOldData.ID}`,
-        "DELETE"
-      );
-
-      if (deletedData.error) {
-        console.log(deletedData.error);
-        throw `There was an error deleting ${exercise.exerciseOldData.Title} exercise`;
-      }
-    }
-  }
-
-  async handleExercise(exercise, trainingPlanId) {
-    if (!exercise?.exerciseOldData) {
-      return await this.requestController.fetch(
-        `trainings/${trainingPlanId}/exercises`,
-        "POST",
-        {
-          title: exercise.title,
-          description: exercise.description,
-        }
-      );
-    } else {
-      const needsUpdate = !(
-        exercise?.exerciseOldData?.Description === exercise.description &&
-        exercise?.exerciseOldData?.Title === exercise.title
-      );
-      if (needsUpdate) {
-        return await this.requestController.fetch(
-          `trainings/${trainingPlanId}/exercises/${exercise.exerciseOldData.ID}`,
-          "PATCH",
-          {
-            title: exercise.title,
-            description: exercise.description,
-          }
-        );
-      } else {
-        return { data: exercise.exerciseOldData };
-      }
-    }
-  }
-
-  async updateExercises(exercisesToUpdate, trainingPlanId) {
-    let updatedExercises = [];
-    for (const exercise of exercisesToUpdate) {
-      const { data, error } = await this.handleExercise(
-        exercise,
-        trainingPlanId
-      );
-      if (error) {
-        console.log(error);
-        throw `There was an error updating exercises`;
-      }
-      updatedExercises.push(data);
-    }
-    return updatedExercises;
-  }
-
   async editTraining(
     originalTrainingData,
     updatedTrainingData,
     exercisesToUpload,
-    exercisesToDelete
   ) {
     try {
       let updatedData = {};
 
-      updatedData.training = await this.updateTrainingIfNeeded(
-        originalTrainingData,
-        updatedTrainingData
+      const { data, error } = await this.requestController.fetch(
+          `trainings/${originalTrainingData.ID}`,
+          "PUT",
+          {
+            name: updatedTrainingData.name,
+            duration: Number(updatedTrainingData.duration),
+            difficulty: updatedTrainingData.difficulty,
+            description: "to-do",
+            tags: updatedTrainingData.tags,
+            exercises: exercisesToUpload.map((exercise) => {
+              return { title: exercise.title, description: exercise.description };
+            }),
+          }
       );
+
+      if (error) {
+        console.log(error);
+        throw `There was an error updating ${originalTrainingData.Name} training`;
+      }
+
+      updatedData.training = data;
 
       updatedData.training.PictureUrl =
         await this.updateTrainingPictureIfNeeded(
           originalTrainingData,
           updatedTrainingData
         );
-
-      await this.deleteExercises(exercisesToDelete);
-
-      updatedData.training.Exercises = await this.updateExercises(
-        exercisesToUpload,
-        originalTrainingData.ID
-      );
 
       return updatedData;
     } catch (e) {
@@ -195,6 +106,45 @@ class TrainingController {
         error: e,
       };
     }
+  }
+
+  async getRecommendedTrainings() {
+    const { data } = await this.requestController.fetch(
+      `trainings?user_id=${this.user.uid}`,
+      "GET"
+    );
+
+    return data.trainings.filter(
+      (training) => training.TrainerID !== this.user.uid
+    );
+  }
+
+  async getTrainingSessions() {
+    const { data } = await this.requestController.fetch(
+      `training_sessions`,
+      "GET"
+    );
+
+    return data.training_sessions;
+  }
+
+  async startTrainingSession(trainingId) {
+    const { data } = await this.requestController.fetch(
+      `training_sessions?training_id=${trainingId}`,
+      "POST"
+    );
+
+    return data.training_session;
+  }
+
+  async updateTrainingSession(trainingSessionId, trainingSessionData) {
+    const { data } = await this.requestController.fetch(
+      `training_sessions/${trainingSessionId}`,
+      "PUT",
+      trainingSessionData
+    );
+
+    return data.training_session;
   }
 }
 

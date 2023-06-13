@@ -1,10 +1,5 @@
 import { DARK_BLUE, WHITE } from "../../../utils/colors";
-import {
-  DEFAULT_PROFILE_PICTURE,
-  auth,
-  signOutFromApp,
-  uploadImage,
-} from "../../../firebase";
+import { DEFAULT_PROFILE_PICTURE, auth, uploadImage } from "../../../firebase";
 import { Image, Pressable, Text, TouchableHighlight, View } from "react-native";
 
 import Back from "../../Shared/Back/back";
@@ -17,7 +12,6 @@ import ImageModal from "../../Shared/Modals/ImageModal/imageModal";
 import Input from "../../Shared/Input/input";
 import InterestsModal from "../../InterestsModal/InterestsModal";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
-import LogoutIcon from "../../../assets/images/general/logoutIcon.svg";
 import ProfileController from "../../../utils/controllers/ProfileController";
 import SuccessModal from "../../Shared/Modals/SuccessModal/SuccessModal";
 import { TextInput } from "react-native-paper";
@@ -26,6 +20,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState } from "recoil";
 import { useState } from "react";
 import { userDataState } from "../../../atoms";
+import LogOutButton from "../../Shared/LogOutButton/logOutButton";
+import LocationModal from "../../Shared/Modals/LocationModal/locationModal";
 
 const EditProfile = ({ navigation }) => {
   const [userData, setUserData] = useRecoilState(userDataState);
@@ -38,15 +34,22 @@ const EditProfile = ({ navigation }) => {
   const [weight, setWeight] = useState(String(userData.Weight));
   const [displayName, setDisplayName] = useState(userData.DisplayName);
   const [nickName, setNickName] = useState(userData.Nickname);
-  const [mainLocation, setMainLocation] = useState(userData.MainLocation);
-  const [interestsModalIsVisible, setInterestsModalIsVisible] = useState(false);
-  const [selectedInterests, setSelectedInterests] = useState([]);
+  const [mainLocation, setMainLocation] = useState(
+    userData.MainLocation.split(" ")[0]
+  );
+  const [interests, setInterests] = useState(
+    userData.Interests.map(
+      (i) => i.Name.charAt(0).toUpperCase() + i.Name.slice(1)
+    )
+  );
   const [loading, setLoading] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [errorModalIsVisible, setErrorModalIsVisible] = useState(false);
   const [errorDescription, setErrorDescription] = useState("");
   const [successModalIsVisible, setSuccessModalIsVisible] = useState(false);
   const [successDescription, setSuccessDescription] = useState("");
+  const [showInterestsModal, setShowInterestsModal] = useState(false);
+  const [showLocationModal, setShowLocationModal] = useState(false);
 
   const nameOptions = {
     displayName: {
@@ -91,15 +94,11 @@ const EditProfile = ({ navigation }) => {
       icon: <TextInput.Icon icon="weight" />,
     },
     {
-      editOptions: {
-        title: "Edit your main location",
-        value: mainLocation,
-        icon: <TextInput.Icon icon="map-marker" />,
-        placeholder: "Main Location",
-        setEditValue: setMainLocation,
-      },
       displayValue: mainLocation,
       icon: <TextInput.Icon icon="map-marker" />,
+      onPress: () => {
+        setShowLocationModal(true);
+      },
     },
     {
       displayValue: `${isMale ? "Male" : "Female"}`,
@@ -116,6 +115,16 @@ const EditProfile = ({ navigation }) => {
       displayValue: `${dateOfBirth.toDateString()}`,
       icon: <TextInput.Icon icon="calendar" />,
       onPress: () => setShowPicker(true),
+    },
+    {
+      displayValue: `${
+        interests.length > 0 ? interests.join(", ") : "Add your interests"
+      }`,
+      icon: <TextInput.Icon icon="shape" />,
+      multiline: true,
+      onPress: () => {
+        setShowInterestsModal(true);
+      },
     },
   ];
 
@@ -140,7 +149,7 @@ const EditProfile = ({ navigation }) => {
         birth_date: dateOfBirth,
         height,
         weight,
-        main_location: mainLocation,
+        interests: interests.map((interest) => interest.toLowerCase()),
       });
 
       if (error) {
@@ -185,15 +194,7 @@ const EditProfile = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <LogoutIcon
-        position={"absolute"}
-        right={20}
-        top={50}
-        opacity={1}
-        width={30}
-        height={25}
-        onPress={() => signOutFromApp(() => setUserData({}))}
-      />
+      <LogOutButton />
       <Back
         onPress={() => navigation.navigate({ name: "Profile", merge: true })}
       />
@@ -298,24 +299,49 @@ const EditProfile = ({ navigation }) => {
         />
       )}
       {loading && <LoadingModal text={"Updating your profile"} />}
+      {showLocationModal && (
+        <LocationModal
+          onClose={() => setShowLocationModal(false)}
+          onError={() => {
+            setErrorModalIsVisible(true);
+            setErrorDescription(
+              "There has been an error while updating your location. Please try again later!"
+            );
+            setShowLocationModal(false);
+          }}
+          onFinish={(data) => {
+            setUserData({
+              ...data,
+              followers: userData.followers,
+              following: userData.following,
+            });
+            setMainLocation(data.MainLocation.split(" ")[0]);
+            setSuccessModalIsVisible(true);
+            setShowLocationModal(false);
+            setSuccessDescription(
+              "Your location has been updated successfully!"
+            );
+          }}
+        />
+      )}
       <InterestsModal
-        modalIsVisible={interestsModalIsVisible}
-        setModalIsVisible={setInterestsModalIsVisible}
-        selectedInterests={selectedInterests}
-        setSelectedInterests={setSelectedInterests}
-      ></InterestsModal>
+        modalIsVisible={showInterestsModal}
+        setModalIsVisible={setShowInterestsModal}
+        selectedInterests={interests}
+        setSelectedInterests={setInterests}
+      />
       <ErrorModal
         modalIsVisible={errorModalIsVisible}
         setModalIsVisible={setErrorModalIsVisible}
         errorTitle="Oooops!"
         errorDescription={errorDescription}
-      ></ErrorModal>
+      />
       <SuccessModal
         modalIsVisible={successModalIsVisible}
         setModalIsVisible={setSuccessModalIsVisible}
         modalTitle="Success!"
         modalDescription={successDescription}
-      ></SuccessModal>
+      />
     </View>
   );
 };

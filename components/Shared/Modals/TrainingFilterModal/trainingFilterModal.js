@@ -3,24 +3,41 @@ import { Text, View } from "react-native";
 import CloseIcon from "../../../../assets/images/general/closeIcon.svg";
 import Button from "../../Button/button";
 import { WHITE } from "../../../../utils/colors";
-import { difficulties } from "../../../../utils/trainings";
-import {useState} from "react";
+import { difficulties, interests } from "../../../../utils/trainings";
+import { useState } from "react";
 
-const TrainingFilterModal = ({ onClose, trainingDifficulty, setDifficulty }) => {
+const TrainingFilterModal = ({
+  onClose,
+  trainingDifficulty,
+  setDifficulty,
+  tags,
+  setTags,
+}) => {
+  const [newDifficulty, setNewDifficulty] = useState(
+    trainingDifficulty.toLowerCase()
+  );
+  const [newTags, setNewTags] = useState(tags);
 
-  const [newDifficulty, setNewDifficulty] = useState(trainingDifficulty.toLowerCase());
+  const handleClose = () => {
+    setDifficulty(newDifficulty.toLowerCase());
+    setTags(newTags);
+    onClose();
+  };
 
-  const handleClose = () =>{
-      setDifficulty(newDifficulty.toLowerCase());
-      onClose()
-  }
+  const handleDifficultyPress = (difficulty) => {
+    if (difficulty === newDifficulty) {
+      setNewDifficulty("all");
+    } else {
+      setNewDifficulty(difficulty);
+    }
+  };
 
-  const handleButtonPress = (difficulty) => {
-      if(difficulty === newDifficulty){
-          setNewDifficulty('all')
-      } else {
-          setNewDifficulty(difficulty)
-      }
+  const handleTagPress = (tag) => {
+    if (newTags.includes(tag.toLowerCase())) {
+      setNewTags(newTags.filter((t) => t !== tag.toLowerCase()));
+    } else {
+      setNewTags([...newTags, tag.toLowerCase()]);
+    }
   }
 
   return (
@@ -35,11 +52,43 @@ const TrainingFilterModal = ({ onClose, trainingDifficulty, setDifficulty }) => 
           right={10}
           onPress={handleClose}
         />
+        <Text style={styles.title}>Select tags</Text>
+        <View style={styles.buttonsContainer}>
+          {interests.map((interest, index) => {
+            return (
+              <Button
+                key={index}
+                style={{
+                  ...styles.button,
+                  opacity:
+                    newTags.includes(interest.toLowerCase())
+                      ? 1
+                      : 0.5,
+                }}
+                textColor={WHITE}
+                onPress={() => {handleTagPress(interest.toLowerCase())}}
+              >
+                {interest}
+              </Button>
+            );
+          })}
+        </View>
         <Text style={styles.title}>Select a difficulty</Text>
         <View style={styles.buttonsContainer}>
           {difficulties.map((difficulty) => {
             return (
-              <Button key={difficulty} style={{...styles.button, opacity: newDifficulty.toLowerCase() === difficulty.toLowerCase() ? 1 : 0.5}} textColor={WHITE} onPress={() => handleButtonPress(difficulty.toLowerCase())}>
+              <Button
+                key={difficulty}
+                style={{
+                  ...styles.button,
+                  opacity:
+                    newDifficulty.toLowerCase() === difficulty.toLowerCase()
+                      ? 1
+                      : 0.5,
+                }}
+                textColor={WHITE}
+                onPress={() => handleDifficultyPress(difficulty.toLowerCase())}
+              >
                 {difficulty}
               </Button>
             );

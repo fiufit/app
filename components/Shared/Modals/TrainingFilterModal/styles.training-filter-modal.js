@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
     modal: {
         position: "relative",
         width: "90%",
-        height: 250,
+        height: 400,
         padding: "10%",
         backgroundColor: WHITE,
         borderRadius: 15,

@@ -10,21 +10,25 @@ import { auth } from "../../firebase";
 import ProfileController from "../../utils/controllers/ProfileController";
 import Button from "../Shared/Button/button";
 import { DARK_BLUE, LIGHT_GREY, MEDIUM_GREY, WHITE } from "../../utils/colors";
-import { useRecoilState } from "recoil";
-import { userDataState } from "../../atoms";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { selectedTrainingState, userDataState } from "../../atoms";
+import { useIsFocused } from "@react-navigation/native";
 
 const ViewProfile = ({ navigation, route }) => {
+  const isFocused = useIsFocused();
   const [user] = useIdToken(auth);
+  const otherUserData = route.params.userData;
   const [createdTrainings, setCreatedTrainings] = useState([]);
   const [trainingsLoading, setTrainingsLoading] = useState(true);
   const [followsLoading, setFollowsLoading] = useState(true);
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const [userData, setUserData] = useRecoilState(userDataState);
+  const setSelectedTraining = useSetRecoilState(selectedTrainingState);
 
   const userIsFollowing = () => {
     return userData.following.some(
-      (followed) => followed.ID === route.params.userData.ID
+      (followed) => followed.ID === otherUserData.ID
     );
   };
 
@@ -33,23 +37,24 @@ const ViewProfile = ({ navigation, route }) => {
   };
 
   const handleTrainingPress = (training) => {
+    setSelectedTraining(training);
     navigation.navigate({
       name: "Single Training",
       merge: true,
-      params: { training, start: true },
+      params: { training, start: true, userTraining: false },
     });
   };
 
   const handleFollow = async () => {
     setUserData({
       ...userData,
-      following: [...userData.following, route.params.userData],
+      following: [...userData.following, otherUserData],
     });
     setFollowers([...followers, userData]);
 
     const controller = new ProfileController(user);
 
-    const data = await controller.followUser(route.params.userData.ID);
+    const data = await controller.followUser(otherUserData.ID);
 
     console.log("FOLLOW", data);
   };
@@ -58,29 +63,37 @@ const ViewProfile = ({ navigation, route }) => {
     setUserData({
       ...userData,
       following: userData.following.filter(
-        (followed) => followed.ID !== route.params.userData.ID
+        (followed) => followed.ID !== otherUserData.ID
       ),
     });
     setFollowers(followers.filter((follower) => follower.ID !== userData.ID));
 
     const controller = new ProfileController(user);
 
-    const data = await controller.unfollowUser(route.params.userData.ID);
+    const data = await controller.unfollowUser(otherUserData.ID);
 
     console.log("UNFOLLOW", data);
+  };
+
+  const handleMessage = () => {
+    navigation.navigate("Conversation", {
+      otherUserName: otherUserData.DisplayName,
+      otherUserId: otherUserData.ID,
+      otherUserProfilePicture: otherUserData.PictureUrl,
+    });
   };
 
   const fetchUserCreatedTrainings = async () => {
     const controller = new TrainingController(user);
 
-    return await controller.getTrainings(route.params.userData.ID);
+    return await controller.getTrainings(otherUserData.ID);
   };
 
   const fetchUserFollows = async () => {
     const controller = new ProfileController(user);
     const promises = [
-      controller.getFollowers(route.params.userData.ID),
-      controller.getFollowing(route.params.userData.ID),
+      controller.getFollowers(otherUserData.ID),
+      controller.getFollowing(otherUserData.ID),
     ];
     const [{ data: followersData }, { data: followingData }] =
       await Promise.all(promises);
@@ -105,24 +118,26 @@ const ViewProfile = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    setTrainingsLoading(true);
-    setFollowsLoading(true);
-    fetchUserCreatedTrainings().then((trainings) => {
-      setCreatedTrainings(trainings);
-      setTrainingsLoading(false);
-    });
-    fetchUserFollows().then(({ followers, following }) => {
-      setFollowers(followers);
-      setFollowing(following);
-      setFollowsLoading(false);
-    });
-  }, [route.params.userData]);
+    if (isFocused) {
+      setTrainingsLoading(true);
+      setFollowsLoading(true);
+      fetchUserCreatedTrainings().then((trainings) => {
+        setCreatedTrainings(trainings);
+        setTrainingsLoading(false);
+      });
+      fetchUserFollows().then(({ followers, following }) => {
+        setFollowers(followers);
+        setFollowing(following);
+        setFollowsLoading(false);
+      });
+    }
+  }, [otherUserData, isFocused]);
 
   return (
     <View style={styles.container}>
       <Back onPress={handleBack} />
       <DataSection
-        otherUserData={{ ...route.params.userData, followers, following }}
+        otherUserData={{ ...otherUserData, followers, following }}
         other
         followsLoading={followsLoading}
         navigation={navigation}
@@ -148,6 +163,7 @@ const ViewProfile = ({ navigation, route }) => {
             style={styles.button}
             textColor={MEDIUM_GREY}
             buttonColor={LIGHT_GREY}
+            onPress={handleMessage}
           >
             {"Message"}
           </Button>
