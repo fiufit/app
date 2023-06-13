@@ -170,7 +170,7 @@ const EditProfile = ({ navigation }) => {
       setLoading(false);
     } else {
       setErrorModalIsVisible(true);
-      setErrorDescription("Width and height must be integers.");
+      setErrorDescription("Weight and height must be integers.");
     }
   };
 
