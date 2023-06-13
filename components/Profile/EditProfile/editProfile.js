@@ -1,6 +1,6 @@
 import { DARK_BLUE, WHITE } from "../../../utils/colors";
 import { DEFAULT_PROFILE_PICTURE, auth, uploadImage } from "../../../firebase";
-import { Image, Pressable, Text, TouchableHighlight, View } from "react-native";
+import { Image, Text, TouchableHighlight, View } from "react-native";
 
 import Back from "../../Shared/Back/back";
 import Button from "../../Shared/Button/button";
@@ -12,6 +12,8 @@ import ImageModal from "../../Shared/Modals/ImageModal/imageModal";
 import Input from "../../Shared/Input/input";
 import InterestsModal from "../../InterestsModal/InterestsModal";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
+import LocationModal from "../../Shared/Modals/LocationModal/locationModal";
+import LogOutButton from "../../Shared/LogOutButton/logOutButton";
 import ProfileController from "../../../utils/controllers/ProfileController";
 import SuccessModal from "../../Shared/Modals/SuccessModal/SuccessModal";
 import { TextInput } from "react-native-paper";
@@ -20,8 +22,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState } from "recoil";
 import { useState } from "react";
 import { userDataState } from "../../../atoms";
-import LogOutButton from "../../Shared/LogOutButton/logOutButton";
-import LocationModal from "../../Shared/Modals/LocationModal/locationModal";
 
 const EditProfile = ({ navigation }) => {
   const [userData, setUserData] = useRecoilState(userDataState);
@@ -246,21 +246,6 @@ const EditProfile = ({ navigation }) => {
             />
           </TouchableHighlight>
         ))}
-        <Pressable onPress={() => setInterestsModalIsVisible(true)}>
-          <Input
-            placeholder={
-              selectedInterests.length !== 0
-                ? selectedInterests.join(", ")
-                : "Example interests"
-            }
-            height={55}
-            fontSize={12}
-            left={<TextInput.Icon icon="shape" />}
-            editable={false}
-            multiline={true}
-            borderRadius={18}
-          />
-        </Pressable>
       </View>
       <Button
         buttonColor={DARK_BLUE}
