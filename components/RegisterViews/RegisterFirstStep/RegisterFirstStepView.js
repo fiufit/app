@@ -20,6 +20,10 @@ import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
 import { WHITE } from "../../../utils/colors";
 import { signInWithGoogle } from "../../../firebase";
 import { styles } from "./styles.RegisterFirstStepView";
+import LockIcon from "../../../assets/images/general/lockIcon.svg";
+import MailIcon from "../../../assets/images/general/mailIcon.svg";
+import EyeIcon from "../../../assets/images/general/eyeIcon.svg";
+import HideEyeIcon from "../../../assets/images/general/hideEyeIcon.svg";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -114,9 +118,9 @@ const RegisterFirstStepView = ({ navigation }) => {
           placeholder="Email"
           onChangeText={(email) => setEmail(email)}
           width={"80%"}
-          height={55}
-          fontSize={14}
-          left={<TextInput.Icon icon="email" />}
+          height={48}
+          fontSize={12}
+          left={<MailIcon height={18} width={18}/>}
           backgroundColor={"#FFFFFF"}
         />
         <Input
@@ -124,38 +128,60 @@ const RegisterFirstStepView = ({ navigation }) => {
           placeholder="Password"
           onChangeText={(password) => setPassword(password)}
           width={"80%"}
-          height={55}
-          fontSize={14}
+          height={48}
+          fontSize={12}
           backgroundColor={"#FFFFFF"}
           secureTextEntry={!passwordIsVisible}
           right={
-            <TextInput.Icon
-              onPress={() => {
-                setPasswordIsVisible(!passwordIsVisible);
-              }}
-              icon={passwordIsVisible ? "eye-off" : "eye"}
-            />
+            passwordIsVisible ? (
+                <HideEyeIcon
+                    height={18}
+                    width={25}
+                    onPress={() => {
+                      setPasswordIsVisible(!passwordIsVisible);
+                    }}
+                />
+            ) : (
+                <EyeIcon
+                    height={18}
+                    width={25}
+                    onPress={() => {
+                      setPasswordIsVisible(!passwordIsVisible);
+                    }}
+                />
+            )
           }
-          left={<TextInput.Icon icon="lock" />}
+          left={<LockIcon height={18} width={18}/>}
         />
         <Input
           value={passwordRepeat}
           placeholder="Repeat password"
           onChangeText={(passwordRepeat) => setPasswordRepeat(passwordRepeat)}
           width={"80%"}
-          height={55}
-          fontSize={14}
+          height={48}
+          fontSize={12}
           backgroundColor={"#FFFFFF"}
           secureTextEntry={!passwordRepeatIsVisible}
           right={
-            <TextInput.Icon
-              onPress={() => {
-                setPasswordRepeatIsVisible(!passwordRepeatIsVisible);
-              }}
-              icon={passwordRepeatIsVisible ? "eye-off" : "eye"}
-            />
+            passwordRepeatIsVisible ? (
+              <HideEyeIcon
+                height={18}
+                width={25}
+                onPress={() => {
+                  setPasswordRepeatIsVisible(!passwordRepeatIsVisible);
+                }}
+              />
+            ) : (
+              <EyeIcon
+                height={18}
+                width={25}
+                onPress={() => {
+                  setPasswordRepeatIsVisible(!passwordRepeatIsVisible);
+                }}
+              />
+            )
           }
-          left={<TextInput.Icon icon="lock" />}
+          left={<LockIcon height={18} width={18}/>}
         />
         <View style={styles.checkboxPolicies}>
           <Checkbox
