@@ -19,6 +19,7 @@ import Ratings from "../Ratings/ratings";
 import SessionList from "../SessionList/sessionList";
 import LogOutButton from "../Shared/LogOutButton/logOutButton";
 import NotificationsWrapper from "../NotificationsWrapper/notificationsWrapper";
+import UploadGoal from "../Goals/UploadGoal/uploadGoal";
 
 const Tab = createBottomTabNavigator();
 
@@ -69,16 +70,16 @@ const Routes = () => {
             component={Ratings}
             options={{ unmountOnBlur: true }}
           />
+          <Tab.Screen name={"Create Goal"} component={UploadGoal} />
         </Tab.Navigator>
       </NotificationsWrapper>
     </NavigationContainer>
   );
 };
 const InDevelopment = ({ navigation }) => {
-
   return (
     <View style={styles.container}>
-      <LogOutButton/>
+      <LogOutButton />
       <Text>In development</Text>
     </View>
   );
