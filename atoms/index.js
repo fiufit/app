@@ -42,3 +42,8 @@ export const locationState = atom({
         longitude: 0,
     },
 });
+
+export const goalsState = atom({
+    key: 'goalsState',
+    default: [],
+});
