@@ -13,15 +13,13 @@ import { DARK_BLUE } from "../../utils/colors";
 import { useEffect, useState } from "react";
 import ProfileSwitcher from "./ProfileSwitcher";
 import CreatedTrainingsSection from "./CreatedTrainingsSection/CreatedTrainingsSection";
-import WalletSection from "./WalletSection/WalletSection";
 import GoalsSection from "./GoalsSection/GoalsSection";
 import { useIdToken } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
 import TrainingController from "../../utils/controllers/TrainingController";
 import { useRecoilState } from "recoil";
 import {
-  createdTrainingsState,
-  startedTrainingsState,
+  createdTrainingsState, goalsState,
   trainingSessionsState,
   userDataState,
 } from "../../atoms";
@@ -38,6 +36,7 @@ const Profile = ({ navigation }) => {
   const [startedTrainings, setStartedTrainings] = useRecoilState(
     trainingSessionsState
   );
+  const [goals, setGoals] = useRecoilState(goalsState);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -69,6 +68,12 @@ const Profile = ({ navigation }) => {
     return data.followed;
   };
 
+  const fetchGoals = async () => {
+    const controller = new TrainingController(user);
+    const data = await controller.getGoals();
+    return data;
+  }
+
   const refreshData = async () => {
     setRefreshing(true);
     const promises = [
@@ -88,6 +93,8 @@ const Profile = ({ navigation }) => {
     setLoading(true);
     const trainings = await fetchCreatedTrainings();
     const startedTrainings = await fetchStartedTrainings();
+    const goals = await fetchGoals();
+
     setCreatedTrainings(trainings);
     setStartedTrainings(startedTrainings);
     setLoading(false);
@@ -135,8 +142,7 @@ const Profile = ({ navigation }) => {
               loading={loading || refreshing}
             />
           )}
-          {athleteProfileSelected && <GoalsSection />}
-          <WalletSection />
+          {athleteProfileSelected && <GoalsSection goals={goals} loading={loading}/>}
         </ScrollView>
       </View>
     </View>
