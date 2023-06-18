@@ -5,6 +5,7 @@ import {
   signInWithCredential,
   signInWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail
 } from "firebase/auth";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { getFirestore } from "firebase/firestore";
@@ -79,3 +80,11 @@ export const getImageUrl = async (imagePath) => {
     return null;
   }
 };
+
+export const sendPasswordResetEmailTo = async (email) => {
+    try {
+        await sendPasswordResetEmail(auth, email);
+    } catch (e) {
+        throw new Error(e.message);
+    }
+}
