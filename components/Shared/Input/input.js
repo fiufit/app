@@ -23,6 +23,7 @@ const Input = ({
   multiline,
   autoFocus,
   borderRadius,
+  placeholderTextColor,
 }) => {
   return (
     <View
@@ -49,6 +50,7 @@ const Input = ({
           paddingTop: fontFamily ? 0 : 3,
           height: multiline ? height : undefined,
         }}
+        placeholderTextColor={placeholderTextColor}
         cursorColor={cursorColor ?? DARK_GREY}
         editable={editable ?? true}
         inputMode={inputMode ?? "text"}
