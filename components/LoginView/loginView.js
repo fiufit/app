@@ -1,4 +1,5 @@
 import * as Google from "expo-auth-session/providers/google";
+import * as LocalAuthentication from "expo-local-authentication";
 import * as WebBrowser from "expo-web-browser";
 
 import {
@@ -8,7 +9,7 @@ import {
   TouchableHighlight,
   View,
 } from "react-native";
-import {sendPasswordResetEmailTo, signInWithGoogle, singIn} from "../../firebase";
+import { signInWithGoogle, singIn } from "../../firebase";
 import { useEffect, useState } from "react";
 
 import Background from "../Background/background";
@@ -21,9 +22,9 @@ import LoadingModal from "../Shared/Modals/LoadingModal/loadingModal";
 import LockIcon from "../../assets/images/general/lockIcon.svg";
 import LoginIcon from "../../assets/images/general/loginIcon.svg";
 import MailIcon from "../../assets/images/general/mailIcon.svg";
+import RequestController from "../../utils/controllers/RequestController";
 import { WHITE } from "../../utils/colors";
 import { styles } from "./styles.loginView";
-import RequestController from "../../utils/controllers/RequestController";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -33,6 +34,7 @@ const LoginView = ({ navigation }) => {
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorModalIsVisible, setErrorModalIsVisible] = useState(false);
+  const [biometricsIsSupported, setBiometricsIsSupported] = useState(false);
   const [errorDescription, setErrorDescription] = useState("");
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId:
@@ -70,6 +72,31 @@ const LoginView = ({ navigation }) => {
     }
   }
 
+  // const handleBiometricAuth = async () => {
+  //   try {
+  //     const { success, error } = await LocalAuthentication.authenticateAsync({
+  //       promptMessage: "Authenticate with Face ID",
+  //     });
+  //     if (success) {
+  //       // Biometric authentication succeeded
+  //       // Proceed with login or perform any other action
+  //     } else {
+  //       if (error === "not_enrolled") {
+  //         Alert.alert(
+  //           "Biometric Authentication",
+  //           "Please set up biometrics in your device settings."
+  //         );
+  //       } else {
+  //         // Handle other authentication errors
+  //         Alert.alert("Biometric Authentication Error", error);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     // An error occurred during biometric authentication
+  //     Alert.alert("Biometric Authentication Error", error.message);
+  //   }
+  // };
+
   async function handleGoogleLogIn() {
     setLoading(true);
     await promptAsync();
@@ -97,6 +124,28 @@ const LoginView = ({ navigation }) => {
       setLoading(false);
     }
   }, [response]);
+
+  function onAuthenticate() {
+    const auth = LocalAuthentication.authenticateAsync({
+      promptMessage: "Authenticate",
+      fallbackLabel: "Enter password",
+    });
+    auth.then((result) => {
+      console.log("USER SHOULD BE LOGGED", result);
+    });
+  }
+
+  useEffect(() => {
+    (async () => {
+      const compatible = await LocalAuthentication.hasHardwareAsync();
+      setBiometricsIsSupported(compatible);
+      if (compatible) {
+        console.log("THE DEVICE HAS BIOMETRICS");
+      } else {
+        console.log("NOT COMPATIBLE");
+      }
+    })();
+  });
 
   return (
     <Background
@@ -165,6 +214,14 @@ const LoginView = ({ navigation }) => {
           icon={<LoginIcon />}
         >
           Log In
+        </Button>
+        <Button
+          textColor={WHITE}
+          fontSize={16}
+          style={styles.loginButton}
+          onPress={onAuthenticate}
+        >
+          BIOMETRICS
         </Button>
         <Text style={styles.orText}>Or</Text>
         <TouchableHighlight
