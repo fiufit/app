@@ -72,31 +72,6 @@ const LoginView = ({ navigation }) => {
     }
   }
 
-  // const handleBiometricAuth = async () => {
-  //   try {
-  //     const { success, error } = await LocalAuthentication.authenticateAsync({
-  //       promptMessage: "Authenticate with Face ID",
-  //     });
-  //     if (success) {
-  //       // Biometric authentication succeeded
-  //       // Proceed with login or perform any other action
-  //     } else {
-  //       if (error === "not_enrolled") {
-  //         Alert.alert(
-  //           "Biometric Authentication",
-  //           "Please set up biometrics in your device settings."
-  //         );
-  //       } else {
-  //         // Handle other authentication errors
-  //         Alert.alert("Biometric Authentication Error", error);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     // An error occurred during biometric authentication
-  //     Alert.alert("Biometric Authentication Error", error.message);
-  //   }
-  // };
-
   async function handleGoogleLogIn() {
     setLoading(true);
     await promptAsync();
