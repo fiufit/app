@@ -1,5 +1,4 @@
 import * as Google from "expo-auth-session/providers/google";
-import * as LocalAuthentication from "expo-local-authentication";
 import * as WebBrowser from "expo-web-browser";
 
 import {
@@ -34,7 +33,6 @@ const LoginView = ({ navigation }) => {
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorModalIsVisible, setErrorModalIsVisible] = useState(false);
-  const [biometricsIsSupported, setBiometricsIsSupported] = useState(false);
   const [errorDescription, setErrorDescription] = useState("");
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId:
@@ -99,28 +97,6 @@ const LoginView = ({ navigation }) => {
       setLoading(false);
     }
   }, [response]);
-
-  function onAuthenticate() {
-    const auth = LocalAuthentication.authenticateAsync({
-      promptMessage: "Authenticate",
-      fallbackLabel: "Enter password",
-    });
-    auth.then((result) => {
-      console.log("USER SHOULD BE LOGGED", result);
-    });
-  }
-
-  useEffect(() => {
-    (async () => {
-      const compatible = await LocalAuthentication.hasHardwareAsync();
-      setBiometricsIsSupported(compatible);
-      if (compatible) {
-        console.log("THE DEVICE HAS BIOMETRICS");
-      } else {
-        console.log("NOT COMPATIBLE");
-      }
-    })();
-  });
 
   return (
     <Background
@@ -189,14 +165,6 @@ const LoginView = ({ navigation }) => {
           icon={<LoginIcon />}
         >
           Log In
-        </Button>
-        <Button
-          textColor={WHITE}
-          fontSize={16}
-          style={styles.loginButton}
-          onPress={onAuthenticate}
-        >
-          BIOMETRICS
         </Button>
         <Text style={styles.orText}>Or</Text>
         <TouchableHighlight
