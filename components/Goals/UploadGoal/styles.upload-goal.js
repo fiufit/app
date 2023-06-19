@@ -7,6 +7,8 @@ export const styles = StyleSheet.create({
         height: "100%",
         backgroundColor: WHITE,
         position: "relative",
+        display: "flex",
+        gap: 20
     },
     title: {
         fontFamily: "Poppins_500Medium",
@@ -33,10 +35,8 @@ export const styles = StyleSheet.create({
         width: "80%",
     },
     buttonContainer: {
-        position: "absolute",
         width: "100%",
         height: 45,
-        bottom: 40,
         display: 'flex',
         justifyContent: "center",
         alignItems: "center"
