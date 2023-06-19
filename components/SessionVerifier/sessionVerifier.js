@@ -1,13 +1,18 @@
 import * as LocalAuthentication from "expo-local-authentication";
 
-import { Button, ScrollView, View } from "react-native";
+import { Image, ScrollView, Text, TouchableHighlight } from "react-native";
 import { useEffect, useState } from "react";
 
 import Background from "../Background/background";
+import { styles } from "./styles.sessionVerifier";
+import { useRecoilValue } from "recoil";
+import { userDataState } from "../../atoms";
 
 const SessionVerifier = ({ children }) => {
   const [isSessionVerified, setIsSessionVerified] = useState(false);
   const [areBiometricsSupported, setAreBiometricsSupported] = useState(false);
+
+  const userData = useRecoilValue(userDataState);
 
   function onAuthenticate() {
     const auth = LocalAuthentication.authenticateAsync({
@@ -19,6 +24,10 @@ const SessionVerifier = ({ children }) => {
         setIsSessionVerified(true);
       }
     });
+  }
+
+  function loginWithAnotherAccount() {
+    // console.log("LOG IN WITH ANOTHER ACCOUNT");
   }
 
   useEffect(() => {
@@ -43,11 +52,39 @@ const SessionVerifier = ({ children }) => {
               style={{ width: "100%", position: "relative" }}
               contentContainerStyle={{ alignItems: "center" }}
             >
-              <View style={{ marginTop: 130 }}>
-                <Button title="Press me" onPress={onAuthenticate}></Button>
-                {/* //The Face ID icon should be displayed only when the device has
+              <Image
+                style={styles.lockedCellphone}
+                source={require("../../assets/lockedCellphone.png")}
+              />
+              {/* //The Face ID icon should be displayed only when the device has
                 the appropriate hardware. */}
-              </View>
+
+              <Text style={styles.greetings}>
+                Hey there {userData.DisplayName},
+              </Text>
+              <Text style={styles.welcome}>Welcome Back!</Text>
+              <Text style={styles.biometrics}>
+                Please use biometric data to continue
+              </Text>
+              <TouchableHighlight
+                underlayColor={"transparent"}
+                onPress={onAuthenticate}
+              >
+                <Image
+                  style={styles.faceId}
+                  source={require("../../assets/faceId.png")}
+                />
+              </TouchableHighlight>
+              <Text style={styles.incorrectUser}>
+                Not {userData.DisplayName}?{" "}
+                <Text
+                  style={styles.loginText}
+                  onPress={loginWithAnotherAccount}
+                >
+                  Login{" "}
+                </Text>
+                with another account
+              </Text>
             </ScrollView>
           </Background>
         </>
