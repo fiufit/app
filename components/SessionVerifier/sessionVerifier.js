@@ -4,6 +4,7 @@ import { Image, ScrollView, Text, TouchableHighlight } from "react-native";
 import { useEffect, useState } from "react";
 
 import Background from "../Background/background";
+import LogOutButton from "../Shared/LogOutButton/logOutButton";
 import { styles } from "./styles.sessionVerifier";
 import { useRecoilValue } from "recoil";
 import { userDataState } from "../../atoms";
@@ -75,16 +76,7 @@ const SessionVerifier = ({ children }) => {
                   source={require("../../assets/faceId.png")}
                 />
               </TouchableHighlight>
-              <Text style={styles.incorrectUser}>
-                Not {userData.DisplayName}?{" "}
-                <Text
-                  style={styles.loginText}
-                  onPress={loginWithAnotherAccount}
-                >
-                  Login{" "}
-                </Text>
-                with another account
-              </Text>
+              <LogOutButton />
             </ScrollView>
           </Background>
         </>
