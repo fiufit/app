@@ -1,9 +1,11 @@
 import * as LocalAuthentication from "expo-local-authentication";
 
+import { DARK_GREY, LIGHT_GREY } from "../../utils/colors";
 import { Image, ScrollView, Text, TouchableHighlight } from "react-native";
 import { useEffect, useState } from "react";
 
 import Background from "../Background/background";
+import Button from "../Shared/Button/button";
 import LogOutButton from "../Shared/LogOutButton/logOutButton";
 import { styles } from "./styles.sessionVerifier";
 import { useRecoilValue } from "recoil";
@@ -25,10 +27,6 @@ const SessionVerifier = ({ children }) => {
         setIsSessionVerified(true);
       }
     });
-  }
-
-  function loginWithAnotherAccount() {
-    // console.log("LOG IN WITH ANOTHER ACCOUNT");
   }
 
   useEffect(() => {
@@ -64,18 +62,41 @@ const SessionVerifier = ({ children }) => {
                 Hey there {userData.DisplayName},
               </Text>
               <Text style={styles.welcome}>Welcome Back!</Text>
-              <Text style={styles.biometrics}>
-                Please use biometric data to continue
-              </Text>
-              <TouchableHighlight
-                underlayColor={"transparent"}
-                onPress={onAuthenticate}
-              >
-                <Image
-                  style={styles.faceId}
-                  source={require("../../assets/faceId.png")}
-                />
-              </TouchableHighlight>
+              {areBiometricsSupported ? (
+                <>
+                  <Text style={styles.biometrics}>
+                    Please use biometric data to continue
+                  </Text>
+                  <TouchableHighlight
+                    underlayColor={"transparent"}
+                    onPress={onAuthenticate}
+                  >
+                    <Image
+                      style={styles.faceId}
+                      source={require("../../assets/faceId.png")}
+                    />
+                  </TouchableHighlight>
+                </>
+              ) : (
+                <>
+                  <Text style={styles.configureBiometrics}>
+                    Please configure the biometrics on your mobile device.
+                  </Text>
+                  <Text style={styles.noBiometrics}>
+                    Or continue without this extra authentication (Not
+                    recommended).
+                  </Text>
+                  <Button
+                    style={styles.continueButton}
+                    fontSize={13}
+                    buttonColor={LIGHT_GREY}
+                    textColor={DARK_GREY}
+                    onPress={() => setIsSessionVerified(true)}
+                  >
+                    Continue
+                  </Button>
+                </>
+              )}
               <LogOutButton />
             </ScrollView>
           </Background>
