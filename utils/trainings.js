@@ -54,3 +54,27 @@ export const phraseToShow = (session) => {
         return `${StepCount} steps and ${Math.ceil(SecondsCount / 60)} min done`;
     }
 };
+
+export const getGoalDescription = (goal) => {
+    const { value, type, subtype } = goal;
+    switch (type) {
+        case "sessions count":
+            return `Finish ${value} ${subtype} trainings`;
+        case "step count":
+            return `Walk ${value} steps`;
+        case "minutes count":
+            return `Train for ${value} minutes`;
+    }
+}
+
+export const categoriesType = {
+    Trainings: "sessions count",
+    Steps: "step count",
+    Minutes: "minutes count",
+};
+
+export const typesCategory = {
+    "sessions count": "Trainings",
+    "step count": "Steps",
+    "minutes count": "Minutes",
+}
