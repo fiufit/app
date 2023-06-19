@@ -8,7 +8,7 @@ import {
   TouchableHighlight,
   View,
 } from "react-native";
-import { signInWithGoogle, singIn } from "../../firebase";
+import {sendPasswordResetEmailTo, signInWithGoogle, singIn} from "../../firebase";
 import { useEffect, useState } from "react";
 
 import Background from "../Background/background";
@@ -47,8 +47,8 @@ const LoginView = ({ navigation }) => {
       : setPasswordIsVisible(true);
   }
 
-  function handleForgotPassword() {
-    //TO DO
+  async function handleForgotPassword() {
+    navigation.navigate({ name: "ResetPassword", merge: true });
   }
 
   async function handleLogIn() {
