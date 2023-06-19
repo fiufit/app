@@ -2,15 +2,17 @@ import { useEffect, useRef } from "react";
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 import * as Device from "expo-device";
-import {useRecoilValue, useSetRecoilState} from "recoil";
+import { useSetRecoilState } from "recoil";
 import {
   expoPushTokenState,
-  notificationSubscriptionIdState, redirectParamsState, redirectToState, routesMountedState,
+  notificationSubscriptionIdState
 } from "../../atoms";
 import { auth } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import NotificationController from "../../utils/controllers/NotificationController";
 import { useNavigation } from "@react-navigation/native";
+import Constants from "expo-constants";
+const EXPO_PROJECT_ID = Constants.manifest.extra.expoProjectId;
 
 //TODO: decide if we want to show push notifications while app is running
 Notifications.setNotificationHandler({
@@ -90,7 +92,9 @@ const NotificationsWrapper = ({ children }) => {
       if (finalStatus !== "granted") {
         return;
       }
-      token = (await Notifications.getExpoPushTokenAsync()).data;
+      token = (await Notifications.getExpoPushTokenAsync({
+        projectId: EXPO_PROJECT_ID,
+      })).data;
       console.log("EXPO PUSH TOKEN", token);
     } else {
       alert("Must use physical device for Push Notifications");

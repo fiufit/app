@@ -1,4 +1,5 @@
-const API_URL = "https://fiufit-gateway.fly.dev/v1/"
+import Constants from 'expo-constants';
+const API_URL = Constants.manifest.extra.apiGatewayUrl;
 class RequestController{
 
     constructor(user) {

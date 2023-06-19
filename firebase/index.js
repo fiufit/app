@@ -12,17 +12,9 @@ import { getFirestore } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getReactNativePersistence } from "firebase/auth/react-native";
 import { initializeApp } from "firebase/app";
-import RequestController from "../utils/controllers/RequestController";
+import Constants from "expo-constants";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDbXF3gPXW-uggq-Fhsu_ANVgE-1mCYLcI", //TODO: Put this in an env file
-  authDomain: "fiufit.firebaseapp.com",
-  projectId: "fiufit",
-  storageBucket: "fiufit.appspot.com",
-  messagingSenderId: "235995330653",
-  appId: "1:235995330653:web:43dcd2cdfab28df85c35b4",
-  measurementId: "G-0W6BHPCT5D",
-};
+const { firebaseConfig } = Constants.manifest.extra;
 
 const app = initializeApp(firebaseConfig);
 
@@ -33,8 +25,7 @@ export const auth = getAuth();
 const storage = getStorage();
 export const db = getFirestore();
 
-export const DEFAULT_PROFILE_PICTURE =
-  "https://firebasestorage.googleapis.com/v0/b/fiufit.appspot.com/o/profile_pictures%2Fdefault.png?alt=media&token=8242ac98-c07e-4217-8f07-3fddc5a727bc";
+export const DEFAULT_PROFILE_PICTURE = Constants.manifest.extra.defaultProfilePictureUrl;
 export const singIn = async (email, password) => {
   try {
     return await signInWithEmailAndPassword(auth, email, password);

@@ -24,6 +24,7 @@ import LockIcon from "../../../assets/images/general/lockIcon.svg";
 import MailIcon from "../../../assets/images/general/mailIcon.svg";
 import EyeIcon from "../../../assets/images/general/eyeIcon.svg";
 import HideEyeIcon from "../../../assets/images/general/hideEyeIcon.svg";
+import Constants from "expo-constants";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -37,12 +38,7 @@ const RegisterFirstStepView = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [errorModalIsVisible, setErrorModalIsVisible] = useState(false);
   const [errorDescription, setErrorDescription] = useState("");
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    expoClientId:
-      "235995330653-u65jmivq25u554uak81v7auljem4800e.apps.googleusercontent.com",
-    scopes: ["profile", "email"],
-    redirectUri: "https://auth.expo.io/@stein257/fiufitapp",
-  });
+  const [request, response, promptAsync] = Google.useAuthRequest(Constants.manifest.extra.googleAuthConfig);
 
   async function handleRegister() {
     if (!email || !password || !passwordRepeat) {
