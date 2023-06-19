@@ -71,6 +71,7 @@ const Routes = () => {
             options={{ unmountOnBlur: true }}
           />
           <Tab.Screen name={"Create Goal"} component={UploadGoal} />
+          <Tab.Screen name={"Update Goal"} component={UploadGoal} options={{unmountOnBlur: true}}/>
         </Tab.Navigator>
       </NotificationsWrapper>
     </NavigationContainer>
