@@ -41,8 +41,12 @@ const EditModal = ({
               setEditValue(text);
               onButtonPress();
             } else {
-              setErrorModalIsVisible(true);
-              setErrorDescription("Value can not be empty.");
+              if(setErrorModalIsVisible && setErrorDescription) {
+                setErrorModalIsVisible(true);
+                setErrorDescription("Value can not be empty.");
+              } else {
+                onButtonPress();
+              }
             }
           }}
         >
