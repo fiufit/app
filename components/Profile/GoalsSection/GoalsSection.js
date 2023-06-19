@@ -9,12 +9,16 @@ const GoalsSection = ({ goals, loading, navigation }) => {
     navigation.navigate("Create Goal", { merge: true, edit: false });
   };
 
+  const handleSeeAll = () => {
+    navigation.navigate("Goal List", { merge: true });
+  }
+
   return (
     <View style={styles.goalsSection}>
       <View style={styles.textContainer}>
         <Text style={styles.title}>Your goals</Text>
         {goals.length > 0 && !loading && (
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleSeeAll}>
             <Text style={styles.seeAll}>See All</Text>
           </TouchableOpacity>
         )}
