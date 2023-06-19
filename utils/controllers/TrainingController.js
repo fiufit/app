@@ -150,8 +150,19 @@ class TrainingController {
   async getGoals() {
     const { data } = await this.requestController.fetch(`goals`, "GET");
 
-    console.log("GOALS DATA", data);
-    return data;
+    return data.goals;
+  }
+
+  async createGoal(goalData) {
+    return await this.requestController.fetch(`goals`, "POST", goalData);
+  }
+
+  async updateGoal(goalId, goalData) {
+    return await this.requestController.fetch(
+        `goals/${goalId}`,
+        "PATCH",
+        goalData
+    );
   }
 }
 
