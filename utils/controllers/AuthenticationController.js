@@ -1,7 +1,9 @@
 import {singIn} from "../../firebase";
 import RequestController from "./RequestController";
-import Constants from 'expo-constants';
-const {emailVerifyUrl} = Constants.manifest.extra;
+import { FIREBASE_EMAIL_VERIFY_URL } from "@env";
+
+
+const emailVerifyUrl = FIREBASE_EMAIL_VERIFY_URL;
 
 class AuthenticationController{
     constructor(user) {

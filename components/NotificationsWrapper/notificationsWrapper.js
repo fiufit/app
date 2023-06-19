@@ -11,8 +11,7 @@ import { auth } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import NotificationController from "../../utils/controllers/NotificationController";
 import { useNavigation } from "@react-navigation/native";
-import Constants from "expo-constants";
-const EXPO_PROJECT_ID = Constants.manifest.extra.expoProjectId;
+import {EXPO_PROJECT_ID} from "@env";
 
 //TODO: decide if we want to show push notifications while app is running
 Notifications.setNotificationHandler({

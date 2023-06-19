@@ -1,5 +1,5 @@
-import Constants from 'expo-constants';
-const API_URL = Constants.manifest.extra.apiGatewayUrl;
+import {API_GATEWAY_URL} from "@env";
+const API_URL = API_GATEWAY_URL;
 class RequestController{
 
     constructor(user) {

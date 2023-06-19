@@ -5,16 +5,33 @@ import {
   signInWithCredential,
   signInWithEmailAndPassword,
   signOut,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { getFirestore } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getReactNativePersistence } from "firebase/auth/react-native";
 import { initializeApp } from "firebase/app";
-import Constants from "expo-constants";
+import {
+  FIREBASE_API_KEY,
+  FIREBASE_AUTH_DOMAIN,
+  FIREBASE_PROJECT_ID,
+  FIREBASE_STORAGE_BUCKET,
+  FIREBASE_MESSAGING_SENDER_ID,
+  FIREBASE_APP_ID,
+  FIREBASE_MEASUREMENT_ID,
+  DEFAULT_PROFILE_PICTURE_URL,
+} from "@env";
 
-const { firebaseConfig } = Constants.manifest.extra;
+const firebaseConfig = {
+  apiKey: FIREBASE_API_KEY,
+  authDomain: FIREBASE_AUTH_DOMAIN,
+  projectId: FIREBASE_PROJECT_ID,
+  storageBucket: FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+  appId: FIREBASE_APP_ID,
+  measurementId: FIREBASE_MEASUREMENT_ID,
+};
 
 const app = initializeApp(firebaseConfig);
 
@@ -25,7 +42,7 @@ export const auth = getAuth();
 const storage = getStorage();
 export const db = getFirestore();
 
-export const DEFAULT_PROFILE_PICTURE = Constants.manifest.extra.defaultProfilePictureUrl;
+export const DEFAULT_PROFILE_PICTURE = DEFAULT_PROFILE_PICTURE_URL;
 export const singIn = async (email, password) => {
   try {
     return await signInWithEmailAndPassword(auth, email, password);
@@ -73,9 +90,9 @@ export const getImageUrl = async (imagePath) => {
 };
 
 export const sendPasswordResetEmailTo = async (email) => {
-    try {
-        await sendPasswordResetEmail(auth, email);
-    } catch (e) {
-        throw new Error(e.message);
-    }
-}
+  try {
+    await sendPasswordResetEmail(auth, email);
+  } catch (e) {
+    throw new Error(e.message);
+  }
+};
