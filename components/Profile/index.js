@@ -53,7 +53,8 @@ const Profile = ({ navigation }) => {
   const fetchUserTrainings = async () => {
     const createdTrainings = await fetchCreatedTrainings();
     const startedTrainings = await fetchStartedTrainings();
-    return { createdTrainings, startedTrainings };
+    const goals = await fetchGoals();
+    return { createdTrainings, startedTrainings, goals };
   }
 
   const fetchFollowers = async () => {
@@ -70,8 +71,7 @@ const Profile = ({ navigation }) => {
 
   const fetchGoals = async () => {
     const controller = new TrainingController(user);
-    const data = await controller.getGoals();
-    return data;
+    return await controller.getGoals();
   }
 
   const refreshData = async () => {
@@ -81,10 +81,11 @@ const Profile = ({ navigation }) => {
       fetchFollowers(),
       fetchFollowing(),
     ];
-    const [{ createdTrainings, startedTrainings }, followers, following] =
+    const [{ createdTrainings, startedTrainings, goals }, followers, following] =
       await Promise.all(promises);
     setCreatedTrainings(createdTrainings);
     setStartedTrainings(startedTrainings);
+    setGoals(goals);
     setUserData({ ...userData, followers, following });
     setRefreshing(false);
   };
@@ -97,11 +98,11 @@ const Profile = ({ navigation }) => {
 
     setCreatedTrainings(trainings);
     setStartedTrainings(startedTrainings);
+    setGoals(goals);
     setLoading(false);
   };
 
   useEffect(() => {
-    //TODO fetch started trainings
     fetchData();
   }, []);
 
@@ -142,7 +143,7 @@ const Profile = ({ navigation }) => {
               loading={loading || refreshing}
             />
           )}
-          {athleteProfileSelected && <GoalsSection goals={goals} loading={loading}/>}
+          {athleteProfileSelected && <GoalsSection goals={goals} loading={loading || refreshing} navigation={navigation}/>}
         </ScrollView>
       </View>
     </View>
