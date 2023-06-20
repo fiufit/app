@@ -19,7 +19,8 @@ import { auth } from "../../firebase";
 import TrainingController from "../../utils/controllers/TrainingController";
 import { useRecoilState } from "recoil";
 import {
-  createdTrainingsState, goalsState,
+  createdTrainingsState,
+  goalsState,
   trainingSessionsState,
   userDataState,
 } from "../../atoms";
@@ -51,11 +52,18 @@ const Profile = ({ navigation }) => {
   };
 
   const fetchUserTrainings = async () => {
-    const createdTrainings = await fetchCreatedTrainings();
-    const startedTrainings = await fetchStartedTrainings();
-    const goals = await fetchGoals();
+    const promises = [
+      fetchCreatedTrainings(),
+      fetchStartedTrainings(),
+      fetchGoals(),
+    ];
+
+    const [createdTrainings, startedTrainings, goals] = await Promise.all(
+      promises
+    );
+
     return { createdTrainings, startedTrainings, goals };
-  }
+  };
 
   const fetchFollowers = async () => {
     const controller = new ProfileController(user);
@@ -72,17 +80,16 @@ const Profile = ({ navigation }) => {
   const fetchGoals = async () => {
     const controller = new TrainingController(user);
     return await controller.getGoals();
-  }
+  };
 
   const refreshData = async () => {
     setRefreshing(true);
-    const promises = [
-      fetchUserTrainings(),
-      fetchFollowers(),
-      fetchFollowing(),
-    ];
-    const [{ createdTrainings, startedTrainings, goals }, followers, following] =
-      await Promise.all(promises);
+    const promises = [fetchUserTrainings(), fetchFollowers(), fetchFollowing()];
+    const [
+      { createdTrainings, startedTrainings, goals },
+      followers,
+      following,
+    ] = await Promise.all(promises);
     setCreatedTrainings(createdTrainings);
     setStartedTrainings(startedTrainings);
     setGoals(goals);
@@ -92,13 +99,14 @@ const Profile = ({ navigation }) => {
 
   const fetchData = async () => {
     setLoading(true);
-    const trainings = await fetchCreatedTrainings();
-    const startedTrainings = await fetchStartedTrainings();
-    const goals = await fetchGoals();
 
-    setCreatedTrainings(trainings);
+    const { createdTrainings, startedTrainings, goals } =
+      await fetchUserTrainings();
+
+    setCreatedTrainings(createdTrainings);
     setStartedTrainings(startedTrainings);
     setGoals(goals);
+    
     setLoading(false);
   };
 
@@ -143,7 +151,13 @@ const Profile = ({ navigation }) => {
               loading={loading || refreshing}
             />
           )}
-          {athleteProfileSelected && <GoalsSection goals={goals} loading={loading || refreshing} navigation={navigation}/>}
+          {athleteProfileSelected && (
+            <GoalsSection
+              goals={goals}
+              loading={loading || refreshing}
+              navigation={navigation}
+            />
+          )}
         </ScrollView>
       </View>
     </View>
