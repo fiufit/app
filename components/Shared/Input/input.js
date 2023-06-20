@@ -1,7 +1,7 @@
-import {TextInput, View} from "react-native";
-import {DARK_GREY} from "../../../utils/colors";
-import {React} from "react";
-import {styles} from "./styles.input";
+import { TextInput, View } from "react-native";
+
+import { DARK_GREY } from "../../../utils/colors";
+import { styles } from "./styles.input";
 
 const Input = ({
   left,
@@ -22,13 +22,15 @@ const Input = ({
   marginTop,
   multiline,
   autoFocus,
-  placeholderTextColor
+  borderRadius,
+  placeholderTextColor,
 }) => {
   return (
     <View
       style={{
         ...styles.inputContainer,
         backgroundColor: backgroundColor ?? "#F7F8F8",
+        borderRadius: borderRadius ?? 14,
         height,
         width,
         marginTop: marginTop === undefined ? 20 : marginTop,

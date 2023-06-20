@@ -10,7 +10,10 @@ import EditModal from "../../Shared/Modals/EditModal/editModal";
 import ErrorModal from "../../Shared/Modals/ErrorModal/ErrorModal";
 import ImageModal from "../../Shared/Modals/ImageModal/imageModal";
 import Input from "../../Shared/Input/input";
+import InterestsModal from "../../InterestsModal/InterestsModal";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
+import LocationModal from "../../Shared/Modals/LocationModal/locationModal";
+import LogOutButton from "../../Shared/LogOutButton/logOutButton";
 import ProfileController from "../../../utils/controllers/ProfileController";
 import SuccessModal from "../../Shared/Modals/SuccessModal/SuccessModal";
 import { TextInput } from "react-native-paper";
@@ -19,9 +22,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState } from "recoil";
 import { useState } from "react";
 import { userDataState } from "../../../atoms";
-import InterestsModal from "../../InterestsModal/InterestsModal";
-import LogOutButton from "../../Shared/LogOutButton/logOutButton";
-import LocationModal from "../../Shared/Modals/LocationModal/locationModal";
 
 const EditProfile = ({ navigation }) => {
   const [userData, setUserData] = useRecoilState(userDataState);
@@ -136,35 +136,42 @@ const EditProfile = ({ navigation }) => {
   };
 
   const handleUpdate = async () => {
-    setLoading(true);
+    const numericWeight = Number(weight);
+    const numericHeight = Number(height);
+    if (Number.isInteger(numericHeight) && Number.isInteger(numericWeight)) {
+      setLoading(true);
 
-    const controller = new ProfileController(user);
-    const { data, error } = await controller.updateProfile({
-      nickname: nickName,
-      display_name: displayName,
-      is_male: isMale,
-      birth_date: dateOfBirth,
-      height,
-      weight,
-      interests: interests.map((interest) => interest.toLowerCase()),
-    });
-
-    if (error) {
-      //TODO: Show different messagges according to the error.
-      setErrorModalIsVisible(true);
-      setErrorDescription(
-        "There has been an error while updating your profile. Please try again later!"
-      );
-    } else {
-      setUserData({
-        ...data,
-        followers: userData.followers,
-        following: userData.following,
+      const controller = new ProfileController(user);
+      const { data, error } = await controller.updateProfile({
+        nickname: nickName,
+        display_name: displayName,
+        is_male: isMale,
+        birth_date: dateOfBirth,
+        height,
+        weight,
+        interests: interests.map((interest) => interest.toLowerCase()),
       });
-      setSuccessModalIsVisible(true);
-      setSuccessDescription("Your profile has been updated successfully!");
+
+      if (error) {
+        //TODO: Show different messagges according to the error.
+        setErrorModalIsVisible(true);
+        setErrorDescription(
+          "There has been an error while updating your profile. Please try again later!"
+        );
+      } else {
+        setUserData({
+          ...data,
+          followers: userData.followers,
+          following: userData.following,
+        });
+        setSuccessModalIsVisible(true);
+        setSuccessDescription("Your profile has been updated successfully!");
+      }
+      setLoading(false);
+    } else {
+      setErrorModalIsVisible(true);
+      setErrorDescription("Weight and height must be integers.");
     }
-    setLoading(false);
   };
 
   const handleImageUpdate = async (image) => {

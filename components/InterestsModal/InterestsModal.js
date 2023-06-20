@@ -10,8 +10,8 @@ import { Text, TouchableOpacity, View } from "react-native";
 import Button from "../Shared/Button/button";
 import { LinearGradient } from "expo-linear-gradient";
 import { WHITE } from "../../utils/colors";
+import { interests } from "../../utils/trainings";
 import { styles } from "./styles.InterestsModal";
-import {interests} from "../../utils/trainings";
 
 const InterestsModal = ({
   modalIsVisible,
@@ -52,8 +52,8 @@ const InterestsModal = ({
         >
           <Text style={styles.modalTitle}>
             {" "}
-            Choose {converter.toWords(MAX_INTERESTS)} topics you might find
-            interesting!
+            Choose up to {converter.toWords(MAX_INTERESTS)} topics you might
+            find interesting!
           </Text>
           <View style={styles.interestsContainer}>
             {interests.map((interest) => (
