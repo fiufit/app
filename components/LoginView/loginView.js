@@ -24,10 +24,13 @@ import MailIcon from "../../assets/images/general/mailIcon.svg";
 import RequestController from "../../utils/controllers/RequestController";
 import { WHITE } from "../../utils/colors";
 import { styles } from "./styles.loginView";
+import {useSetRecoilState} from "recoil";
+import {sessionVerifiedState} from "../../atoms";
 
 WebBrowser.maybeCompleteAuthSession();
 
 const LoginView = ({ navigation }) => {
+  const setIsSessionVerified = useSetRecoilState(sessionVerifiedState);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
@@ -53,7 +56,7 @@ const LoginView = ({ navigation }) => {
 
   async function handleLogIn() {
     try {
-      const credential = await singIn(email, password);
+      const credential = await singIn(email, password, () => setIsSessionVerified(true));
       if (credential.user) {
         const controller = new RequestController(credential.user);
         controller
@@ -85,6 +88,7 @@ const LoginView = ({ navigation }) => {
       signInWithGoogle(response.authentication.accessToken).then(
         (credential) => {
           if (credential.user) {
+            setIsSessionVerified(true);
             const controller = new RequestController(credential.user);
             controller
               .fetch("users/login?method=federated_entity", "POST")

@@ -8,11 +8,11 @@ import Background from "../Background/background";
 import Button from "../Shared/Button/button";
 import LogOutButton from "../Shared/LogOutButton/logOutButton";
 import { styles } from "./styles.sessionVerifier";
-import { useRecoilValue } from "recoil";
-import { userDataState } from "../../atoms";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {sessionVerifiedState, userDataState} from "../../atoms";
 
 const SessionVerifier = ({ children }) => {
-  const [isSessionVerified, setIsSessionVerified] = useState(false);
+  const [isSessionVerified, setIsSessionVerified] = useRecoilState(sessionVerifiedState);
   const [areBiometricsSupported, setAreBiometricsSupported] = useState(false);
 
   const userData = useRecoilValue(userDataState);

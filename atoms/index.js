@@ -42,3 +42,9 @@ export const locationState = atom({
         longitude: 0,
     },
 });
+
+export const sessionVerifiedState = atom({
+    key: 'sessionVerifiedState',
+    default: false,
+});
+

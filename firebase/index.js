@@ -35,9 +35,12 @@ export const db = getFirestore();
 
 export const DEFAULT_PROFILE_PICTURE =
   "https://firebasestorage.googleapis.com/v0/b/fiufit.appspot.com/o/profile_pictures%2Fdefault.png?alt=media&token=8242ac98-c07e-4217-8f07-3fddc5a727bc";
-export const singIn = async (email, password) => {
+export const singIn = async (email, password, onLoginSuccess = null) => {
   try {
     return await signInWithEmailAndPassword(auth, email, password);
+    if(onLoginSuccess){
+        onLoginSuccess();
+    }
   } catch (e) {
     throw new Error(e.message);
   }
