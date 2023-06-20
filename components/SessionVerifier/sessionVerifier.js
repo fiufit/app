@@ -2,18 +2,19 @@ import * as LocalAuthentication from "expo-local-authentication";
 
 import { DARK_GREY, LIGHT_GREY } from "../../utils/colors";
 import { Image, ScrollView, Text, TouchableHighlight } from "react-native";
+import { sessionVerifiedState, userDataState } from "../../atoms";
 import { useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 import Background from "../Background/background";
 import Button from "../Shared/Button/button";
 import LogOutButton from "../Shared/LogOutButton/logOutButton";
 import { styles } from "./styles.sessionVerifier";
-import {useRecoilState, useRecoilValue} from "recoil";
-import {sessionVerifiedState, userDataState} from "../../atoms";
 
 const SessionVerifier = ({ children }) => {
-  const [isSessionVerified, setIsSessionVerified] = useRecoilState(sessionVerifiedState);
-  const [areBiometricsSupported, setAreBiometricsSupported] = useState(false);
+  const [isSessionVerified, setIsSessionVerified] =
+    useRecoilState(sessionVerifiedState);
+  const [areBiometricsSupported, setAreBiometricsSupported] = useState(true);
 
   const userData = useRecoilValue(userDataState);
 

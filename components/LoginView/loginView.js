@@ -23,9 +23,9 @@ import LoginIcon from "../../assets/images/general/loginIcon.svg";
 import MailIcon from "../../assets/images/general/mailIcon.svg";
 import RequestController from "../../utils/controllers/RequestController";
 import { WHITE } from "../../utils/colors";
+import { sessionVerifiedState } from "../../atoms";
 import { styles } from "./styles.loginView";
-import {useSetRecoilState} from "recoil";
-import {sessionVerifiedState} from "../../atoms";
+import { useSetRecoilState } from "recoil";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -56,8 +56,9 @@ const LoginView = ({ navigation }) => {
 
   async function handleLogIn() {
     try {
-      const credential = await singIn(email, password, () => setIsSessionVerified(true));
+      const credential = await singIn(email, password);
       if (credential.user) {
+        setIsSessionVerified(true);
         const controller = new RequestController(credential.user);
         controller
           .fetch("users/login?method=mail", "POST")

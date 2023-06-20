@@ -2,17 +2,17 @@ import {
   GoogleAuthProvider,
   getAuth,
   initializeAuth,
+  sendPasswordResetEmail,
   signInWithCredential,
   signInWithEmailAndPassword,
   signOut,
-  sendPasswordResetEmail
 } from "firebase/auth";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { getFirestore } from "firebase/firestore";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getFirestore } from "firebase/firestore";
 import { getReactNativePersistence } from "firebase/auth/react-native";
 import { initializeApp } from "firebase/app";
-import RequestController from "../utils/controllers/RequestController";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDbXF3gPXW-uggq-Fhsu_ANVgE-1mCYLcI", //TODO: Put this in an env file
@@ -35,12 +35,9 @@ export const db = getFirestore();
 
 export const DEFAULT_PROFILE_PICTURE =
   "https://firebasestorage.googleapis.com/v0/b/fiufit.appspot.com/o/profile_pictures%2Fdefault.png?alt=media&token=8242ac98-c07e-4217-8f07-3fddc5a727bc";
-export const singIn = async (email, password, onLoginSuccess = null) => {
+export const singIn = async (email, password) => {
   try {
     return await signInWithEmailAndPassword(auth, email, password);
-    if(onLoginSuccess){
-        onLoginSuccess();
-    }
   } catch (e) {
     throw new Error(e.message);
   }
@@ -85,9 +82,9 @@ export const getImageUrl = async (imagePath) => {
 };
 
 export const sendPasswordResetEmailTo = async (email) => {
-    try {
-        await sendPasswordResetEmail(auth, email);
-    } catch (e) {
-        throw new Error(e.message);
-    }
-}
+  try {
+    await sendPasswordResetEmail(auth, email);
+  } catch (e) {
+    throw new Error(e.message);
+  }
+};
