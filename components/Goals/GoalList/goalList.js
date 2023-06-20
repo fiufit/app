@@ -21,7 +21,7 @@ const GoalList = ({ navigation }) => {
       <View
         style={{
           width: "100%",
-          height: "72%",
+          height: "70%",
           display: "flex",
           alignItems: "center",
         }}
@@ -33,7 +33,7 @@ const GoalList = ({ navigation }) => {
         >
           {goals.map((goal, index) => {
             return (
-              <View style={{ width: "90%", height: 150 }}>
+              <View style={{ width: "90%", height: 150 }} key={goal.ID}>
                 <GoalCard
                   title={goal.title}
                   index={index}
