@@ -24,6 +24,13 @@ import MailIcon from "../../assets/images/general/mailIcon.svg";
 import { WHITE } from "../../utils/colors";
 import { styles } from "./styles.loginView";
 import RequestController from "../../utils/controllers/RequestController";
+import { EXPO_CLIENT_ID, EXPO_REDIRECT_URI } from "@env";
+
+const googleAuthConfig = {
+  expoClientId: EXPO_CLIENT_ID,
+  scopes: ["profile", "email"],
+  redirectUri: EXPO_REDIRECT_URI,
+};
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -34,12 +41,7 @@ const LoginView = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [errorModalIsVisible, setErrorModalIsVisible] = useState(false);
   const [errorDescription, setErrorDescription] = useState("");
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    expoClientId:
-      "235995330653-u65jmivq25u554uak81v7auljem4800e.apps.googleusercontent.com",
-    scopes: ["profile", "email"],
-    redirectUri: "https://auth.expo.io/@stein257/fiufitapp",
-  });
+  const [request, response, promptAsync] = Google.useAuthRequest(googleAuthConfig);
 
   function togglePasswordVisibility() {
     passwordIsVisible
