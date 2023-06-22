@@ -8,7 +8,7 @@ import {
   TouchableHighlight,
   View,
 } from "react-native";
-import {sendPasswordResetEmailTo, signInWithGoogle, singIn} from "../../firebase";
+import { signInWithGoogle, singIn } from "../../firebase";
 import { useEffect, useState } from "react";
 
 import Background from "../Background/background";
@@ -21,9 +21,11 @@ import LoadingModal from "../Shared/Modals/LoadingModal/loadingModal";
 import LockIcon from "../../assets/images/general/lockIcon.svg";
 import LoginIcon from "../../assets/images/general/loginIcon.svg";
 import MailIcon from "../../assets/images/general/mailIcon.svg";
-import { WHITE } from "../../utils/colors";
-import { styles } from "./styles.loginView";
 import RequestController from "../../utils/controllers/RequestController";
+import { WHITE } from "../../utils/colors";
+import { sessionVerifiedState } from "../../atoms";
+import { styles } from "./styles.loginView";
+import { useSetRecoilState } from "recoil";
 import { EXPO_CLIENT_ID, EXPO_REDIRECT_URI } from "@env";
 
 const googleAuthConfig = {
@@ -35,13 +37,15 @@ const googleAuthConfig = {
 WebBrowser.maybeCompleteAuthSession();
 
 const LoginView = ({ navigation }) => {
+  const setIsSessionVerified = useSetRecoilState(sessionVerifiedState);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorModalIsVisible, setErrorModalIsVisible] = useState(false);
   const [errorDescription, setErrorDescription] = useState("");
-  const [request, response, promptAsync] = Google.useAuthRequest(googleAuthConfig);
+  const [request, response, promptAsync] =
+    Google.useAuthRequest(googleAuthConfig);
 
   function togglePasswordVisibility() {
     passwordIsVisible
@@ -57,6 +61,7 @@ const LoginView = ({ navigation }) => {
     try {
       const credential = await singIn(email, password);
       if (credential.user) {
+        setIsSessionVerified(true);
         const controller = new RequestController(credential.user);
         controller
           .fetch("users/login?method=mail", "POST")
@@ -87,6 +92,7 @@ const LoginView = ({ navigation }) => {
       signInWithGoogle(response.authentication.accessToken).then(
         (credential) => {
           if (credential.user) {
+            setIsSessionVerified(true);
             const controller = new RequestController(credential.user);
             controller
               .fetch("users/login?method=federated_entity", "POST")

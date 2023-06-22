@@ -12,13 +12,14 @@ import {
 } from "@expo-google-fonts/poppins";
 
 import AuthenticationWrapper from "./components/AuthenticationWrapper/authenticationWrapper";
+import LocationWrapper from "./components/LocationWrapper/locationWrapper";
 import { Provider } from "react-native-paper";
 import { RecoilRoot } from "recoil";
 import Routes from "./components/Routes";
+import SessionVerifier from "./components/SessionVerifier/sessionVerifier";
 import { View } from "react-native";
 import { useCallback } from "react";
 import { useFonts } from "expo-font";
-import LocationWrapper from "./components/LocationWrapper/locationWrapper";
 
 SplashScreen.preventAutoHideAsync();
 const App = () => {
@@ -49,7 +50,9 @@ const App = () => {
         <Provider>
           <LocationWrapper>
             <AuthenticationWrapper>
-              <Routes />
+              <SessionVerifier>
+                <Routes />
+              </SessionVerifier>
             </AuthenticationWrapper>
           </LocationWrapper>
         </Provider>

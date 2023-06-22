@@ -2,14 +2,15 @@ import {
   GoogleAuthProvider,
   getAuth,
   initializeAuth,
+  sendPasswordResetEmail,
   signInWithCredential,
   signInWithEmailAndPassword,
   signOut,
-  sendPasswordResetEmail,
 } from "firebase/auth";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { getFirestore } from "firebase/firestore";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getFirestore } from "firebase/firestore";
 import { getReactNativePersistence } from "firebase/auth/react-native";
 import { initializeApp } from "firebase/app";
 import {
