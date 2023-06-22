@@ -9,14 +9,19 @@ import { Accelerometer } from "expo-sensors";
 import PlayIcon from "../../assets/images/general/playIcon.svg";
 import StopIcon from "../../assets/images/general/stopIcon.svg";
 import TrainingCompleteModal from "../Shared/Modals/TrainingCompleteModal/trainingCompleteModal";
-import { useRecoilState } from "recoil";
-import { selectedSessionState, trainingSessionsState } from "../../atoms";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import {
+  goalsState,
+  selectedSessionState,
+  trainingSessionsState,
+} from "../../atoms";
 import TrainingController from "../../utils/controllers/TrainingController";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
 
 const TrainingAttempt = ({ navigation, route }) => {
   const [user] = useAuthState(auth);
+  const setGoals = useSetRecoilState(goalsState);
   const [trainingSessions, setTrainingSessions] = useRecoilState(
     trainingSessionsState
   );
@@ -106,35 +111,36 @@ const TrainingAttempt = ({ navigation, route }) => {
 
   const updateSession = (trainingDone = false) => {
     const controller = new TrainingController(user);
-    if(trainingDone) {
-      setCompleted(true)
+    if (trainingDone) {
+      setCompleted(true);
     }
 
     controller
-        .updateTrainingSession(sessionId, {
-          done: trainingDone,
-          step_count: currentStepCount,
-          seconds_count: seconds,
-          exercise_sessions: exercises.map((exercise) => {
-            return {
-              id: exercise.id,
-              done: exercise.done,
-            };
-          }),
-        })
-        .then((response) => {
-          setSelectedSession(response);
-          setCompleted(response.Done);
-          setTrainingSessions(
-              trainingSessions.map((session) => {
-                if (session.ID === response.ID) {
-                  return response;
-                }
-                return session;
-              })
-          );
-        });
-  }
+      .updateTrainingSession(sessionId, {
+        done: trainingDone,
+        step_count: currentStepCount,
+        seconds_count: seconds,
+        exercise_sessions: exercises.map((exercise) => {
+          return {
+            id: exercise.id,
+            done: exercise.done,
+          };
+        }),
+      })
+      .then((response) => {
+        setSelectedSession(response);
+        setCompleted(response.Done);
+        setTrainingSessions(
+          trainingSessions.map((session) => {
+            if (session.ID === response.ID) {
+              return response;
+            }
+            return session;
+          })
+        );
+        controller.getGoals().then((goals) => setGoals(goals));
+      });
+  };
 
   const handleStopPress = () => {
     setIsActive(!isActive);
@@ -147,12 +153,13 @@ const TrainingAttempt = ({ navigation, route }) => {
         <Back onPress={() => navigation.goBack()} />
         <View style={styles.imageContainer}>
           <View style={styles.playAndInfoContainer}>
-            {completed ? (<View style={{display: "flex", alignItems: "center"}}>
-                  <Text style={styles.completedText}>Training Completed!</Text>
-                  <Text style={styles.completedText}>
-                      {formatTime(seconds)} and {stepCount} steps
-                  </Text>
-                </View>
+            {completed ? (
+              <View style={{ display: "flex", alignItems: "center" }}>
+                <Text style={styles.completedText}>Training Completed!</Text>
+                <Text style={styles.completedText}>
+                  {formatTime(seconds)} and {stepCount} steps
+                </Text>
+              </View>
             ) : (
               <>
                 <Text style={styles.trainingTime}>{formatTime(seconds)}</Text>

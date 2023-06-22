@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import {DARK_BLUE, DARK_GREY, GREEN, WHITE} from "../../../utils/colors";
+import {DARK_BLUE, DARK_GREY, GREEN, LIGHT_GREY, WHITE} from "../../../utils/colors";
 
 export const styles = StyleSheet.create({
     goalCard: {
@@ -7,6 +7,15 @@ export const styles = StyleSheet.create({
         width: "48%",
         height: "100%",
         backgroundColor: DARK_BLUE,
+        display: "flex",
+        justifyContent: "space-around",
+        padding: 20
+    },
+    loadingGoalCard: {
+        borderRadius: 18,
+        width: "48%",
+        height: "100%",
+        backgroundColor: LIGHT_GREY,
         display: "flex",
         justifyContent: "space-around",
         padding: 20

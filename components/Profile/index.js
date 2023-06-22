@@ -13,7 +13,6 @@ import { DARK_BLUE } from "../../utils/colors";
 import { useEffect, useState } from "react";
 import ProfileSwitcher from "./ProfileSwitcher";
 import CreatedTrainingsSection from "./CreatedTrainingsSection/CreatedTrainingsSection";
-import WalletSection from "./WalletSection/WalletSection";
 import GoalsSection from "./GoalsSection/GoalsSection";
 import { useIdToken } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
@@ -21,7 +20,7 @@ import TrainingController from "../../utils/controllers/TrainingController";
 import { useRecoilState } from "recoil";
 import {
   createdTrainingsState,
-  startedTrainingsState,
+  goalsState,
   trainingSessionsState,
   userDataState,
 } from "../../atoms";
@@ -38,6 +37,7 @@ const Profile = ({ navigation }) => {
   const [startedTrainings, setStartedTrainings] = useRecoilState(
     trainingSessionsState
   );
+  const [goals, setGoals] = useRecoilState(goalsState);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -52,10 +52,18 @@ const Profile = ({ navigation }) => {
   };
 
   const fetchUserTrainings = async () => {
-    const createdTrainings = await fetchCreatedTrainings();
-    const startedTrainings = await fetchStartedTrainings();
-    return { createdTrainings, startedTrainings };
-  }
+    const promises = [
+      fetchCreatedTrainings(),
+      fetchStartedTrainings(),
+      fetchGoals(),
+    ];
+
+    const [createdTrainings, startedTrainings, goals] = await Promise.all(
+      promises
+    );
+
+    return { createdTrainings, startedTrainings, goals };
+  };
 
   const fetchFollowers = async () => {
     const controller = new ProfileController(user);
@@ -69,32 +77,40 @@ const Profile = ({ navigation }) => {
     return data.followed;
   };
 
+  const fetchGoals = async () => {
+    const controller = new TrainingController(user);
+    return await controller.getGoals();
+  };
+
   const refreshData = async () => {
     setRefreshing(true);
-    const promises = [
-      fetchUserTrainings(),
-      fetchFollowers(),
-      fetchFollowing(),
-    ];
-    const [{ createdTrainings, startedTrainings }, followers, following] =
-      await Promise.all(promises);
+    const promises = [fetchUserTrainings(), fetchFollowers(), fetchFollowing()];
+    const [
+      { createdTrainings, startedTrainings, goals },
+      followers,
+      following,
+    ] = await Promise.all(promises);
     setCreatedTrainings(createdTrainings);
     setStartedTrainings(startedTrainings);
+    setGoals(goals);
     setUserData({ ...userData, followers, following });
     setRefreshing(false);
   };
 
   const fetchData = async () => {
     setLoading(true);
-    const trainings = await fetchCreatedTrainings();
-    const startedTrainings = await fetchStartedTrainings();
-    setCreatedTrainings(trainings);
+
+    const { createdTrainings, startedTrainings, goals } =
+      await fetchUserTrainings();
+
+    setCreatedTrainings(createdTrainings);
     setStartedTrainings(startedTrainings);
+    setGoals(goals);
+    
     setLoading(false);
   };
 
   useEffect(() => {
-    //TODO fetch started trainings
     fetchData();
   }, []);
 
@@ -135,8 +151,13 @@ const Profile = ({ navigation }) => {
               loading={loading || refreshing}
             />
           )}
-          {athleteProfileSelected && <GoalsSection />}
-          <WalletSection />
+          {athleteProfileSelected && (
+            <GoalsSection
+              goals={goals}
+              loading={loading || refreshing}
+              navigation={navigation}
+            />
+          )}
         </ScrollView>
       </View>
     </View>
