@@ -146,6 +146,24 @@ class TrainingController {
 
     return data.training_session;
   }
+
+  async getGoals() {
+    const { data } = await this.requestController.fetch(`goals`, "GET");
+
+    return data.goals;
+  }
+
+  async createGoal(goalData) {
+    return await this.requestController.fetch(`goals`, "POST", goalData);
+  }
+
+  async updateGoal(goalId, goalData) {
+    return await this.requestController.fetch(
+        `goals/${goalId}`,
+        "PATCH",
+        goalData
+    );
+  }
 }
 
 export default TrainingController;

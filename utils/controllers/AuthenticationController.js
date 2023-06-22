@@ -1,5 +1,9 @@
 import {singIn} from "../../firebase";
 import RequestController from "./RequestController";
+import { FIREBASE_EMAIL_VERIFY_URL } from "@env";
+
+
+const emailVerifyUrl = FIREBASE_EMAIL_VERIFY_URL;
 
 class AuthenticationController{
     constructor(user) {
@@ -10,7 +14,7 @@ class AuthenticationController{
     async sendVerificationMail(){
         const {stsTokenManager} = this.user;
         //TODO: add apikey to .env file
-        const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${'AIzaSyDbXF3gPXW-uggq-Fhsu_ANVgE-1mCYLcI'}`, {
+        const response = await fetch(emailVerifyUrl, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

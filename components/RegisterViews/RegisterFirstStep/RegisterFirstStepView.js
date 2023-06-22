@@ -24,25 +24,30 @@ import LockIcon from "../../../assets/images/general/lockIcon.svg";
 import MailIcon from "../../../assets/images/general/mailIcon.svg";
 import EyeIcon from "../../../assets/images/general/eyeIcon.svg";
 import HideEyeIcon from "../../../assets/images/general/hideEyeIcon.svg";
+import { EXPO_CLIENT_ID, EXPO_REDIRECT_URI } from "@env";
+
+const googleAuthConfig = {
+  expoClientId: EXPO_CLIENT_ID,
+  scopes: ["profile", "email"],
+  redirectUri: EXPO_REDIRECT_URI,
+};
 
 WebBrowser.maybeCompleteAuthSession();
 
 const RegisterFirstStepView = ({ navigation }) => {
+  const PASSWORD_MIN_CHARACTERS = 6;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   const [passwordRepeatIsVisible, setPasswordRepeatIsVisible] = useState(false);
-  const [checked, setChecked] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorModalIsVisible, setErrorModalIsVisible] = useState(false);
   const [errorDescription, setErrorDescription] = useState("");
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    expoClientId:
-      "235995330653-u65jmivq25u554uak81v7auljem4800e.apps.googleusercontent.com",
-    scopes: ["profile", "email"],
-    redirectUri: "https://auth.expo.io/@stein257/fiufitapp",
-  });
+  const [request, response, promptAsync] =
+    Google.useAuthRequest(googleAuthConfig);
 
   async function handleRegister() {
     if (!email || !password || !passwordRepeat) {
@@ -51,6 +56,12 @@ const RegisterFirstStepView = ({ navigation }) => {
     } else if (password !== passwordRepeat) {
       setErrorModalIsVisible(true);
       setErrorDescription("Passwords don't match!");
+    } else if (password?.length < PASSWORD_MIN_CHARACTERS) {
+      setErrorModalIsVisible(true);
+      setErrorDescription("The password should have at least 6 characters.");
+    } else if (!termsAccepted) {
+      setErrorModalIsVisible(true);
+      setErrorDescription("Terms of use and Privacy policy were not accepted!");
     } else {
       setLoading(true);
       const controller = new AuthenticationController();
@@ -120,7 +131,7 @@ const RegisterFirstStepView = ({ navigation }) => {
           width={"80%"}
           height={48}
           fontSize={12}
-          left={<MailIcon height={18} width={18}/>}
+          left={<MailIcon height={18} width={18} />}
           backgroundColor={"#FFFFFF"}
         />
         <Input
@@ -134,24 +145,24 @@ const RegisterFirstStepView = ({ navigation }) => {
           secureTextEntry={!passwordIsVisible}
           right={
             passwordIsVisible ? (
-                <HideEyeIcon
-                    height={18}
-                    width={25}
-                    onPress={() => {
-                      setPasswordIsVisible(!passwordIsVisible);
-                    }}
-                />
+              <HideEyeIcon
+                height={18}
+                width={25}
+                onPress={() => {
+                  setPasswordIsVisible(!passwordIsVisible);
+                }}
+              />
             ) : (
-                <EyeIcon
-                    height={18}
-                    width={25}
-                    onPress={() => {
-                      setPasswordIsVisible(!passwordIsVisible);
-                    }}
-                />
+              <EyeIcon
+                height={18}
+                width={25}
+                onPress={() => {
+                  setPasswordIsVisible(!passwordIsVisible);
+                }}
+              />
             )
           }
-          left={<LockIcon height={18} width={18}/>}
+          left={<LockIcon height={18} width={18} />}
         />
         <Input
           value={passwordRepeat}
@@ -181,14 +192,14 @@ const RegisterFirstStepView = ({ navigation }) => {
               />
             )
           }
-          left={<LockIcon height={18} width={18}/>}
+          left={<LockIcon height={18} width={18} />}
         />
         <View style={styles.checkboxPolicies}>
           <Checkbox
             color="black"
-            status={checked ? "checked" : "unchecked"}
+            status={termsAccepted ? "checked" : "unchecked"}
             onPress={() => {
-              setChecked(!checked);
+              setTermsAccepted(!termsAccepted);
             }}
           />
           <Text style={styles.policiesText}>

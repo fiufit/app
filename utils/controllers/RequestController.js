@@ -1,4 +1,5 @@
-const API_URL = "https://fiufit-gateway.fly.dev/v1/"
+import {API_GATEWAY_URL} from "@env";
+const API_URL = API_GATEWAY_URL;
 class RequestController{
 
     constructor(user) {

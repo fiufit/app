@@ -4,6 +4,20 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      API_GATEWAY_URL: ${{ secrets.API_GATEWAY_URL }}
+      EXPO_PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
+      EXPO_CLIENT_ID: ${{ secrets.EXPO_CLIENT_ID }}
+      EXPO_REDIRECT_URI: ${{ secrets.EXPO_REDIRECT_URI }}
+      FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+      FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+      FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+      FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+      FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+      FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+      FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
+      FIREBASE_EMAIL_VERIFY_URL: ${{ secrets.FIREBASE_EMAIL_VERIFY_URL }}
+      DEFAULT_PROFILE_PICTURE_URL: ${{ secrets.DEFAULT_PROFILE_PICTURE_URL }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -16,4 +30,4 @@ jobs:
       - name: Build and deploy app
         run: |
           expo login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
-          eas update --auto
+          eas update --auto --non-interactive
