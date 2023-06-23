@@ -1,25 +1,43 @@
-import {Image, Pressable, ScrollView, Text, TouchableOpacity, View} from "react-native";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { styles } from "./style.single-training";
 import Back from "../../Shared/Back/back";
 import trainingImage from "../../../assets/images/examples/woman.png";
 import FavouriteIcon from "../../../assets/images/general/favouriteIcon.svg";
 import StarIcon from "../../../assets/images/general/star.svg";
 import PencilIcon from "../../../assets/images/general/pencilIcon.svg";
-import { React, useState } from "react";
-import {WHITE} from "../../../utils/colors";
+import {React, useEffect, useState} from "react";
+import { WHITE } from "../../../utils/colors";
 import Exercise from "./Exercise/exercise";
 import Button from "../../Shared/Button/button";
-import {parseExercises} from "../../../utils/trainings";
-import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
-import {selectedSessionState, selectedTrainingState, trainingSessionsState} from "../../../atoms";
-import {useAuthState} from "react-firebase-hooks/auth";
-import {auth} from "../../../firebase";
+import {
+  isTrainingInFavorites,
+  parseExercises,
+} from "../../../utils/trainings";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  favoriteTrainingsState,
+  selectedSessionState,
+  selectedTrainingState,
+  trainingSessionsState,
+} from "../../../atoms";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../../firebase";
 import TrainingController from "../../../utils/controllers/TrainingController";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
 
 const SingleTraining = ({ navigation, route }) => {
   const [user] = useAuthState(auth);
   const selectedTraining = useRecoilValue(selectedTrainingState);
+  const [favoriteTrainings, setFavoriteTrainings] = useRecoilState(
+    favoriteTrainingsState
+  );
   const {
     Name: title,
     Duration: duration,
@@ -30,24 +48,31 @@ const SingleTraining = ({ navigation, route }) => {
     Tags: tags,
     ID: trainingId,
   } = selectedTraining;
-  const {start, createdTrainingIndex, userTraining} = route.params;
-  const { isFavourite } = route.params;
-  const [trainingSessions, setTrainingSessions] = useRecoilState(trainingSessionsState);
+  const { start, createdTrainingIndex, userTraining } = route.params;
+  const [trainingSessions, setTrainingSessions] = useRecoilState(
+    trainingSessionsState
+  );
   const setSelectedSession = useSetRecoilState(selectedSessionState);
-  const [favourite, setFavourite] = useState(isFavourite);
-  const exercises = parseExercises(trainingExercises);
+  const [favourite, setFavourite] = useState(
+    isTrainingInFavorites(trainingId, favoriteTrainings)
+  );
+  const [exercises, setExercises] = useState(parseExercises(trainingExercises));
   const [loading, setLoading] = useState(false);
 
   const handleStartPress = async () => {
-    setLoading(true)
+    setLoading(true);
     const controller = new TrainingController(user);
     let session = await controller.startTrainingSession(trainingId);
     session.TrainingPlan.PictureUrl = pictureUrl;
-    setLoading(false)
+    setLoading(false);
     setSelectedSession(session);
-    setTrainingSessions([...trainingSessions, session])
+    setTrainingSessions([...trainingSessions, session]);
 
-    navigation.navigate({name: "Training Attempt", merge: true, params: {session: session}})
+    navigation.navigate({
+      name: "Training Attempt",
+      merge: true,
+      params: { session: session },
+    });
   };
 
   const handleTopButtonPress = () => {
@@ -62,9 +87,36 @@ const SingleTraining = ({ navigation, route }) => {
         name: "Ratings",
         merge: true,
         params: { training: route.params.training, userTraining: false },
-      })
+      });
     }
-  }
+  };
+
+  const handleFavoritePress = () => {
+    const controller = new TrainingController(user);
+    if (favourite) {
+      controller.removeTrainingFromFavorites(trainingId).then((res) => {
+        console.log("Remove training from favorites", res);
+        setFavoriteTrainings(
+            favoriteTrainings.filter((training) => training.ID !== trainingId)
+        );
+      });
+
+    } else {
+      controller.addTrainingToFavorites(trainingId).then((res) => {
+        console.log("Add training to favorites", res);
+        setFavoriteTrainings([...favoriteTrainings, selectedTraining]);
+      });
+    }
+    setFavourite(!favourite);
+  };
+
+  useEffect(() => {
+    setFavourite(isTrainingInFavorites(trainingId, favoriteTrainings));
+  }, [trainingId])
+
+  useEffect(() => {
+    setExercises(parseExercises(trainingExercises));
+  }, [trainingExercises])
 
   return (
     <>
@@ -81,7 +133,11 @@ const SingleTraining = ({ navigation, route }) => {
               ? meanScore.toFixed(1)
               : "Rate"}
           </Text>
-          {userTraining ? <PencilIcon color={WHITE} width={12} height={12}/> : <StarIcon color={WHITE} width={12} height={12} />}
+          {Boolean(userTraining) ? (
+            <PencilIcon color={WHITE} width={12} height={12} />
+          ) : (
+            <StarIcon color={WHITE} width={12} height={12} />
+          )}
         </TouchableOpacity>
         <View style={styles.imageContainer}>
           <Image
@@ -94,7 +150,7 @@ const SingleTraining = ({ navigation, route }) => {
             <Text style={styles.title}>{title}</Text>
             <FavouriteIcon
               color={favourite ? "#000000" : WHITE}
-              onPress={() => setFavourite(!favourite)}
+              onPress={handleFavoritePress}
             />
           </View>
           <View style={styles.detailsContainer}>
@@ -117,7 +173,7 @@ const SingleTraining = ({ navigation, route }) => {
               contentContainerStyle={{ gap: 20 }}
               showsVerticalScrollIndicator={false}
             >
-              {exercises?.length &&
+              {Boolean(exercises?.length) &&
                 exercises.map((exercise, index) => {
                   return (
                     <Exercise

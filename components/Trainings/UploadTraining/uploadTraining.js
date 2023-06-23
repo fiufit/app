@@ -140,6 +140,7 @@ const UploadTraining = ({ navigation, route }) => {
           trainings: createdTrainings,
           title: "Created Trainings",
           created: true,
+          favorites: false,
         },
       });
     }
@@ -175,6 +176,7 @@ const UploadTraining = ({ navigation, route }) => {
           trainings: createdTrainings,
           title: "Created Trainings",
           created: true,
+          favorites: false
         },
       });
     }

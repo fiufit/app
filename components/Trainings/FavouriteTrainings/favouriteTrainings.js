@@ -9,40 +9,56 @@ import {
 import { styles } from "./style.favourite-trainings";
 import trainingImage from "../../../assets/images/examples/woman.png";
 import { useEffect, useState } from "react";
+import {isTrainingInFavorites} from "../../../utils/trainings";
 
 const FavouriteTrainings = ({
-  favourite,
+  favorite,
   recommended,
   onTrainingPress,
+  onSeeAllPress,
   loading,
 }) => {
   const loadingPlaceholder = [{ ID: 1 }, { ID: 2 }, { ID: 3 }, { ID: 4 }];
   const [trainingsToShow, setTrainingsToShow] = useState([]);
 
-  useEffect(() => {
-    if (loading) {
-      setTrainingsToShow(loadingPlaceholder);
-    } else if (favourite.length) {
-      setTrainingsToShow(favourite);
-    } else {
-      setTrainingsToShow(recommended);
-    }
-  }, [favourite, recommended, loading]);
-
   const transformTrainings = (trainings) => {
-    const transformedTrainings = [];
-    if (trainings.length <= 2) {
-      return trainings.map((training) => [training]);
+    let combinedTrainings = [...trainings];
+    if (favorite.length < 4 && favorite.length !== 0) {
+      combinedTrainings = combinedTrainings.concat(
+        recommended
+          .filter((training) => !isTrainingInFavorites(training.ID, favorite))
+          .slice(0, 4 - favorite.length)
+          .map((training) => ({ ...training, isRecommended: true }))
+      );
     }
-    for (let i = 0; i < trainings.length; i += 2) {
-      if (i + 1 < trainings.length) {
-        transformedTrainings.push([trainings[i], trainings[i + 1]]);
+
+    const transformedTrainings = [];
+    if (combinedTrainings.length <= 2) {
+      return combinedTrainings.map((training) => [training]);
+    }
+    for (let i = 0; i < combinedTrainings.length; i += 2) {
+      if (i + 1 < combinedTrainings.length) {
+        transformedTrainings.push([
+          combinedTrainings[i],
+          combinedTrainings[i + 1],
+        ]);
       } else {
-        transformedTrainings.push([trainings[i]]);
+        transformedTrainings.push([combinedTrainings[i]]);
       }
     }
     return transformedTrainings;
   };
+
+  useEffect(() => {
+    if (loading) {
+      setTrainingsToShow(transformTrainings(loadingPlaceholder));
+    } else if (favorite.length) {
+      setTrainingsToShow(transformTrainings(favorite));
+    } else {
+      setTrainingsToShow(transformTrainings(recommended));
+    }
+  }, [favorite, recommended, loading]);
+
 
   return (
     <View style={styles.container}>
@@ -51,13 +67,13 @@ const FavouriteTrainings = ({
           <View style={styles.loadingCardTitle} />
         ) : (
           <Text style={styles.title}>
-            {favourite.length
-              ? "Favourite Trainings"
-              : "Add these to favourites!"}
+            {favorite.length ? "Favorite Trainings" : "Add these to favorites!"}
           </Text>
         )}
-        <TouchableOpacity>
-          <Text style={styles.seeAll}>{favourite.length ? "See all" : ""}</Text>
+        <TouchableOpacity onPress={onSeeAllPress}>
+          <Text style={styles.seeAll}>
+            {favorite.length && !loading ? "See all" : ""}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -66,7 +82,7 @@ const FavouriteTrainings = ({
         style={styles.trainingsContainer}
         showsHorizontalScrollIndicator={false}
       >
-        {transformTrainings(trainingsToShow).map((trainingColumn, idx) => (
+        {trainingsToShow.map((trainingColumn, idx) => (
           <View style={styles.cardColumn} key={idx}>
             {trainingColumn.map((training) => (
               <TouchableOpacity
@@ -74,7 +90,7 @@ const FavouriteTrainings = ({
                   loading ? styles.loadingTrainingCard : styles.trainingCard
                 }
                 key={training.ID}
-                onPress={() => onTrainingPress(training)}
+                onPress={() => onTrainingPress({...training, isRecommended: false})}
               >
                 {!loading ? (
                   <Image
@@ -89,7 +105,11 @@ const FavouriteTrainings = ({
                     style={loading ? styles.loadingTitle : styles.trainingTitle}
                     numberOfLines={1}
                   >
-                    {loading ? "" : training.Name}
+                    {loading
+                      ? ""
+                      : training.isRecommended
+                      ? "Add this one!"
+                      : training.Name}
                   </Text>
                   <View style={styles.detailsContainer}>
                     <Text

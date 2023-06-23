@@ -8,8 +8,10 @@ import RecommendedTraining from "./RecommendedTraining/recommendedTraining";
 import FavouriteTrainings from "./FavouriteTrainings/favouriteTrainings";
 import SearchBar from "../Shared/SearchBar/searchBar";
 import TrainingAttempts from "./TrainingAttempts/trainingAttempts";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
+  createdTrainingsState,
+  favoriteTrainingsState,
   selectedSessionState,
   selectedTrainingState,
   trainingSessionsState,
@@ -26,8 +28,13 @@ const Trainings = ({ navigation }) => {
   const [trainingSessions, setTrainingSessions] = useRecoilState(
     trainingSessionsState
   );
+  const [favoriteTrainings, setFavoriteTrainings] = useRecoilState(
+    favoriteTrainingsState
+  );
+  const [createdTrainings, setCreatedTrainings] = useRecoilState(
+    createdTrainingsState
+  );
   const [recommendedTrainings, setRecommendedTrainings] = useState([]);
-  const [favouriteTrainings, setFavouriteTrainings] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchRecommendedTrainings = async () => {
@@ -40,22 +47,52 @@ const Trainings = ({ navigation }) => {
     return await controller.getTrainingSessions();
   };
 
-  const fetchUserTrainingsData = async () => {
-    const promises = [fetchRecommendedTrainings(), fetchTrainingSessions()];
+  const fetchFavoriteTrainings = async () => {
+    const controller = new TrainingController(user);
+    return await controller.getFavoriteTrainings();
+  };
 
-    const [recommendedTrainings, trainingSessions] = await Promise.all(
-      promises
-    );
-    return { recommendedTrainings, trainingSessions };
+  const fetchCreatedTrainings = async () => {
+    const controller = new TrainingController(user);
+    return await controller.getTrainings();
+  };
+
+  const fetchUserTrainingsData = async () => {
+    const promises = [
+      fetchRecommendedTrainings(),
+      fetchTrainingSessions(),
+      fetchFavoriteTrainings(),
+      fetchCreatedTrainings(),
+    ];
+
+    const [
+      recommendedTrainings,
+      trainingSessions,
+      favoriteTrainings,
+      userCreatedTrainings,
+    ] = await Promise.all(promises);
+    return {
+      recommendedTrainings,
+      trainingSessions,
+      favoriteTrainings,
+      userCreatedTrainings,
+    };
   };
 
   const fetchData = () => {
     setLoading(true);
 
     fetchUserTrainingsData().then(
-      ({ recommendedTrainings, trainingSessions }) => {
+      ({
+        recommendedTrainings,
+        trainingSessions,
+        favoriteTrainings,
+        userCreatedTrainings,
+      }) => {
         setRecommendedTrainings(recommendedTrainings);
         setTrainingSessions(trainingSessions);
+        setFavoriteTrainings(favoriteTrainings);
+        setCreatedTrainings(userCreatedTrainings);
         setLoading(false);
       }
     );
@@ -71,7 +108,14 @@ const Trainings = ({ navigation }) => {
       navigation.navigate({
         name: "Single Training",
         merge: true,
-        params: { training, start: true, userTraining: false },
+        params: {
+          training,
+          start: true,
+          userTraining: training.TrainerID === user.uid,
+          createdTrainingIndex: createdTrainings.findIndex(
+            (t) => t.id === training.id
+          ),
+        },
       });
     }
   };
@@ -84,6 +128,7 @@ const Trainings = ({ navigation }) => {
         title: "Recommended Trainings",
         paramTrainings: recommendedTrainings,
         created: false,
+        favorites: false,
       },
     });
   };
@@ -100,6 +145,18 @@ const Trainings = ({ navigation }) => {
         params: { session: session },
       });
     }
+  };
+
+  const handleFavoritesSeeAll = () => {
+    navigation.navigate({
+      name: "Training List",
+      merge: true,
+      params: {
+        title: "Favorite Trainings",
+        created: false,
+        favorites: true,
+      },
+    });
   };
 
   return (
@@ -146,10 +203,11 @@ const Trainings = ({ navigation }) => {
           loading={loading}
         />
         <FavouriteTrainings
-          favourite={favouriteTrainings}
+          favorite={favoriteTrainings.slice(0, 4)}
           recommended={recommendedTrainings.slice(1, 5)}
           onTrainingPress={handleTrainingPress}
           loading={loading}
+          onSeeAllPress={handleFavoritesSeeAll}
         />
         <TrainingAttempts
           navigation={navigation}

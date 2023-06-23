@@ -12,7 +12,7 @@ const CreatedTrainingsSection = ({ navigation, createdTrainings, loading }) => {
     navigation.navigate({
       name: "Training List",
       merge: true,
-      params: { trainings: createdTrainings, title: "Created Trainings", created: true},
+      params: { trainings: createdTrainings, title: "Created Trainings", created: true, favorites: false},
     });
   };
 
