@@ -52,3 +52,8 @@ export const goalsState = atom({
   key: "goalsState",
   default: [],
 });
+
+export const favoriteTrainingsState = atom({
+  key: "favoriteTrainingsState",
+  default: [],
+});
