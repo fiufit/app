@@ -78,3 +78,7 @@ export const typesCategory = {
     "step count": "Steps",
     "minutes count": "Minutes",
 }
+
+export const isTrainingInFavorites = (trainingId, favorites) => {
+    return favorites.some((favTraining) => favTraining.ID === trainingId);
+};
