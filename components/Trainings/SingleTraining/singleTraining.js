@@ -10,10 +10,10 @@ import { styles } from "./style.single-training";
 import Back from "../../Shared/Back/back";
 import trainingImage from "../../../assets/images/examples/woman.png";
 import FavouriteIcon from "../../../assets/images/general/favouriteIcon.svg";
-import StarIcon from "../../../assets/images/general/star.svg";
+import ChartIcon from "../../../assets/images/general/bar-chart.svg";
 import PencilIcon from "../../../assets/images/general/pencilIcon.svg";
-import {React, useEffect, useState} from "react";
-import { WHITE } from "../../../utils/colors";
+import { React, useEffect, useState } from "react";
+import { DARK_BLUE, WHITE } from "../../../utils/colors";
 import Exercise from "./Exercise/exercise";
 import Button from "../../Shared/Button/button";
 import {
@@ -97,10 +97,9 @@ const SingleTraining = ({ navigation, route }) => {
       controller.removeTrainingFromFavorites(trainingId).then((res) => {
         console.log("Remove training from favorites", res);
         setFavoriteTrainings(
-            favoriteTrainings.filter((training) => training.ID !== trainingId)
+          favoriteTrainings.filter((training) => training.ID !== trainingId)
         );
       });
-
     } else {
       controller.addTrainingToFavorites(trainingId).then((res) => {
         console.log("Add training to favorites", res);
@@ -112,11 +111,11 @@ const SingleTraining = ({ navigation, route }) => {
 
   useEffect(() => {
     setFavourite(isTrainingInFavorites(trainingId, favoriteTrainings));
-  }, [trainingId])
+  }, [trainingId]);
 
   useEffect(() => {
     setExercises(parseExercises(trainingExercises));
-  }, [trainingExercises])
+  }, [trainingExercises]);
 
   return (
     <>
@@ -136,7 +135,7 @@ const SingleTraining = ({ navigation, route }) => {
           {Boolean(userTraining) ? (
             <PencilIcon color={WHITE} width={12} height={12} />
           ) : (
-            <StarIcon color={WHITE} width={12} height={12} />
+            <ChartIcon color={WHITE} width={12} height={12} />
           )}
         </TouchableOpacity>
         <View style={styles.imageContainer}>
@@ -148,10 +147,28 @@ const SingleTraining = ({ navigation, route }) => {
         <View style={styles.infoContainer}>
           <View style={styles.titleAndIconContainer}>
             <Text style={styles.title}>{title}</Text>
-            <FavouriteIcon
-              color={favourite ? "#000000" : WHITE}
-              onPress={handleFavoritePress}
-            />
+            <View style={styles.iconsContainer}>
+              {userTraining && (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate({
+                      name: "Ratings",
+                      merge: true,
+                      params: {
+                        training: selectedTraining,
+                        userTraining: true,
+                      },
+                    })
+                  }
+                >
+                  <ChartIcon color={DARK_BLUE} width={25} height={25} />
+                </TouchableOpacity>
+              )}
+              <FavouriteIcon
+                color={favourite ? "#000000" : WHITE}
+                onPress={handleFavoritePress}
+              />
+            </View>
           </View>
           <View style={styles.detailsContainer}>
             <Text style={styles.detail}>{difficulty}</Text>

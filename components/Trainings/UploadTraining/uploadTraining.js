@@ -61,7 +61,9 @@ const UploadTraining = ({ navigation, route }) => {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const [showErrorModal, setShowErrorModal] = useState(false);
-  const [tags, setTags] = useState(edit ? trainingData?.Tags.map(tag => tag.Name) : []);
+  const [tags, setTags] = useState(
+    edit ? trainingData?.Tags.map((tag) => tag.Name) : []
+  );
 
   const resetStates = () => {
     setDifficultyToUploadIndex(0);
@@ -118,7 +120,7 @@ const UploadTraining = ({ navigation, route }) => {
     const { training, error } = await controller.editTraining(
       trainingData,
       updatedTrainingData,
-      exercisesToUpload,
+      exercisesToUpload
     );
 
     if (error) {
@@ -176,7 +178,7 @@ const UploadTraining = ({ navigation, route }) => {
           trainings: createdTrainings,
           title: "Created Trainings",
           created: true,
-          favorites: false
+          favorites: false,
         },
       });
     }
@@ -278,19 +280,6 @@ const UploadTraining = ({ navigation, route }) => {
                 ? titleToUpload
                 : "Title"}
             </Text>
-            {edit && (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate({
-                    name: "Ratings",
-                    merge: true,
-                    params: { training: trainingData, userTraining: true },
-                  })
-                }
-              >
-                <StarIcon color={DARK_BLUE} width={25} height={25} />
-              </TouchableOpacity>
-            )}
           </View>
           <View style={styles.detailsContainer}>
             <Text onPress={handleDifficultyPress} style={styles.detail}>
@@ -313,7 +302,10 @@ const UploadTraining = ({ navigation, route }) => {
           <View style={styles.tagsContainer}>
             {interests.map((interest, index) => {
               return (
-                <TouchableOpacity key={index} onPress={() => handleTagPress(interest) }>
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => handleTagPress(interest)}
+                >
                   <Text
                     style={{
                       ...styles.tag,
@@ -321,7 +313,9 @@ const UploadTraining = ({ navigation, route }) => {
                       backgroundColor: tags.includes(interest.toLowerCase())
                         ? DARK_BLUE
                         : "#F1F1F1",
-                      color: tags.includes(interest.toLowerCase()) ? WHITE : "#192126",
+                      color: tags.includes(interest.toLowerCase())
+                        ? WHITE
+                        : "#192126",
                     }}
                   >
                     {interest}
@@ -353,9 +347,7 @@ const UploadTraining = ({ navigation, route }) => {
                     add
                     exercises={exercisesToUpload}
                     setExercises={setExercisesToUpload}
-                    onDelete={(index) =>
-                      handleExerciseDelete(index)
-                    }
+                    onDelete={(index) => handleExerciseDelete(index)}
                     setEditOptions={setEditOptions}
                   />
                 );
