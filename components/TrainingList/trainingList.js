@@ -5,13 +5,24 @@ import TrainingCard from "../Shared/TrainingCard/trainingCard";
 import Button from "../Shared/Button/button";
 import { WHITE } from "../../utils/colors";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { createdTrainingsState, selectedTrainingState } from "../../atoms";
+import {
+  createdTrainingsState,
+  favoriteTrainingsState,
+  selectedTrainingState,
+  userDataState,
+} from "../../atoms";
 
 const TrainingList = ({ navigation, route }) => {
+  const userData = useRecoilValue(userDataState);
   const setSelectedTraining = useSetRecoilState(selectedTrainingState);
   const createdTrainings = useRecoilValue(createdTrainingsState);
-  const { paramTrainings, created, title } = route.params;
-  const trainings = created ? createdTrainings : paramTrainings;
+  const favoriteTrainings = useRecoilValue(favoriteTrainingsState);
+  const { paramTrainings, created, title, favorites } = route.params;
+  const trainings = created
+    ? createdTrainings
+    : favorites
+    ? favoriteTrainings
+    : paramTrainings;
   const handleBack = () => {
     navigation.goBack();
   };
@@ -21,13 +32,29 @@ const TrainingList = ({ navigation, route }) => {
       setSelectedTraining(training);
       navigation.navigate({
         name: "Single Training",
-        params: { start: true, userTraining: true, createdTrainingIndex: index },
+        params: {
+          start: true,
+          userTraining: true,
+          createdTrainingIndex: index,
+        },
       });
     } else {
       setSelectedTraining(training);
       navigation.navigate({
         name: "Single Training",
-        params: { training, start: true, userTraining: false },
+        params: {
+          training,
+          start: true,
+          userTraining: training.TrainerID === userData.ID,
+          createdTrainingIndex:
+            createdTrainings.findIndex(
+              (createdTraining) => createdTraining.ID === training.ID
+            ) < 0
+              ? undefined
+              : createdTrainings.findIndex(
+                  (createdTraining) => createdTraining.ID === training.ID
+                ),
+        },
       });
     }
   };

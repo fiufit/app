@@ -156,7 +156,6 @@ class TrainingController {
   async createGoal(goalData) {
     return await this.requestController.fetch(`goals`, "POST", goalData);
   }
-
   async updateGoal(goalId, goalData) {
     return await this.requestController.fetch(
         `goals/${goalId}`,
@@ -164,6 +163,33 @@ class TrainingController {
         goalData
     );
   }
+
+  async getFavoriteTrainings() {
+    const { data } = await this.requestController.fetch(
+      "trainings/favorites",
+      "GET"
+    );
+
+    return data.trainings;
+  }
+
+  async addTrainingToFavorites(trainingId) {
+    const { data } = await this.requestController.fetch(
+        `trainings/${trainingId}/favorites`,
+        "POST"
+    );
+
+    return data;
+  }
+
+    async removeTrainingFromFavorites(trainingId) {
+        const { data } = await this.requestController.fetch(
+            `trainings/${trainingId}/favorites`,
+            "DELETE"
+        );
+
+        return data;
+    }
 }
 
 export default TrainingController;
