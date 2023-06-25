@@ -169,7 +169,7 @@ const Profile = ({ navigation }) => {
             />
           )}
           {!athleteProfileSelected && createdTrainings.length > 0 && (
-            <TrainerStatsSection />
+            <TrainerStatsSection loading={loading || refreshing}/>
           )}
         </ScrollView>
       </View>
