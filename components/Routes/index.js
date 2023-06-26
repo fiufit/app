@@ -1,5 +1,3 @@
-import { Text, View } from "react-native";
-
 import Conversation from "../Conversation/Conversation";
 import EditProfile from "../Profile/EditProfile/editProfile";
 import MessagingView from "../MessagingView/MessagingView";
@@ -13,14 +11,13 @@ import TrainingList from "../TrainingList/trainingList";
 import TrainingsNavigation from "../TrainingsNavigation/trainingsNavigation";
 import UploadTraining from "../Trainings/UploadTraining/uploadTraining";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { styles } from "./styles.routes";
 import TrainingAttempt from "../TrainingAttempt/trainingAttempt";
 import Ratings from "../Ratings/ratings";
 import SessionList from "../SessionList/sessionList";
-import LogOutButton from "../Shared/LogOutButton/logOutButton";
 import NotificationsWrapper from "../NotificationsWrapper/notificationsWrapper";
 import UploadGoal from "../Goals/UploadGoal/uploadGoal";
 import GoalList from "../Goals/GoalList/goalList";
+import NotificationsNavigation from "../NotificationsNavigation/notificationsNavigation";
 
 const Tab = createBottomTabNavigator();
 
@@ -29,7 +26,7 @@ const Routes = () => {
     <NavigationContainer>
       <NotificationsWrapper>
         <Tab.Navigator
-          initialRouteName={"Home"}
+          initialRouteName={"Trainings"}
           screenOptions={{
             headerShown: false,
             tabBarShowLabel: false,
@@ -41,8 +38,8 @@ const Routes = () => {
             name="RegisterSecondStep"
             component={RegisterSecondStepView}
           />
-          <Tab.Screen name="Home" component={InDevelopment} />
           <Tab.Screen name="Trainings" component={TrainingsNavigation} />
+          <Tab.Screen name="Notifications" component={NotificationsNavigation} />
           <Tab.Screen name="Single Training" component={SingleTraining} />
           <Tab.Screen name="New Training" component={UploadTraining} />
           <Tab.Screen
@@ -77,14 +74,6 @@ const Routes = () => {
         </Tab.Navigator>
       </NotificationsWrapper>
     </NavigationContainer>
-  );
-};
-const InDevelopment = ({ navigation }) => {
-  return (
-    <View style={styles.container}>
-      <LogOutButton />
-      <Text>In development</Text>
-    </View>
   );
 };
 

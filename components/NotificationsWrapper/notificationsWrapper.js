@@ -2,16 +2,18 @@ import { useEffect, useRef } from "react";
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 import * as Device from "expo-device";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   expoPushTokenState,
-  notificationSubscriptionIdState
+  notificationsState,
+  notificationSubscriptionIdState,
 } from "../../atoms";
 import { auth } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import NotificationController from "../../utils/controllers/NotificationController";
 import { useNavigation } from "@react-navigation/native";
-import {EXPO_PROJECT_ID} from "@env";
+import { EXPO_PROJECT_ID } from "@env";
+import { getNotificationIdByBody } from "../../utils/notifications";
 
 //TODO: decide if we want to show push notifications while app is running
 Notifications.setNotificationHandler({
@@ -30,8 +32,8 @@ const NotificationsWrapper = ({ children }) => {
   const setNotificationSubscriptionId = useSetRecoilState(
     notificationSubscriptionIdState
   );
+  const [notifications, setNotifications] = useRecoilState(notificationsState);
   const [user] = useAuthState(auth);
-
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => {
@@ -48,16 +50,32 @@ const NotificationsWrapper = ({ children }) => {
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
         console.log("NOTIFICATION", notification);
+        const notificationController = new NotificationController(user);
+        notificationController.getNotifications().then(({ notifications }) => {
+          setNotifications(notifications);
+        });
       });
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
         console.log("NOTIFICATION RESPONSE", response);
+
+        const notificationController = new NotificationController(user);
+
+        notificationController
+          .markNotificationAsRead(
+            getNotificationIdByBody(
+              notifications,
+              response.notification.request.content.body
+            )
+          )
+          .then((data) => console.log("Notification read", data));
+
         const { redirectTo, params } =
           response.notification.request.content.data;
-          if(redirectTo){
-            navigation.navigate(redirectTo, params);
-          }
+        if (redirectTo) {
+          navigation.navigate(redirectTo, params);
+        }
       });
 
     return () => {
@@ -91,9 +109,11 @@ const NotificationsWrapper = ({ children }) => {
       if (finalStatus !== "granted") {
         return;
       }
-      token = (await Notifications.getExpoPushTokenAsync({
-        projectId: EXPO_PROJECT_ID,
-      })).data;
+      token = (
+        await Notifications.getExpoPushTokenAsync({
+          projectId: EXPO_PROJECT_ID,
+        })
+      ).data;
       console.log("EXPO PUSH TOKEN", token);
     } else {
       alert("Must use physical device for Push Notifications");
