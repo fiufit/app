@@ -49,7 +49,7 @@ class NotificationController {
 
   async getNotifications() {
     const { data } = await this.requestController.fetch(
-      `notifications/push?read=false&limit=${10}`,
+      `notifications/push`,
       "GET"
     );
 
