@@ -57,3 +57,8 @@ export const favoriteTrainingsState = atom({
   key: "favoriteTrainingsState",
   default: [],
 });
+
+export const notificationsState = atom({
+    key: "notificationsState",
+    default: [],
+});
