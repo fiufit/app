@@ -1,5 +1,5 @@
 export const uniqueNotifications = (notifications) => {
-    const uniqueNotifications = [];
+    let uniqueNotifications = [];
 
     notifications.forEach((notification) => {
         if (!uniqueNotifications.filter(n => n.body === notification.body).length) {
@@ -7,7 +7,7 @@ export const uniqueNotifications = (notifications) => {
         }
     });
 
-    return uniqueNotifications;
+    return uniqueNotifications.filter((notification) => notification.data.type !== "NEW_MESSAGE");
 }
 
 export const getNotificationIdByBody = (notifications, body) => {
