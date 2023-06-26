@@ -57,7 +57,6 @@ const Notifications = ({ navigation }) => {
       >
         {notifications.length > 0 &&
           uniqueNotifications(notifications)
-            .filter((notification) => notification.title === "FiuFit")
             .map((notification) => {
               return (
                 <TouchableOpacity

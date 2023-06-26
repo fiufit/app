@@ -61,15 +61,27 @@ const NotificationsWrapper = ({ children }) => {
         console.log("NOTIFICATION RESPONSE", response);
 
         const notificationController = new NotificationController(user);
-
+        const notificationId = getNotificationIdByBody(
+            notifications,
+            response.notification.request.content.body
+            );
         notificationController
           .markNotificationAsRead(
-            getNotificationIdByBody(
-              notifications,
-              response.notification.request.content.body
-            )
+            notificationId
           )
-          .then((data) => console.log("Notification read", data));
+          .then((data) => {
+            console.log("Notification read", data);
+            setNotifications(notifications.map((n) => {
+                if (n.id === notificationId) {
+                    return {
+                    ...n,
+                    read: true,
+                    };
+                }
+
+                return n;
+            }));
+          });
 
         const { redirectTo, params } =
           response.notification.request.content.data;

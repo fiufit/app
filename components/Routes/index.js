@@ -17,7 +17,7 @@ import SessionList from "../SessionList/sessionList";
 import NotificationsWrapper from "../NotificationsWrapper/notificationsWrapper";
 import UploadGoal from "../Goals/UploadGoal/uploadGoal";
 import GoalList from "../Goals/GoalList/goalList";
-import NotificationsNavigation from "../NotificationsNavigation/notificationsNavigation";
+import Notifications from "../Notifications/notifications";
 
 const Tab = createBottomTabNavigator();
 
@@ -39,7 +39,7 @@ const Routes = () => {
             component={RegisterSecondStepView}
           />
           <Tab.Screen name="Trainings" component={TrainingsNavigation} />
-          <Tab.Screen name="Notifications" component={NotificationsNavigation} />
+          <Tab.Screen name="Notifications" component={Notifications} />
           <Tab.Screen name="Single Training" component={SingleTraining} />
           <Tab.Screen name="New Training" component={UploadTraining} />
           <Tab.Screen
