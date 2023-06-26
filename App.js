@@ -9,6 +9,7 @@ import {
   Poppins_400Regular,
   Poppins_500Medium,
   Poppins_700Bold,
+  Poppins_600SemiBold,
 } from "@expo-google-fonts/poppins";
 
 import AuthenticationWrapper from "./components/AuthenticationWrapper/authenticationWrapper";
@@ -27,6 +28,7 @@ const App = () => {
     Poppins_500Medium,
     Poppins_700Bold,
     Poppins_400Regular,
+    Poppins_600SemiBold,
     Lato_700Bold,
     Lato_400Regular,
     Lato_300Light,
