@@ -1,6 +1,6 @@
 import {View, TouchableOpacity, LayoutAnimation, Keyboard} from "react-native";
 import { styles } from "./styles.tabbar";
-import HomeIcon from "../../assets/images/tabBar/homeIcon.svg";
+import NotificationsIcon from "../../assets/images/tabBar/notificationsIcon.svg";
 import MessageIcon from "../../assets/images/tabBar/messagesIcon.svg";
 import TrainingsIcon from "../../assets/images/tabBar/trainingsIcon.svg";
 import UserIcon from "../../assets/images/tabBar/userIcon.svg"
@@ -8,15 +8,15 @@ import {GREEN} from "../../utils/colors";
 import {useEffect, useState} from "react";
 
 const icons = {
-    "Home": style => <HomeIcon style={style} />,
     "Trainings": style => <TrainingsIcon style={style} />,
+    "Notifications": style => <NotificationsIcon style={style} />,
     "Messages": style => <MessageIcon style={style} />,
     "Profile": style => <UserIcon style={style} />,
 };
 
 const barPosition = {
-    "Home": "9.5%",
-    "Trainings": "31.5%",
+    "Trainings": "9.5%",
+    "Notifications": "31.5%",
     "Messages": "53.5%",
     "Profile": "75.5%",
 };
