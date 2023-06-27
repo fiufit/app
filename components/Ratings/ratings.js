@@ -2,9 +2,11 @@ import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./style.ratings";
 import Back from "../Shared/Back/back";
 import StarIcon from "../../assets/images/general/star.svg";
+import FavoriteIcon from "../../assets/images/general/favouriteIcon.svg";
+import SessionIcon from "../../assets/images/general/barbell-outline.svg";
 import { DARK_BLUE, WHITE } from "../../utils/colors";
 import Button from "../Shared/Button/button";
-import { auth, DEFAULT_PROFILE_PICTURE } from "../../firebase";
+import { auth } from "../../firebase";
 import RatingModal from "../Shared/Modals/RatingModal/ratingModal";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -98,18 +100,53 @@ const Ratings = ({ navigation, route }) => {
       <View style={styles.container}>
         <Back onPress={handleBack} />
         <Text style={styles.title}>{title}</Text>
-        {meanScore === 0 ? (
+        {meanScore === 0 && (
           <Text style={styles.subtitle}>
-            {userTraining ? "There are no ratings for this training" : "Be the first to rate this training!"}
+            {userTraining
+              ? "There are no reviews for this training"
+              : "Be the first to rate this training!"}
           </Text>
-        ) : (
-          <View style={styles.ratingContainer}>
-            <Text style={styles.rating}>{meanScore.toFixed(1)}</Text>
-            <StarIcon color={DARK_BLUE} height={50} width={50} />
-          </View>
         )}
+        <View
+          style={{
+            ...styles.dataContainer,
+            justifyContent: userTraining ? meanScore > 0 ? "space-between" : "space-evenly" : "center",
+          }}
+        >
+          { meanScore > 0 &&
+            <View style={styles.ratingContainer}>
+              <Text
+                style={{ ...styles.rating, fontSize: !userTraining ? 50 : 30 }}
+              >
+                {meanScore.toFixed(1)}
+              </Text>
+              <StarIcon
+                color={DARK_BLUE}
+                height={!userTraining ? 30 : 25}
+                width={30}
+              />
+            </View>
+          }
+          {userTraining && (
+            <View style={styles.ratingContainer}>
+              <Text style={styles.rating}>{training.FavoritesCount}</Text>
+              <FavoriteIcon color={DARK_BLUE} height={20} width={30} />
+            </View>
+          )}
+          {userTraining && (
+            <View style={styles.ratingContainer}>
+              <Text style={styles.rating}>{training.SessionsCount}</Text>
+              <SessionIcon
+                color={DARK_BLUE}
+                height={25}
+                width={30}
+                rotation={45}
+              />
+            </View>
+          )}
+        </View>
         {meanScore > 0 && (
-          <View style={{ height: userTraining? "60%" : "50%", width: "100%" }}>
+          <View style={{ height: userTraining ? "60%" : "50%", width: "100%" }}>
             <ScrollView
               overScrollMode="never"
               showsVerticalScrollIndicator={false}
@@ -181,7 +218,9 @@ const Ratings = ({ navigation, route }) => {
                           </View>
                         </View>
                       </View>
-                      {review.Comment && <Text style={styles.ratingText}>{review.Comment}</Text>}
+                      {review.Comment && (
+                        <Text style={styles.ratingText}>{review.Comment}</Text>
+                      )}
                     </View>
                   );
                 })}

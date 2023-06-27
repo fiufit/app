@@ -82,3 +82,29 @@ export const typesCategory = {
 export const isTrainingInFavorites = (trainingId, favorites) => {
     return favorites.some((favTraining) => favTraining.ID === trainingId);
 };
+
+export const trainingsTotalFavorites = (trainings) => {
+    return trainings
+        .map((training) => training.FavoritesCount)
+        .reduce((a, b) => a + b, 0)
+}
+
+export const trainingsAverageRating = (trainings) => {
+    const filteredTrainings = trainings.filter((training) => training.MeanScore !== 0)
+
+    return filteredTrainings
+        .map((training) => training.MeanScore)
+        .reduce((a, b) => a + b, 0) / filteredTrainings.length
+}
+
+export const trainingsTotalReviews = (trainings) => {
+    return trainings
+        .map((training) => training?.Reviews?.length ?? 0)
+        .reduce((a, b) => a + b, 0)
+}
+
+export const trainingsTotalSessions = (trainings) => {
+    return trainings
+        .map((training) => training.SessionsCount)
+        .reduce((a, b) => a + b, 0)
+}

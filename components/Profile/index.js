@@ -17,15 +17,17 @@ import GoalsSection from "./GoalsSection/GoalsSection";
 import { useIdToken } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
 import TrainingController from "../../utils/controllers/TrainingController";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   createdTrainingsState,
+  favoriteTrainingsState,
   goalsState,
   trainingSessionsState,
   userDataState,
 } from "../../atoms";
 import StartedTrainingsSection from "./StartedTrainingsSection/startedTrainingsSection";
 import ProfileController from "../../utils/controllers/ProfileController";
+import TrainerStatsSection from "./TrainerStatsSection/trainerStatsSection";
 
 const Profile = ({ navigation }) => {
   const [userData, setUserData] = useRecoilState(userDataState);
@@ -37,6 +39,7 @@ const Profile = ({ navigation }) => {
   const [startedTrainings, setStartedTrainings] = useRecoilState(
     trainingSessionsState
   );
+  const setFavoriteTrainings = useSetRecoilState(favoriteTrainingsState);
   const [goals, setGoals] = useRecoilState(goalsState);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -51,18 +54,23 @@ const Profile = ({ navigation }) => {
     return await controller.getTrainingSessions();
   };
 
+  const fetchFavoriteTrainings = async () => {
+    const controller = new TrainingController(user);
+    return await controller.getFavoriteTrainings();
+  };
+
   const fetchUserTrainings = async () => {
     const promises = [
       fetchCreatedTrainings(),
       fetchStartedTrainings(),
       fetchGoals(),
+      fetchFavoriteTrainings(),
     ];
 
-    const [createdTrainings, startedTrainings, goals] = await Promise.all(
-      promises
-    );
+    const [createdTrainings, startedTrainings, goals, favoriteTrainings] =
+      await Promise.all(promises);
 
-    return { createdTrainings, startedTrainings, goals };
+    return { createdTrainings, startedTrainings, goals, favoriteTrainings };
   };
 
   const fetchFollowers = async () => {
@@ -86,13 +94,14 @@ const Profile = ({ navigation }) => {
     setRefreshing(true);
     const promises = [fetchUserTrainings(), fetchFollowers(), fetchFollowing()];
     const [
-      { createdTrainings, startedTrainings, goals },
+      { createdTrainings, startedTrainings, goals, favoriteTrainings },
       followers,
       following,
     ] = await Promise.all(promises);
     setCreatedTrainings(createdTrainings);
     setStartedTrainings(startedTrainings);
     setGoals(goals);
+    setFavoriteTrainings(favoriteTrainings);
     setUserData({ ...userData, followers, following });
     setRefreshing(false);
   };
@@ -100,13 +109,14 @@ const Profile = ({ navigation }) => {
   const fetchData = async () => {
     setLoading(true);
 
-    const { createdTrainings, startedTrainings, goals } =
+    const { createdTrainings, startedTrainings, goals, favoriteTrainings } =
       await fetchUserTrainings();
 
     setCreatedTrainings(createdTrainings);
     setStartedTrainings(startedTrainings);
     setGoals(goals);
-    
+    setFavoriteTrainings(favoriteTrainings);
+
     setLoading(false);
   };
 
@@ -157,6 +167,9 @@ const Profile = ({ navigation }) => {
               loading={loading || refreshing}
               navigation={navigation}
             />
+          )}
+          {!athleteProfileSelected && createdTrainings.length > 0 && (
+            <TrainerStatsSection loading={loading || refreshing}/>
           )}
         </ScrollView>
       </View>
