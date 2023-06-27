@@ -51,8 +51,8 @@ const NotificationsWrapper = ({ children }) => {
       Notifications.addNotificationReceivedListener((notification) => {
         console.log("NOTIFICATION", notification);
         const notificationController = new NotificationController(user);
-        notificationController.getNotifications().then(({ notifications }) => {
-          setNotifications(notifications);
+        notificationController.getNotifications().then((data) => {
+          setNotifications(data?.notifications ?? []);
         });
       });
 

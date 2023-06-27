@@ -34,9 +34,9 @@ const AuthenticationWrapper = ({ children }) => {
           { data },
           { data: followersData },
           { data: followingData },
-          { notifications },
+          notificationsData,
         ] = await Promise.all(promises);
-        setNotifications(notifications);
+        setNotifications(notificationsData?.notifications ?? []);
         setUserData({
           ...data,
           followers: followersData?.followers ?? [],
