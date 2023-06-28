@@ -25,6 +25,8 @@ import MailIcon from "../../../assets/images/general/mailIcon.svg";
 import EyeIcon from "../../../assets/images/general/eyeIcon.svg";
 import HideEyeIcon from "../../../assets/images/general/hideEyeIcon.svg";
 import { EXPO_CLIENT_ID, EXPO_REDIRECT_URI } from "@env";
+import {userDataState} from "../../../atoms";
+import {useSetRecoilState} from "recoil";
 
 const googleAuthConfig = {
   expoClientId: EXPO_CLIENT_ID,
@@ -37,6 +39,7 @@ WebBrowser.maybeCompleteAuthSession();
 const RegisterFirstStepView = ({ navigation }) => {
   const PASSWORD_MIN_CHARACTERS = 6;
 
+  const setUserData = useSetRecoilState(userDataState);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
@@ -50,6 +53,7 @@ const RegisterFirstStepView = ({ navigation }) => {
     Google.useAuthRequest(googleAuthConfig);
 
   async function handleRegister() {
+    setUserData({});
     if (!email || !password || !passwordRepeat) {
       setErrorModalIsVisible(true);
       setErrorDescription("You need to complete all fields!");
@@ -95,6 +99,7 @@ const RegisterFirstStepView = ({ navigation }) => {
   }
 
   async function handleGoogleRegister() {
+    setUserData({});
     setLoading(true);
     await promptAsync();
   }

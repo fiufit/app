@@ -59,7 +59,11 @@ const Routes = () => {
             />
             <Tab.Screen name="Search View" component={SearchView} />
             <Tab.Screen name="Profile" component={ProfileNavigation} />
-            <Tab.Screen name="Profile Settings" component={EditProfile} />
+            <Tab.Screen
+              name="Profile Settings"
+              component={EditProfile}
+              options={{ unmountOnBlur: true }}
+            />
             <Tab.Screen
               name="Training Attempt"
               component={TrainingAttempt}

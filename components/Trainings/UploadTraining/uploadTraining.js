@@ -13,7 +13,7 @@ import AddImageIcon from "../../../assets/images/general/galleryadd.svg";
 import { DARK_BLUE, WHITE } from "../../../utils/colors";
 import Exercise from "../SingleTraining/Exercise/exercise";
 import Button from "../../Shared/Button/button";
-import ImageModal from "../../Shared/Modals/ImageModal/imageModal";
+import MediaModal from "../../Shared/Modals/MediaModal/mediaModal";
 import EditModal from "../../Shared/Modals/EditModal/editModal";
 import { React, useState } from "react";
 import TrainingController from "../../../utils/controllers/TrainingController";
@@ -374,7 +374,7 @@ const UploadTraining = ({ navigation, route }) => {
         </View>
       </View>
       {showImageModal && (
-        <ImageModal
+        <MediaModal
           imageAspect={[4, 3]}
           onClose={() => setShowImageModal(false)}
           onUpload={(image) => {

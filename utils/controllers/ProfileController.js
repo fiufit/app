@@ -35,6 +35,16 @@ class ProfileController {
         return await this.requestController
             .fetch(`users/${userId}/followers`, "DELETE");
     }
+
+    async getPendingCertifications(userId = null){
+        return await this.requestController
+            .fetch(`users/certifications?user_id=${userId ?? this.user.uid}&status=pending`, "GET");
+    }
+
+    async sendVerificationAttempt(){
+        return await this.requestController
+            .fetch(`users/certifications`, "POST");
+    }
 }
 
 export default ProfileController;

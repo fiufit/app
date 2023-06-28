@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
   name: {
     fontFamily: "Poppins_500Medium",
     fontSize: 25,
-    marginTop: "5%",
+    marginTop: "3%",
   },
   nickName: {
     fontFamily: "Poppins_400Regular",
