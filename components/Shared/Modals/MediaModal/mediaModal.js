@@ -1,7 +1,7 @@
-import { styles } from "./styles.imageModal";
+import { styles } from "./styles.mediaModal";
 import { Text, View, Image, Pressable } from "react-native";
 import Button from "../../Button/button";
-import { LIGHT_GREY, MEDIUM_GREY, WHITE } from "../../../../utils/colors";
+import { MEDIUM_GREY, WHITE } from "../../../../utils/colors";
 import { useState } from "react";
 import AddImageGalery from "../../../../assets/images/general/galleryadd.svg";
 import AddImageCamera from "../../../../assets/images/general/cameraIcon.svg";
