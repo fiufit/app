@@ -1,5 +1,5 @@
-import { useRecoilState } from "recoil";
-import { userDataState } from "../../atoms";
+import {useRecoilState, useSetRecoilState} from "recoil";
+import {notificationsState, userDataState} from "../../atoms";
 import { useIdToken } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase";
 import Authentication from "./Authentication/authentication";
@@ -10,9 +10,11 @@ import LoadingModal from "../Shared/Modals/LoadingModal/loadingModal";
 import { useEffect, useState } from "react";
 import Background from "../Background/background";
 import ProfileController from "../../utils/controllers/ProfileController";
+import NotificationController from "../../utils/controllers/NotificationController";
 
 const AuthenticationWrapper = ({ children }) => {
   const [userData, setUserData] = useRecoilState(userDataState);
+  const setNotifications = useSetRecoilState(notificationsState);
   const [loadingData, setLoadingData] = useState(false);
   const [user, loadingUser] = useIdToken(auth);
 
@@ -21,19 +23,27 @@ const AuthenticationWrapper = ({ children }) => {
       setLoadingData(true);
       if (!userData?.DisplayName) {
         const profileController = new ProfileController(user);
+        const notificationController = new NotificationController(user);
         const promises = [
           profileController.getProfileData(),
           profileController.getFollowers(),
           profileController.getFollowing(),
+          notificationController.getNotifications(),
         ];
-        const [{ data }, { data: followersData }, { data: followingData }] =
-          await Promise.all(promises);
-
+        const [
+          { data },
+          { data: followersData },
+          { data: followingData },
+          notificationsData,
+        ] = await Promise.all(promises);
+        setNotifications(notificationsData?.notifications ?? []);
         setUserData({
           ...data,
           followers: followersData?.followers ?? [],
           following: followingData?.followed ?? [],
         });
+
+
       }
       if (!user.emailVerified) {
         const authController = new AuthenticationController(user);

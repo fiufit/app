@@ -9,6 +9,7 @@ import {
   Poppins_400Regular,
   Poppins_500Medium,
   Poppins_700Bold,
+  Poppins_600SemiBold,
 } from "@expo-google-fonts/poppins";
 
 import AuthenticationWrapper from "./components/AuthenticationWrapper/authenticationWrapper";
@@ -16,7 +17,6 @@ import LocationWrapper from "./components/LocationWrapper/locationWrapper";
 import { Provider } from "react-native-paper";
 import { RecoilRoot } from "recoil";
 import Routes from "./components/Routes";
-import SessionVerifier from "./components/SessionVerifier/sessionVerifier";
 import { View } from "react-native";
 import { useCallback } from "react";
 import { useFonts } from "expo-font";
@@ -27,6 +27,7 @@ const App = () => {
     Poppins_500Medium,
     Poppins_700Bold,
     Poppins_400Regular,
+    Poppins_600SemiBold,
     Lato_700Bold,
     Lato_400Regular,
     Lato_300Light,
@@ -50,9 +51,7 @@ const App = () => {
         <Provider>
           <LocationWrapper>
             <AuthenticationWrapper>
-              <SessionVerifier>
-                <Routes />
-              </SessionVerifier>
+              <Routes />
             </AuthenticationWrapper>
           </LocationWrapper>
         </Provider>

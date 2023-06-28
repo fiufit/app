@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import {DARK_BLUE} from "../../utils/colors";
+import {DARK_BLUE, GREEN} from "../../utils/colors";
 
 export const styles = StyleSheet.create({
     tabBar: {
@@ -23,5 +23,15 @@ export const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         width: "10%",
+        position: "relative",
     },
+    notificationDot: {
+        position: "absolute",
+        top: "27%",
+        right: "15%",
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        backgroundColor: GREEN,
+    }
 })
