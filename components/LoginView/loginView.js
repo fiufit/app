@@ -23,7 +23,7 @@ import LoginIcon from "../../assets/images/general/loginIcon.svg";
 import MailIcon from "../../assets/images/general/mailIcon.svg";
 import RequestController from "../../utils/controllers/RequestController";
 import { WHITE } from "../../utils/colors";
-import { sessionVerifiedState } from "../../atoms";
+import {sessionVerifiedState, userDataState} from "../../atoms";
 import { styles } from "./styles.loginView";
 import { useSetRecoilState } from "recoil";
 import { EXPO_CLIENT_ID, EXPO_REDIRECT_URI } from "@env";
@@ -37,6 +37,7 @@ const googleAuthConfig = {
 WebBrowser.maybeCompleteAuthSession();
 
 const LoginView = ({ navigation }) => {
+  const setUserData = useSetRecoilState(userDataState);
   const setIsSessionVerified = useSetRecoilState(sessionVerifiedState);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -58,6 +59,7 @@ const LoginView = ({ navigation }) => {
   }
 
   async function handleLogIn() {
+    setUserData({})
     try {
       const credential = await singIn(email, password);
       if (credential.user) {
@@ -78,6 +80,7 @@ const LoginView = ({ navigation }) => {
   }
 
   async function handleGoogleLogIn() {
+    setUserData({})
     setLoading(true);
     await promptAsync();
   }
