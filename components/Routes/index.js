@@ -60,7 +60,11 @@ const Routes = () => {
           />
           <Tab.Screen name="Search View" component={SearchView} />
           <Tab.Screen name="Profile" component={ProfileNavigation} />
-          <Tab.Screen name="Profile Settings" component={EditProfile} />
+          <Tab.Screen
+            name="Profile Settings"
+            component={EditProfile}
+            options={{ unmountOnBlur: true }}
+          />
           <Tab.Screen
             name="Training Attempt"
             component={TrainingAttempt}
@@ -72,8 +76,16 @@ const Routes = () => {
             options={{ unmountOnBlur: true }}
           />
           <Tab.Screen name={"Create Goal"} component={UploadGoal} />
-          <Tab.Screen name={"Update Goal"} component={UploadGoal} options={{unmountOnBlur: true}}/>
-          <Tab.Screen name={"Goal List"} component={GoalList} options={{unmountOnBlur: true}}/>
+          <Tab.Screen
+            name={"Update Goal"}
+            component={UploadGoal}
+            options={{ unmountOnBlur: true }}
+          />
+          <Tab.Screen
+            name={"Goal List"}
+            component={GoalList}
+            options={{ unmountOnBlur: true }}
+          />
         </Tab.Navigator>
       </NotificationsWrapper>
     </NavigationContainer>
