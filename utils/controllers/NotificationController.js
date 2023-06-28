@@ -46,6 +46,25 @@ class NotificationController {
       data,
     });
   }
+
+  async getNotifications() {
+    const { data } = await this.requestController.fetch(
+      `notifications/push`,
+      "GET"
+    );
+
+    return data;
+  }
+
+  async markNotificationAsRead(notificationId) {
+    return await this.requestController.fetch(
+      `notifications/push/${notificationId}`,
+      "PATCH",
+      {
+        read: true,
+      }
+    );
+  }
 }
 
 export default NotificationController;

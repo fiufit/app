@@ -2,14 +2,18 @@ import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles.user-list";
 import Back from "../Shared/Back/back";
 import { DARK_BLUE, WHITE } from "../../utils/colors";
-import { DEFAULT_PROFILE_PICTURE } from "../../firebase";
+import {auth, DEFAULT_PROFILE_PICTURE} from "../../firebase";
 import VerifiedIcon from "../../assets/images/profile/verifiedIcon.svg";
-import { useRecoilValue } from "recoil";
+import {useRecoilState, useRecoilValue} from "recoil";
 import { userDataState } from "../../atoms";
+import {useEffect} from "react";
+import ProfileController from "../../utils/controllers/ProfileController";
+import {useAuthState} from "react-firebase-hooks/auth";
 
 const UserList = ({ navigation, route }) => {
   const { other, users, title, showFollowers } = route.params;
-  const userData = useRecoilValue(userDataState);
+  const [user] = useAuthState(auth);
+  const [userData, setUserData] = useRecoilState(userDataState);
 
   const getUsersToShow = () => {
     if (other) return users;
@@ -19,6 +23,16 @@ const UserList = ({ navigation, route }) => {
   const handleBack = () => {
     navigation.pop();
   };
+
+  useEffect(() => {
+      if(route.params.forceRefresh) {
+          const controller = new ProfileController(user);
+          controller.getFollowers().then(({ data }) => {
+              setUserData({...userData, followers: data.followers})
+          });
+          navigation.setParams({forceRefresh: false})
+      }
+  }, [route.params])
 
   const handleUserCardPress = (user) => {
     if (user.ID === userData.ID) {

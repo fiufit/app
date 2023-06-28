@@ -16,8 +16,8 @@ import { useIsFocused } from "@react-navigation/native";
 import { useRecoilValue } from "recoil";
 import { userDataState } from "../../atoms";
 import NotificationController from "../../utils/controllers/NotificationController";
-import {useAuthState} from "react-firebase-hooks/auth";
-import {auth} from "../../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase";
 
 const Conversation = ({ navigation, route }) => {
   const {
@@ -26,13 +26,13 @@ const Conversation = ({ navigation, route }) => {
     otherUserId,
     otherUserProfilePicture,
   } = route.params;
-  const [user] = useAuthState(auth)
+  const [user] = useAuthState(auth);
   const [conversationId, setConversationId] = useState(initialConversationId);
   const [messages, setMessages] = useState([]);
   const [isLoadingMessages, setIsLoadingMessages] = useState(true);
   const isFocused = useIsFocused();
   const userData = useRecoilValue(userDataState);
-  const [listener, setListener] = useState({unsubscribe: null})
+  const [listener, setListener] = useState({ unsubscribe: null });
 
   const addNewMessages = (data) => {
     if (data.length) {
@@ -56,8 +56,8 @@ const Conversation = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    if(listener.unsubscribe){
-        listener.unsubscribe();
+    if (listener.unsubscribe) {
+      listener.unsubscribe();
     }
 
     const messageController = new MessageController();
@@ -70,12 +70,12 @@ const Conversation = ({ navigation, route }) => {
           setIsLoadingMessages(false);
         }
       );
-    setListener({unsubscribe: unSubscribe});
+    setListener({ unsubscribe: unSubscribe });
 
     return () => {
-        if(listener.unsubscribe){
-            unSubscribe();
-        }
+      if (listener.unsubscribe) {
+        unSubscribe();
+      }
     };
   }, [route]);
 
@@ -110,6 +110,7 @@ const Conversation = ({ navigation, route }) => {
         inputMessage,
         {
           redirectTo: "Conversation",
+          type: "NEW_MESSAGE",
           params: {
             conversationId: newMessage.conversationId,
             otherUserName: userData.DisplayName,
