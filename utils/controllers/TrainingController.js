@@ -1,4 +1,4 @@
-import { uploadImage } from "../../firebase";
+import { uploadMedia } from "../../firebase";
 import RequestController from "./RequestController";
 
 class TrainingController {
@@ -26,7 +26,7 @@ class TrainingController {
 
       let PictureUrl;
       if (createdTrainingData?.data?.training_plan?.ID) {
-        PictureUrl = await uploadImage(
+        PictureUrl = await uploadMedia(
           trainingImage,
           `training_pictures/${this.user.uid}/${createdTrainingData.data.training_plan.ID}/training.png`
         );
@@ -50,7 +50,7 @@ class TrainingController {
   ) {
     try {
       if (this.needsPictureUpdate(originalTrainingData, updatedTrainingData)) {
-        return await uploadImage(
+        return await uploadMedia(
           updatedTrainingData.pictureUrl,
           `training_pictures/${this.user.uid}/${originalTrainingData.ID}/training.png`
         );

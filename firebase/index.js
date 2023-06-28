@@ -67,12 +67,12 @@ export const signInWithGoogle = async (accessToken) => {
   }
 };
 
-export const uploadImage = async (anImage, imagePath) => {
-  if (anImage) {
+export const uploadMedia = async (media, mediaPath) => {
+  if (media) {
     try {
-      const response = await fetch(anImage);
+      const response = await fetch(media);
       const blob = await response.blob();
-      const storageRef = ref(storage, imagePath);
+      const storageRef = ref(storage, mediaPath);
       const uploadResult = await uploadBytes(storageRef, blob);
       return await getDownloadURL(uploadResult.ref);
     } catch (e) {
