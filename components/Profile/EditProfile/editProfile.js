@@ -248,7 +248,7 @@ const EditProfile = ({ navigation, route }) => {
     <View style={styles.container}>
       <LogOutButton />
       <Back
-        onPress={() => navigation.navigate({ name: "Profile", merge: true })}
+        onPress={() => navigation.goBack()}
       />
       <Text style={styles.title}>Profile Settings</Text>
       <View style={styles.profilePictureContainer}>

@@ -3,6 +3,8 @@ import { styles } from "./styles.notifications";
 import { useRecoilState } from "recoil";
 import { notificationsState } from "../../atoms";
 import GoalIcon from "../../assets/images/general/trophy-outline.svg";
+import VerifiedIcon from "../../assets/images/general/verified-notification.svg";
+import RejectedIcon from "../../assets/images/general/rejected-notification.svg";
 import { DARK_BLUE } from "../../utils/colors";
 import NotificationController from "../../utils/controllers/NotificationController";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -36,6 +38,17 @@ const Notifications = ({ navigation }) => {
     navigation.navigate(notification.data.redirectTo, notification.data.params);
   };
 
+  const notificationIcon = (type) => {
+    switch (type) {
+      case "VERIFICATION_APPROVED":
+        return <VerifiedIcon height={30} width={30} color={DARK_BLUE} />;
+      case "VERIFICATION_REJECTED":
+        return <RejectedIcon height={30} width={30} color={DARK_BLUE} />;
+      default:
+        return <GoalIcon height={30} width={30} color={DARK_BLUE} />;
+    }
+  };
+
   return (
     <View
       style={{
@@ -56,47 +69,46 @@ const Notifications = ({ navigation }) => {
         }}
       >
         {notifications.length > 0 &&
-          uniqueNotifications(notifications)
-            .map((notification) => {
-              return (
-                <TouchableOpacity
-                  style={styles.notificationCard}
-                  key={notification.id}
-                  onPress={() => handleNotificationPress(notification)}
-                >
-                  <View style={styles.notificationImageContainer}>
-                    {notification?.data?.params?.followerPictureUrl ? (
-                      <Image
-                        source={{
-                          uri: notification.data.params.followerPictureUrl,
-                        }}
-                        style={styles.notificationImage}
-                      />
-                    ) : (
-                      <GoalIcon height={30} width={30} color={DARK_BLUE} />
+          uniqueNotifications(notifications).map((notification) => {
+            return (
+              <TouchableOpacity
+                style={styles.notificationCard}
+                key={notification.id}
+                onPress={() => handleNotificationPress(notification)}
+              >
+                <View style={styles.notificationImageContainer}>
+                  {notification?.data?.params?.followerPictureUrl ? (
+                    <Image
+                      source={{
+                        uri: notification.data.params.followerPictureUrl,
+                      }}
+                      style={styles.notificationImage}
+                    />
+                  ) : (
+                      notificationIcon(notification.data.type)
+                  )}
+                </View>
+                <View style={styles.notificationText}>
+                  <Text
+                    style={{
+                      ...styles.notificationBody,
+                      fontFamily: !notification.read
+                        ? "Poppins_600SemiBold"
+                        : "Poppins_400Regular",
+                    }}
+                  >
+                    {notification.body}
+                  </Text>
+                  <View style={styles.callToActionContainer}>
+                    <Text style={styles.callToActionText}>Check it out!</Text>
+                    {!notification.read && (
+                      <View style={styles.unreadIndicator} />
                     )}
                   </View>
-                  <View style={styles.notificationText}>
-                    <Text
-                      style={{
-                        ...styles.notificationBody,
-                        fontFamily: !notification.read
-                          ? "Poppins_600SemiBold"
-                          : "Poppins_400Regular",
-                      }}
-                    >
-                      {notification.body}
-                    </Text>
-                    <View style={styles.callToActionContainer}>
-                      <Text style={styles.callToActionText}>Check it out!</Text>
-                      {!notification.read && (
-                        <View style={styles.unreadIndicator} />
-                      )}
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
+                </View>
+              </TouchableOpacity>
+            );
+          })}
       </ScrollView>
     </View>
   );
