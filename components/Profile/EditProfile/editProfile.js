@@ -1,14 +1,15 @@
 import { DARK_BLUE, WHITE } from "../../../utils/colors";
-import { DEFAULT_PROFILE_PICTURE, auth, uploadImage } from "../../../firebase";
-import { Image, Text, TouchableHighlight, View } from "react-native";
+import { DEFAULT_PROFILE_PICTURE, auth, uploadMedia } from "../../../firebase";
+import { Image, Pressable, Text, TouchableHighlight, View } from "react-native";
 
 import Back from "../../Shared/Back/back";
 import Button from "../../Shared/Button/button";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import EditIcon from "../../../assets/images/general/editIcon.svg";
+import VerifiedIcon from "../../../assets/images/profile/verifiedIcon.svg";
 import EditModal from "../../Shared/Modals/EditModal/editModal";
 import ErrorModal from "../../Shared/Modals/ErrorModal/ErrorModal";
-import ImageModal from "../../Shared/Modals/ImageModal/imageModal";
+import MediaModal from "../../Shared/Modals/MediaModal/mediaModal";
 import Input from "../../Shared/Input/input";
 import InterestsModal from "../../InterestsModal/InterestsModal";
 import LoadingModal from "../../Shared/Modals/LoadingModal/loadingModal";
@@ -20,10 +21,10 @@ import { TextInput } from "react-native-paper";
 import { styles } from "./styles.editProfile";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState } from "recoil";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { userDataState } from "../../../atoms";
 
-const EditProfile = ({ navigation }) => {
+const EditProfile = ({ navigation, route }) => {
   const [userData, setUserData] = useRecoilState(userDataState);
   const [user] = useAuthState(auth);
   const [editOptions, setEditOptions] = useState({});
@@ -50,6 +51,38 @@ const EditProfile = ({ navigation }) => {
   const [successDescription, setSuccessDescription] = useState("");
   const [showInterestsModal, setShowInterestsModal] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
+  const [mediaSelected, setMediaSelected] = useState("");
+  const [isVerificationPending, setIsVerificationPending] = useState(false);
+  const [verificationLoading, setVerificationLoading] = useState(true);
+
+  useEffect(() => {
+    const controller = new ProfileController(user);
+    controller.getPendingCertifications().then(({ data }) => {
+      setIsVerificationPending(data?.certifications?.length > 0);
+      setVerificationLoading(false);
+    });
+    controller.getProfileData().then(({ data }) => {
+      setUserData({
+        ...userData,
+        IsVerifiedTrainer: data.IsVerifiedTrainer,
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (route?.params?.forceRefresh) {
+      const controller = new ProfileController(user);
+      controller.getProfileData().then(({ data }) => {
+        setUserData({
+          ...userData,
+          IsVerifiedTrainer: data.IsVerifiedTrainer,
+        });
+      });
+      controller.getPendingCertifications().then(({ data }) => {
+        setIsVerificationPending(data?.certifications?.length > 0);
+      });
+    }
+  }, [route.params]);
 
   const nameOptions = {
     displayName: {
@@ -174,21 +207,40 @@ const EditProfile = ({ navigation }) => {
     }
   };
 
-  const handleImageUpdate = async (image) => {
+  const handleMediaUpdate = async (media) => {
     setShowImageModal(false);
     setLoading(true);
-    try {
-      const imageUrl = await uploadImage(
-        image,
-        `profile_pictures/${userData.ID}/profile.png`
-      );
-      setUserData({ ...userData, PictureUrl: imageUrl });
-    } catch (error) {
-      setErrorModalIsVisible(true);
-      setErrorDescription(
-        "There has been an error while updating your image. Please try again later!"
-      );
+    if (mediaSelected === "image") {
+      try {
+        const imageUrl = await uploadMedia(
+          media,
+          `profile_pictures/${userData.ID}/profile.png`
+        );
+        setUserData({ ...userData, PictureUrl: imageUrl });
+      } catch (error) {
+        setErrorModalIsVisible(true);
+        setErrorDescription(
+          "There has been an error while updating your image. Please try again later!"
+        );
+      }
+    } else {
+      try {
+        await uploadMedia(
+          media,
+          `verification_videos/${userData.ID}/video.mp4`
+        );
+        const controller = new ProfileController(user);
+        const { data } = await controller.sendVerificationAttempt();
+        setIsVerificationPending(data?.Status === "pending");
+      } catch (error) {
+        console.log(error);
+        setErrorModalIsVisible(true);
+        setErrorDescription(
+          "There has been an error while updating your video. Please try again later!"
+        );
+      }
     }
+
     setLoading(false);
   };
 
@@ -210,7 +262,10 @@ const EditProfile = ({ navigation }) => {
           style={styles.editIcon}
           height={25}
           width={25}
-          onPress={() => setShowImageModal(true)}
+          onPress={() => {
+            setMediaSelected("image");
+            setShowImageModal(true);
+          }}
         />
       </View>
       <Text
@@ -224,6 +279,28 @@ const EditProfile = ({ navigation }) => {
         onPress={() => setEditOptions(nameOptions.nickName)}
       >
         @{nickName}
+      </Text>
+      <Text
+        style={styles.nickName}
+        onPress={() => {
+          if (
+            !userData.IsVerifiedTrainer &&
+            !isVerificationPending &&
+            !verificationLoading
+          ) {
+            setMediaSelected("video");
+            setShowImageModal(true);
+          }
+        }}
+      >
+        {isVerificationPending
+          ? "Pending verification"
+          : userData.IsVerifiedTrainer
+          ? "Verified"
+          : "Verify your identity"}{" "}
+        {userData.IsVerifiedTrainer && (
+          <VerifiedIcon height={10} width={10} color={DARK_BLUE} />
+        )}
       </Text>
       <View style={styles.data}>
         {inputs.map((input, index) => (
@@ -278,9 +355,16 @@ const EditProfile = ({ navigation }) => {
         />
       )}
       {showImageModal && (
-        <ImageModal
+        <MediaModal
           onClose={() => setShowImageModal(false)}
-          onUpload={(image) => handleImageUpdate(image)}
+          onUpload={(image) => handleMediaUpdate(image)}
+          type={mediaSelected}
+          title={
+            mediaSelected === "video"
+              ? "Upload a video of you to verify your account"
+              : null
+          }
+          imageAspect={mediaSelected === "video" ? [3, 4] : [1, 1]}
         />
       )}
       {loading && <LoadingModal text={"Updating your profile"} />}
