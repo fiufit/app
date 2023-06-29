@@ -124,46 +124,49 @@ const MessagingView = ({ navigation }) => {
           />
         </View>
       )}
-      <ScrollView style={styles.chatPreviewList}>
-        {chatPreviews
-          .filter((chatPreview) =>
-            chatPreview.otherMemberName.startsWith(searchedUser)
-          )
-          .map((chatPreview, chatPreviewIndex) => (
-            <TouchableOpacity
-              onPress={() =>
-                handleConversationPress(
-                  chatPreview.conversationId,
-                  chatPreview.otherMemberName,
-                  chatPreview.otherMemberId,
-                  chatPreview.imageSource
-                )
-              }
-              style={styles.chatPreviewContainer}
-              key={chatPreviewIndex}
-            >
-              <ChatPreview
-                imageSource={chatPreview.imageSource}
-                name={chatPreview.otherMemberName}
-                lastMessage={chatPreview.lastMessage}
-                lastMessageTime={new Date(
-                  chatPreview.lastMessageTime
-                ).toLocaleString("en-US", {
-                  timeZone: "America/Argentina/Buenos_Aires",
-                })}
-                hasUnreadMessage={
-                  chatPreview.hasUnreadMessage &&
-                  chatPreview.lastMessageFrom != userData.ID
-                }
-                lastMessageSender={
-                  chatPreview.lastMessageFrom == userData.ID
-                    ? "You"
-                    : chatPreview.otherMemberName
-                }
-              />
-            </TouchableOpacity>
-          ))}
-      </ScrollView>
+        <View style={styles.scrollContainer}>
+            <ScrollView style={styles.chatPreviewList}>
+                {chatPreviews
+                    .filter((chatPreview) =>
+                        chatPreview.otherMemberName.startsWith(searchedUser)
+                    )
+                    .map((chatPreview, chatPreviewIndex) => (
+                        <TouchableOpacity
+                            onPress={() =>
+                                handleConversationPress(
+                                    chatPreview.conversationId,
+                                    chatPreview.otherMemberName,
+                                    chatPreview.otherMemberId,
+                                    chatPreview.imageSource
+                                )
+                            }
+                            style={styles.chatPreviewContainer}
+                            key={chatPreviewIndex}
+                        >
+                            <ChatPreview
+                                imageSource={chatPreview.imageSource}
+                                name={chatPreview.otherMemberName}
+                                lastMessage={chatPreview.lastMessage}
+                                lastMessageTime={new Date(
+                                    chatPreview.lastMessageTime
+                                ).toLocaleString("en-US", {
+                                    timeZone: "America/Argentina/Buenos_Aires",
+                                })}
+                                hasUnreadMessage={
+                                    chatPreview.hasUnreadMessage &&
+                                    chatPreview.lastMessageFrom != userData.ID
+                                }
+                                lastMessageSender={
+                                    chatPreview.lastMessageFrom == userData.ID
+                                        ? "You"
+                                        : chatPreview.otherMemberName
+                                }
+                            />
+                        </TouchableOpacity>
+                    ))}
+            </ScrollView>
+        </View>
+
     </View>
   );
 };

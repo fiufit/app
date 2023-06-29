@@ -1,6 +1,6 @@
 import {
   AZURE,
-  BLACK,
+  BLACK, LIGHT_GREY,
   QUATERNARY_GREY,
   TERCIARY_GREY,
   WHITE,
@@ -26,6 +26,7 @@ export const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     marginRight: 16,
+    backgroundColor: LIGHT_GREY,
   },
   messageTextContainer: {
     flex: 1,
@@ -47,7 +48,7 @@ export const styles = StyleSheet.create({
   lastMessage: {
     fontSize: 14,
     color: QUATERNARY_GREY,
-    fontFamily: "Lato_400Regular",
+    fontFamily: "Poppins_400Regular",
   },
   lastMessageTime: {
     fontSize: 12,

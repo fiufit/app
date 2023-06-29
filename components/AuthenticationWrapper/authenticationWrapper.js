@@ -6,11 +6,11 @@ import Authentication from "./Authentication/authentication";
 import RegisterSecondStepView from "../RegisterViews/RegisterSecondStep/RegisterSecondStepView";
 import AuthenticationController from "../../utils/controllers/AuthenticationController";
 import EmailVerification from "./EmailVerification/emailVerification";
-import LoadingModal from "../Shared/Modals/LoadingModal/loadingModal";
 import { useEffect, useState } from "react";
-import Background from "../Background/background";
 import ProfileController from "../../utils/controllers/ProfileController";
 import NotificationController from "../../utils/controllers/NotificationController";
+import splashScreen from "../../assets/images/splash.png";
+import {Image} from "react-native";
 
 const AuthenticationWrapper = ({ children }) => {
   const [userData, setUserData] = useRecoilState(userDataState);
@@ -61,12 +61,7 @@ const AuthenticationWrapper = ({ children }) => {
     <>
       {loadingUser || loadingData ? (
         <>
-          <Background
-            fromColor={"rgb(185, 213, 123)"}
-            toColor={"rgb(254,254,253)"}
-            styles={{ height: "100%" }}
-          />
-          <LoadingModal />
+          <Image source={splashScreen} style={{height: "100%", width: "100%", resizeMode: "cover"}}/>
         </>
       ) : user ? (
         user.emailVerified ? (

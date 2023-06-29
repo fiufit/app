@@ -7,8 +7,7 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   messagesText: {
-    fontWeight: "bold",
-    fontSize: 28,
-    fontFamily: "Poppins_700Bold",
+    fontSize: 20,
+    fontFamily: "Poppins_600SemiBold",
   },
 });

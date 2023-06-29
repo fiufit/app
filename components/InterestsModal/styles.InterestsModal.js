@@ -1,4 +1,4 @@
-import { BLACK, SECONDARY_WHITE } from "../../utils/colors";
+import {BLACK, SECONDARY_WHITE, WHITE} from "../../utils/colors";
 
 import { StyleSheet } from "react-native";
 
@@ -10,18 +10,23 @@ export const styles = StyleSheet.create({
     alignSelf: "center",
   },
   modalContent: {
+    height: 300,
     marginBottom: "auto",
     paddingBottom: 10,
     alignItems: "center",
+    justifyContent: "center",
     borderRadius: 20,
+    backgroundColor: WHITE
   },
   interestsContainer: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     flexWrap: "wrap",
     marginTop: 20,
+    width: "80%",
   },
   interestChip: {
+    width: "45%",
     borderRadius: 20,
     paddingVertical: 8,
     paddingHorizontal: 16,
@@ -29,23 +34,16 @@ export const styles = StyleSheet.create({
     margin: 4,
   },
   interestText: {
+    textAlign: "center",
     fontSize: 14,
     color: BLACK,
     fontFamily: "Poppins_500Medium",
   },
   modalTitle: {
     fontSize: 16,
-    marginTop: 10,
     fontFamily: "Poppins_500Medium",
-    paddingHorizontal: 4,
+    width: "80%",
+    textAlign: "center",
     color: BLACK,
-  },
-  closeButton: {
-    borderRadius: 20,
-    paddingHorizontal: 10,
-    marginLeft: "auto",
-    marginRight: 30,
-    marginTop: 20,
-    marginBottom: 5,
-  },
+  }
 });

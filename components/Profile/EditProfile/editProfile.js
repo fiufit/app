@@ -247,9 +247,7 @@ const EditProfile = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <LogOutButton />
-      <Back
-        onPress={() => navigation.goBack()}
-      />
+      <Back onPress={() => navigation.goBack()} />
       <Text style={styles.title}>Profile Settings</Text>
       <View style={styles.profilePictureContainer}>
         <Image
@@ -362,7 +360,7 @@ const EditProfile = ({ navigation, route }) => {
           title={
             mediaSelected === "video"
               ? "Upload a video of you to verify your account"
-              : null
+              : "Upload an image"
           }
           imageAspect={mediaSelected === "video" ? [3, 4] : [1, 1]}
         />
