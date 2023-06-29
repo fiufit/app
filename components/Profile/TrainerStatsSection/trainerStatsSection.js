@@ -2,7 +2,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles.trainer-stats-section";
 import FavoriteIcon from "../../../assets/images/general/favourite-outline.svg";
 import StarIcon from "../../../assets/images/general/star-outline.svg";
-import HeartIcon from "../../../assets/images/general/heart-outline.svg";
+import ReviewIcon from "../../../assets/images/general/review.svg";
 import SessionIcon from "../../../assets/images/general/barbell-outline.svg";
 import { useEffect, useState } from "react";
 import { DARK_BLUE, LIGHT_GREY, WHITE } from "../../../utils/colors";
@@ -65,7 +65,7 @@ const TrainerStatsSection = ({ loading }) => {
       value: averageRating > 0 ? averageRating.toFixed(1) : "",
     },
     {
-      icon: (color) => <HeartIcon color={color} height={25} width={30} />,
+      icon: (color) => <ReviewIcon color={color} height={25} width={30} />,
       text: `total review${totalReviews === 1 ? "" : "s"}`,
       value: totalReviews,
     },
