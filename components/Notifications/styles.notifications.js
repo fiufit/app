@@ -14,6 +14,11 @@ export const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: "100%",
+    backgroundColor: GREY,
+  },
+  scrollContainer: {
+    width: "100%",
+    height: "100%",
   },
   title:{
     fontFamily: "Poppins_600SemiBold",
@@ -43,7 +48,6 @@ export const styles = StyleSheet.create({
     height: 70,
     width: 70,
     borderRadius: 35,
-    objectFit: "cover",
   },
   notificationText: {
     width: "80%",
