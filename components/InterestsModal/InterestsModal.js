@@ -1,17 +1,14 @@
 import {
-  BLACK,
-  SECONDARY_GREEN,
+  BLACK, DARK_BLUE,
   SECONDARY_WHITE,
-  TERCIARY_GREEN,
 } from "../../utils/colors";
 import { Modal, Portal } from "react-native-paper";
 import { Text, TouchableOpacity, View } from "react-native";
 
-import Button from "../Shared/Button/button";
-import { LinearGradient } from "expo-linear-gradient";
 import { WHITE } from "../../utils/colors";
 import { interests } from "../../utils/trainings";
 import { styles } from "./styles.InterestsModal";
+import CloseIcon from "../../assets/images/general/closeIcon.svg";
 
 const InterestsModal = ({
   modalIsVisible,
@@ -46,10 +43,20 @@ const InterestsModal = ({
         }}
         contentContainerStyle={styles.interestsModal}
       >
-        <LinearGradient
-          colors={[SECONDARY_GREEN, WHITE]}
+        <View
           style={styles.modalContent}
         >
+          <CloseIcon
+              color={"black"}
+              height={30}
+              width={30}
+              position={"absolute"}
+              top={10}
+              right={10}
+              onPress={() => {
+                setModalIsVisible(false);
+              }}
+          />
           <Text style={styles.modalTitle}>
             {" "}
             Choose up to {converter.toWords(MAX_INTERESTS)} topics you might
@@ -63,7 +70,7 @@ const InterestsModal = ({
                   styles.interestChip,
                   {
                     backgroundColor: selectedInterests.includes(interest)
-                      ? TERCIARY_GREEN
+                      ? DARK_BLUE
                       : SECONDARY_WHITE,
                   },
                 ]}
@@ -83,18 +90,8 @@ const InterestsModal = ({
                 </Text>
               </TouchableOpacity>
             ))}
-            <Button
-              textColor={WHITE}
-              fontSize={14}
-              style={styles.closeButton}
-              onPress={() => {
-                setModalIsVisible(false);
-              }}
-            >
-              Close
-            </Button>
           </View>
-        </LinearGradient>
+        </View>
       </Modal>
     </Portal>
   );
