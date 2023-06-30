@@ -1,5 +1,6 @@
-import { BLACK, LIGHT_BLUE } from "../../../utils/colors";
+import {WHITE} from "../../../utils/colors";
 import { Share, Text, TouchableOpacity, View } from "react-native";
+import ShareIcon from "../../../assets/images/general/share-social-outline.svg";
 
 import Button from "../../Shared/Button/button";
 import { styles } from "./styles.goal-card";
@@ -28,7 +29,7 @@ const GoalCard = ({
         message:
           "Hey, I've just finished my goal: " +
           title +
-          ", whose main objective was: " +
+          ", its main objective was: " +
           description +
           ". Looking forward to the next one!",
       });
@@ -49,7 +50,7 @@ const GoalCard = ({
         ...styles.goalCard,
         width: extended ? "100%" : "48%",
         height:
-          progress == PROGRESS_COMPLETED && shareButtonVisible
+          progress === PROGRESS_COMPLETED && shareButtonVisible
             ? "120%"
             : "100%",
       }}
@@ -68,15 +69,14 @@ const GoalCard = ({
         ></View>
         <Text style={styles.progressText}>{progress.toFixed(0)}%</Text>
       </View>
-      {progress == PROGRESS_COMPLETED && shareButtonVisible && (
+      {progress === PROGRESS_COMPLETED && shareButtonVisible && (
         <Button
-          textColor={BLACK}
-          fontSize={16}
-          buttonColor={LIGHT_BLUE}
+          textColor={WHITE}
+          fontSize={14}
+          buttonColor={"transparent"}
           style={{ borderRadius: 10, marginTop: 5 }}
-          onPress={() => {
-            onShare();
-          }}
+          onPress={onShare}
+          rightIcon={<ShareIcon width={20} height={20} color={WHITE} />}
         >
           Share achievement!
         </Button>
