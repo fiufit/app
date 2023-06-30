@@ -70,7 +70,7 @@ const Notifications = ({ navigation }) => {
                       display: "flex",
                   }}
               >
-                  {notifications.length > 0 &&
+                  {uniqueNotifications(notifications).length > 0 &&
                       uniqueNotifications(notifications).map((notification) => {
                           return (
                               <TouchableOpacity
@@ -119,7 +119,7 @@ const Notifications = ({ navigation }) => {
                               </TouchableOpacity>
                           );
                       })}
-                  {notifications.length === 0 && (
+                  {uniqueNotifications(notifications).length === 0 && (
                       <View
                           style={{
                               width: "100%",
