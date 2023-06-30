@@ -7,6 +7,7 @@ import AddImageGalery from "../../../../assets/images/general/galleryadd.svg";
 import AddImageCamera from "../../../../assets/images/general/cameraIcon.svg";
 import CloseIcon from "../../../../assets/images/general/closeIcon.svg";
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from 'expo-file-system';
 
 const MediaModal = ({
   imageAspect = [1, 1],
@@ -17,6 +18,7 @@ const MediaModal = ({
   title = "Upload an image",
 }) => {
   const [media, setMedia] = useState(null);
+  const [error, setError] = useState("");
 
   const mediaOptions = {
     mediaTypes: type === "image" ? ImagePicker.MediaTypeOptions.Images : ImagePicker.MediaTypeOptions.Videos,
@@ -25,18 +27,34 @@ const MediaModal = ({
     quality: 1,
   };
   const handleEditImageCamera = async () => {
+    setError("")
     let result = await ImagePicker.launchCameraAsync(mediaOptions);
 
     if (!result.canceled) {
-      setMedia(result.assets[0].uri);
+      const { size } = await FileSystem.getInfoAsync(
+          result.assets[0].uri
+      );
+      if(size > 1000000){
+        setError("File size must be less than 1MB")
+      } else {
+        setMedia(result.assets[0].uri);
+      }
     }
   };
 
   const handleEditImageGalery = async () => {
+    setError("")
     let result = await ImagePicker.launchImageLibraryAsync(mediaOptions);
 
     if (!result.canceled) {
-      setMedia(result.assets[0].uri);
+      const { size } = await FileSystem.getInfoAsync(
+        result.assets[0].uri
+      );
+      if(size > 1000000){
+        setError("File size must be less than 1MB")
+      } else {
+        setMedia(result.assets[0].uri);
+      }
     }
   };
 
@@ -53,7 +71,7 @@ const MediaModal = ({
           right={10}
           onPress={onClose}
         />
-        <Text style={styles.title}>{title}</Text>
+        <Text style={{...styles.title, color: error ? "red" : "black"}}>{error ? error : title}</Text>
         {!media ? (
           <View style={styles.iconsContainer}>
             <AddImageGalery onPress={handleEditImageGalery} />
