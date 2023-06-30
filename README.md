@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="App" src="https://github.com/fiufit/app/assets/86434696/82a49b69-d7bd-4f7d-9449-79b8b60335b1" height="200" />
+  <img alt="App" src="https://github.com/fiufit/app/assets/86434696/2dc48884-cd7c-4aca-ad99-e9adf2f4410d" height="200" />
 </p>
 
 # FiuFit: App
@@ -7,11 +7,11 @@
 Fiufit is a fitness app built with Expo, designed to help users track their workouts, set goals, connect with trainers and atheletes, and stay motivated on their fitness journey. This repository contains the source code for the Fiufit app.
 
 <p align="center">
-    <img alt="App" src="https://github.com/fiufit/app/assets/86434696/57e97af1-8b59-40aa-8e10-29cc611c59cc" height="350" />
-    <img alt="App" src="https://github.com/fiufit/app/assets/86434696/93a17da3-02bb-47b3-a44e-e8e577f42bc8" height="350" />
-    <img alt="App" src="https://github.com/fiufit/app/assets/86434696/68377261-7cc4-4b77-952c-aa097f622f86" height="350" />
-    <img alt="App" src="https://github.com/fiufit/app/assets/86434696/47edee89-4d52-4eb8-8e72-82520326bfc3" height="350" />
-    <img alt="App" src="https://github.com/fiufit/app/assets/86434696/ded18fab-4207-4124-bea0-6f4584bb92d1" height="350" />
+    <img alt="App" src="https://github.com/fiufit/app/assets/86434696/af977ead-26c3-47c1-b324-f91688be3138" height="350" />
+    <img alt="App" src="https://github.com/fiufit/app/assets/86434696/cccd6bef-af45-455c-a639-1a743fe52067" height="350" />
+    <img alt="App" src="https://github.com/fiufit/app/assets/86434696/607287c6-f03e-4e06-a7fe-9a2758553aa4" height="350" />
+    <img alt="App" src="https://github.com/fiufit/app/assets/86434696/c8675ed0-84d9-4cec-91ea-561442b7be9d" height="350" />
+    <img alt="App" src="https://github.com/fiufit/app/assets/86434696/c2b58885-0820-4367-b199-740c10e9d453" height="350" />
 </p>
 
 ## Demo
