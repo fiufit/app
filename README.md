@@ -1,11 +1,17 @@
-# Fiufit
+<p align="center">
+  <img alt="App" src="https://firebasestorage.googleapis.com/v0/b/fiufit.appspot.com/o/fiufit-logo.png?alt=media&token=39f3ae3f-34d1-4fb3-96ca-8707adf2bc37" height="200" />
+</p>
+
+# FiuFit: App
 
 Fiufit is a fitness app built with Expo, designed to help users track their workouts, set goals, connect with trainers and atheletes, and stay motivated on their fitness journey. This repository contains the source code for the Fiufit app.
 
 <p align="center">
-  <a href="https://stunningtodolist.web.app/">
     <img alt="App" src="https://github.com/fiufit/app/assets/86434696/57e97af1-8b59-40aa-8e10-29cc611c59cc" height="350" />
-  </a>
+    <img alt="App" src="https://github.com/fiufit/app/assets/86434696/93a17da3-02bb-47b3-a44e-e8e577f42bc8" height="350" />
+    <img alt="App" src="https://github.com/fiufit/app/assets/86434696/68377261-7cc4-4b77-952c-aa097f622f86" height="350" />
+    <img alt="App" src="https://github.com/fiufit/app/assets/86434696/47edee89-4d52-4eb8-8e72-82520326bfc3" height="350" />
+    <img alt="App" src="https://github.com/fiufit/app/assets/86434696/ded18fab-4207-4124-bea0-6f4584bb92d1" height="350" />
 </p>
 
 ## Demo
