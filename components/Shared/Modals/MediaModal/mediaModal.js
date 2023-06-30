@@ -9,6 +9,8 @@ import CloseIcon from "../../../../assets/images/general/closeIcon.svg";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from 'expo-file-system';
 
+const MAX_FILE_SIZE = 20000000;
+
 const MediaModal = ({
   imageAspect = [1, 1],
   onUpload,
@@ -34,8 +36,8 @@ const MediaModal = ({
       const { size } = await FileSystem.getInfoAsync(
           result.assets[0].uri
       );
-      if(size > 1000000){
-        setError("File size must be less than 1MB")
+      if(size > MAX_FILE_SIZE){
+        setError("File size must be less than 20MB")
       } else {
         setMedia(result.assets[0].uri);
       }
@@ -50,8 +52,8 @@ const MediaModal = ({
       const { size } = await FileSystem.getInfoAsync(
         result.assets[0].uri
       );
-      if(size > 1000000){
-        setError("File size must be less than 1MB")
+      if(size > MAX_FILE_SIZE){
+        setError("File size must be less than 20MB")
       } else {
         setMedia(result.assets[0].uri);
       }
