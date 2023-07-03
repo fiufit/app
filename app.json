@@ -10,14 +10,18 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "androidStatusBar": {
+      "translucent": true,
+      "hidden": true
+    },
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "notification": {
-        "icon": "./assets/icon.png",
-        "color": "#ffffff"
+      "icon": "./assets/icon.png",
+      "color": "#ffffff"
     },
     "assetBundlePatterns": [
       "**/*"
