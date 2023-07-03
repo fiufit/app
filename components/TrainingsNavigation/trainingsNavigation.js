@@ -3,6 +3,7 @@ import Trainings from "../Trainings/trainings";
 import ViewProfile from "../ViewProfile/viewProfile";
 import SearchView from "../SearchView/searchView";
 import UserList from "../UserList/userList";
+import {gestureHandlerRootHOC} from "react-native-gesture-handler";
 
 const Stack = createStackNavigator();
 
@@ -16,14 +17,14 @@ const TrainingsNavigation = () => {
       }}
       backBehavior="history"
     >
-      <Stack.Screen name={"TrainingsView"} component={Trainings} />
-      <Stack.Screen name={"View Profile"} component={ViewProfile} />
+      <Stack.Screen name={"TrainingsView"} component={gestureHandlerRootHOC(Trainings)} />
+      <Stack.Screen name={"View Profile"} component={gestureHandlerRootHOC(ViewProfile)} />
       <Stack.Screen
         name={"Search View"}
-        component={SearchView}
+        component={gestureHandlerRootHOC(SearchView)}
         options={{ unmountOnBlur: true }}
       />
-      <Stack.Screen name={"User List"} component={UserList} />
+      <Stack.Screen name={"User List"} component={gestureHandlerRootHOC(UserList)} />
     </Stack.Navigator>
   );
 };

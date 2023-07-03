@@ -26,12 +26,13 @@ import { WHITE } from "../../utils/colors";
 import {sessionVerifiedState, userDataState} from "../../atoms";
 import { styles } from "./styles.loginView";
 import { useSetRecoilState } from "recoil";
-import { EXPO_CLIENT_ID, EXPO_REDIRECT_URI } from "@env";
+import { EXPO_CLIENT_ID, EXPO_REDIRECT_URI, ANDROID_CLIENT_ID } from "@env";
 
 const googleAuthConfig = {
   expoClientId: EXPO_CLIENT_ID,
+  androidClientId: ANDROID_CLIENT_ID,
   scopes: ["profile", "email"],
-  redirectUri: EXPO_REDIRECT_URI,
+  redirectUri: EXPO_REDIRECT_URI, // Only for development
 };
 
 WebBrowser.maybeCompleteAuthSession();

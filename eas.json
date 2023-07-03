@@ -1,0 +1,57 @@
+{
+  "cli": {
+    "version": ">= 3.15.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "channel": "development",
+      "env": {
+        "API_GATEWAY_URL": "https://fiufit-gateway.fly.dev/v1/",
+        "EXPO_PROJECT_ID": "c665eadf-9598-439f-9afc-fd4d595d8037",
+        "EXPO_CLIENT_ID": "235995330653-u65jmivq25u554uak81v7auljem4800e.apps.googleusercontent.com",
+        "EXPO_REDIRECT_URI": "https://auth.expo.io/@stein257/fiufitapp",
+        "ANDROID_CLIENT_ID": "235995330653-qfmd0qr73j22h6n2n1uodjt47h9vc53o.apps.googleusercontent.com",
+        "FIREBASE_API_KEY": "AIzaSyDbXF3gPXW-uggq-Fhsu_ANVgE-1mCYLcI",
+        "FIREBASE_AUTH_DOMAIN": "fiufit.firebaseapp.com",
+        "FIREBASE_PROJECT_ID": "fiufit",
+        "FIREBASE_STORAGE_BUCKET": "fiufit.appspot.com",
+        "FIREBASE_MESSAGING_SENDER_ID": "235995330653",
+        "FIREBASE_APP_ID": "1:235995330653:web:43dcd2cdfab28df85c35b4",
+        "FIREBASE_MEASUREMENT_ID": "G-0W6BHPCT5D",
+        "FIREBASE_EMAIL_VERIFY_URL": "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDbXF3gPXW-uggq-Fhsu_ANVgE-1mCYLcI",
+        "DEFAULT_PROFILE_PICTURE_URL": "https://firebasestorage.googleapis.com/v0/b/fiufit.appspot.com/o/profile_pictures%2Fdefault.png?alt=media&token=8242ac98-c07e-4217-8f07-3fddc5a727bc"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "channel": "preview"
+    },
+    "production": {
+      "channel": "production",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "API_GATEWAY_URL": "https://fiufit-gateway.fly.dev/v1/",
+        "EXPO_PROJECT_ID": "c665eadf-9598-439f-9afc-fd4d595d8037",
+        "EXPO_CLIENT_ID": "235995330653-u65jmivq25u554uak81v7auljem4800e.apps.googleusercontent.com",
+        "EXPO_REDIRECT_URI": "https://auth.expo.io/@stein257/fiufitapp",
+        "ANDROID_CLIENT_ID": "235995330653-qfmd0qr73j22h6n2n1uodjt47h9vc53o.apps.googleusercontent.com",
+        "FIREBASE_API_KEY": "AIzaSyDbXF3gPXW-uggq-Fhsu_ANVgE-1mCYLcI",
+        "FIREBASE_AUTH_DOMAIN": "fiufit.firebaseapp.com",
+        "FIREBASE_PROJECT_ID": "fiufit",
+        "FIREBASE_STORAGE_BUCKET": "fiufit.appspot.com",
+        "FIREBASE_MESSAGING_SENDER_ID": "235995330653",
+        "FIREBASE_APP_ID": "1:235995330653:web:43dcd2cdfab28df85c35b4",
+        "FIREBASE_MEASUREMENT_ID": "G-0W6BHPCT5D",
+        "FIREBASE_EMAIL_VERIFY_URL": "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDbXF3gPXW-uggq-Fhsu_ANVgE-1mCYLcI",
+        "DEFAULT_PROFILE_PICTURE_URL": "https://firebasestorage.googleapis.com/v0/b/fiufit.appspot.com/o/profile_pictures%2Fdefault.png?alt=media&token=8242ac98-c07e-4217-8f07-3fddc5a727bc"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
