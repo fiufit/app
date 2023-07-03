@@ -19,6 +19,7 @@ import UploadGoal from "../Goals/UploadGoal/uploadGoal";
 import GoalList from "../Goals/GoalList/goalList";
 import Notifications from "../Notifications/notifications";
 import SessionVerifier from "../SessionVerifier/sessionVerifier";
+import {gestureHandlerRootHOC} from "react-native-gesture-handler";
 
 const Tab = createBottomTabNavigator();
 
@@ -38,51 +39,51 @@ const Routes = () => {
           >
             <Tab.Screen
               name="RegisterSecondStep"
-              component={RegisterSecondStepView}
+              component={gestureHandlerRootHOC(RegisterSecondStepView)}
             />
-            <Tab.Screen name="Trainings" component={TrainingsNavigation} />
-            <Tab.Screen name="Notifications" component={Notifications} />
-            <Tab.Screen name="Single Training" component={SingleTraining} />
-            <Tab.Screen name="New Training" component={UploadTraining} />
+            <Tab.Screen name="Trainings" component={gestureHandlerRootHOC(TrainingsNavigation)} />
+            <Tab.Screen name="Notifications" component={gestureHandlerRootHOC(Notifications)} />
+            <Tab.Screen name="Single Training" component={gestureHandlerRootHOC(SingleTraining)} />
+            <Tab.Screen name="New Training" component={gestureHandlerRootHOC(UploadTraining)} />
             <Tab.Screen
               name="Edit Training"
-              component={UploadTraining}
+              component={gestureHandlerRootHOC(UploadTraining)}
               options={{ unmountOnBlur: true }}
             />
-            <Tab.Screen name="Training List" component={TrainingList} />
-            <Tab.Screen name="Session List" component={SessionList} />
-            <Tab.Screen name="Messages" component={MessagingView} />
+            <Tab.Screen name="Training List" component={gestureHandlerRootHOC(TrainingList)} />
+            <Tab.Screen name="Session List" component={gestureHandlerRootHOC(SessionList)} />
+            <Tab.Screen name="Messages" component={gestureHandlerRootHOC(MessagingView)} />
             <Tab.Screen
               name="Conversation"
-              component={Conversation}
+              component={gestureHandlerRootHOC(Conversation)}
               options={{ unmountOnBlur: true }}
             />
-            <Tab.Screen name="Search View" component={SearchView} />
-            <Tab.Screen name="Profile" component={ProfileNavigation} />
+            <Tab.Screen name="Search View" component={gestureHandlerRootHOC(SearchView)} />
+            <Tab.Screen name="Profile" component={gestureHandlerRootHOC(ProfileNavigation)} />
             <Tab.Screen
               name="Profile Settings"
-              component={EditProfile}
+              component={gestureHandlerRootHOC(EditProfile)}
               options={{ unmountOnBlur: true }}
             />
             <Tab.Screen
               name="Training Attempt"
-              component={TrainingAttempt}
+              component={gestureHandlerRootHOC(TrainingAttempt)}
               options={{ unmountOnBlur: true }}
             />
             <Tab.Screen
               name={"Ratings"}
-              component={Ratings}
+              component={gestureHandlerRootHOC(Ratings)}
               options={{ unmountOnBlur: true }}
             />
-            <Tab.Screen name={"Create Goal"} component={UploadGoal} />
+            <Tab.Screen name={"Create Goal"} component={gestureHandlerRootHOC(UploadGoal)} />
             <Tab.Screen
               name={"Update Goal"}
-              component={UploadGoal}
+              component={gestureHandlerRootHOC(UploadGoal)}
               options={{ unmountOnBlur: true }}
             />
             <Tab.Screen
               name={"Goal List"}
-              component={GoalList}
+              component={gestureHandlerRootHOC(GoalList)}
               options={{ unmountOnBlur: true }}
             />
           </Tab.Navigator>

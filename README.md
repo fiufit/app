@@ -20,6 +20,8 @@ A live demo of Fiufit is available [here](https://expo.dev/%40stein257/fiufitapp
 
 Download the Expo Go app on your device and scan the QR displayed.
 
+You can also try our latest release by downloading the APK for Android [here](https://expo.dev/artifacts/eas/rK3d6ueqccKPQFoYEQ87zE.apk).
+
 ## Getting Started
 
 To run Fiufit locally on your machine, follow the instructions below.

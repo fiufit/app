@@ -1,19 +1,27 @@
 {
   "expo": {
     "owner": "stein257",
-    "name": "fiufitapp",
+    "name": "FiuFit",
     "slug": "fiufitapp",
-    "scheme": "fiufitapp",
+    "scheme": "com.fiufit.app",
     "currentFullName": "@stein257/fiufitapp",
     "originalFullName": "@stein257/fiufitapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "androidStatusBar": {
+      "translucent": true,
+      "hidden": true
+    },
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
+    },
+    "notification": {
+      "icon": "./assets/icon.png",
+      "color": "#ffffff"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -27,9 +35,10 @@
     "android": {
       "package": "com.fiufit.app",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -44,6 +53,15 @@
     },
     "updates": {
       "url": "https://u.expo.dev/c665eadf-9598-439f-9afc-fd4d595d8037"
-    }
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#ffffff"
+        }
+      ]
+    ]
   }
 }

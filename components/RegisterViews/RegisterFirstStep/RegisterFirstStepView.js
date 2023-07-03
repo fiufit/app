@@ -24,14 +24,15 @@ import LockIcon from "../../../assets/images/general/lockIcon.svg";
 import MailIcon from "../../../assets/images/general/mailIcon.svg";
 import EyeIcon from "../../../assets/images/general/eyeIcon.svg";
 import HideEyeIcon from "../../../assets/images/general/hideEyeIcon.svg";
-import { EXPO_CLIENT_ID, EXPO_REDIRECT_URI } from "@env";
+import { EXPO_CLIENT_ID, EXPO_REDIRECT_URI, ANDROID_CLIENT_ID } from "@env";
 import {userDataState} from "../../../atoms";
 import {useSetRecoilState} from "recoil";
 
 const googleAuthConfig = {
   expoClientId: EXPO_CLIENT_ID,
+  androidClientId: ANDROID_CLIENT_ID,
   scopes: ["profile", "email"],
-  redirectUri: EXPO_REDIRECT_URI,
+  redirectUri: EXPO_REDIRECT_URI, //Only for development
 };
 
 WebBrowser.maybeCompleteAuthSession();

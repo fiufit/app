@@ -1,3 +1,4 @@
+import "react-native-gesture-handler";
 import * as SplashScreen from "expo-splash-screen";
 
 import {
@@ -17,7 +18,8 @@ import LocationWrapper from "./components/LocationWrapper/locationWrapper";
 import { Provider } from "react-native-paper";
 import { RecoilRoot } from "recoil";
 import Routes from "./components/Routes";
-import { View } from "react-native";
+import {View} from "react-native";
+import { StatusBar } from 'expo-status-bar';
 import { useCallback } from "react";
 import { useFonts } from "expo-font";
 
@@ -43,20 +45,23 @@ const App = () => {
   }
 
   return (
-    <RecoilRoot>
-      <View
-        onLayout={onLayoutRootView}
-        style={{ width: "100%", height: "100%" }}
-      >
-        <Provider>
-          <LocationWrapper>
-            <AuthenticationWrapper>
-              <Routes />
-            </AuthenticationWrapper>
-          </LocationWrapper>
-        </Provider>
-      </View>
-    </RecoilRoot>
+      <>
+        <StatusBar style="light" />
+        <RecoilRoot>
+          <View
+              onLayout={onLayoutRootView}
+              style={{ width: "100%", height: "100%" }}
+          >
+            <Provider>
+              <LocationWrapper>
+                <AuthenticationWrapper>
+                  <Routes />
+                </AuthenticationWrapper>
+              </LocationWrapper>
+            </Provider>
+          </View>
+        </RecoilRoot>
+      </>
   );
 };
 

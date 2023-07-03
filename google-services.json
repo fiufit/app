@@ -1,0 +1,92 @@
+{
+  "project_info": {
+    "project_number": "235995330653",
+    "project_id": "fiufit",
+    "storage_bucket": "fiufit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235995330653:android:afb5434a19c1d5ce5c35b4",
+        "android_client_info": {
+          "package_name": "com.fiufit.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "235995330653-qfmd0qr73j22h6n2n1uodjt47h9vc53o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fiufit.app",
+            "certificate_hash": "e413247fc75d7000395ea4ccad09bb263f622836"
+          }
+        },
+        {
+          "client_id": "235995330653-25cjhqg4d8o3a17dfcadqma3dn092su9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-qwdt6nKfv8del8AsNO1Ixs3AKFmT7pI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "235995330653-25cjhqg4d8o3a17dfcadqma3dn092su9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235995330653:android:1f98eede2a78d4975c35b4",
+        "android_client_info": {
+          "package_name": "com.stein257.fiufitapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "235995330653-49jjd8muv721ffda727dvju6dsvohe9h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stein257.fiufitapp",
+            "certificate_hash": "dc8a0da72723715ee695c26071dcd85f17e4f7bb"
+          }
+        },
+        {
+          "client_id": "235995330653-s33bqe5e848g1i930n5mnuhkdv4hcdcv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stein257.fiufitapp",
+            "certificate_hash": "2baddc1409da965cedef3ec6b63df6314772b01e"
+          }
+        },
+        {
+          "client_id": "235995330653-25cjhqg4d8o3a17dfcadqma3dn092su9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-qwdt6nKfv8del8AsNO1Ixs3AKFmT7pI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "235995330653-25cjhqg4d8o3a17dfcadqma3dn092su9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
